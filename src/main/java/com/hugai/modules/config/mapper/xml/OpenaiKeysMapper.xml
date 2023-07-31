@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hugai.modules.config.mapper.OpenaiKeysMapper">
+
+    <resultMap type="com.hugai.modules.config.entity.model.OpenaiKeysModel" id="baseMap">
+            <result property="id" column="id"/>
+            <result property="createTime" column="create_time"/>
+            <result property="createOper" column="create_oper"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="updateOper" column="update_oper"/>
+            <result property="delFlag" column="del_flag"/>
+            <result property="apiKey" column="api_key"/>
+            <result property="name" column="name"/>
+            <result property="totalAmount" column="total_amount"/>
+            <result property="totalUsage" column="total_usage"/>
+            <result property="expiredTime" column="expired_time"/>
+            <result property="ifFree" column="if_free"/>
+        </resultMap>
+
+    <resultMap type="com.hugai.modules.config.entity.dto.OpenaiKeysDTO" id="dtoMap">
+
+    </resultMap>
+
+</mapper>
