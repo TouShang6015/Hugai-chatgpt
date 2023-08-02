@@ -18,6 +18,6 @@ public interface SensitiveWordStrategy {
      * @param value
      * @return
      */
-    Object defaultReplaceValue(Object value,String replaceValue);
+    String defaultReplaceValue(String value,String replaceValue);
 
 }

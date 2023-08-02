@@ -30,7 +30,7 @@ public abstract class SenFilterCommonImpl implements SensitiveWordStrategy {
      * @return
      */
     @Override
-    public Object defaultReplaceValue(Object value, String replaceValue) {
+    public String defaultReplaceValue(String value, String replaceValue) {
         if (Objects.isNull(value)) {
             return null;
         }
@@ -43,9 +43,7 @@ public abstract class SenFilterCommonImpl implements SensitiveWordStrategy {
             log.warn("敏感词 参数已过滤: 参数：{},类型：Interface||Abstract", value);
             return value;
         }
-        if (value instanceof String) {
-            value = this.handleString((String) value);
-        }
+        value = this.handleString((String) value);
         return value;
     }
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <localRepository>本地的maven仓库路径</localRepository>
+
+	<servers>
+		<server>
+			<id>rdc-releases</id>
+			<username>63493a921b97d790e6149f6a</username>
+			<password>VPD=8J2lg3DY</password>
+		</server>
+		<server>
+			<id>rdc-snapshots</id>
+			<username>63493a921b97d790e6149f6a</username>
+			<password>VPD=8J2lg3DY</password>
+		</server>
+	</servers>
+
+	<mirrors>
+		<mirror>
+			<id>mirror</id>
+			<mirrorOf>central</mirrorOf>
+			<name>mirror</name>
+			<url>https://maven.aliyun.com/nexus/content/groups/public</url>
+		</mirror>
+	</mirrors>
+
+</settings>

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * todo 待测试
+ *
  * @author WuHao
  * @since 2023/7/28 14:54
  */
@@ -39,10 +40,10 @@ public class SensitiveWordAspectj {
         for (int i = 0; i < args.length; i++) {
             Object arg = args[i];
             if (arg instanceof String) {
-                args[i] = strategyService.defaultReplaceValue(arg, sensitiveContentFilter.replaceVal());
+                args[i] = strategyService.defaultReplaceValue((String) arg, sensitiveContentFilter.replaceVal());
             } else {
                 Object value = ReflectUtil.getFieldValue(arg, sensitiveContentFilter.attrName());
-                args[i] = strategyService.defaultReplaceValue(value, sensitiveContentFilter.replaceVal());
+                args[i] = strategyService.defaultReplaceValue((String) value, sensitiveContentFilter.replaceVal());
             }
         }
     }
@@ -54,10 +55,15 @@ public class SensitiveWordAspectj {
         SensitiveWordStrategy strategyService = SenStrategyContext.getStrategyService(sensitiveContentFilter.resultType());
         Object finalResult = result;
         if (result instanceof Result) {
-            String data = (String) strategyService.defaultReplaceValue(((Result) result).getData(), sensitiveContentFilter.replaceVal());
-            ((Result) finalResult).setData(data);
+            Object resultData = ((Result) result).getData();
+            if (resultData instanceof String) {
+                String data = strategyService.defaultReplaceValue((String) resultData, sensitiveContentFilter.replaceVal());
+                ((Result) finalResult).setData(data);
+            }
         } else {
-            finalResult = strategyService.defaultReplaceValue(result, sensitiveContentFilter.replaceVal());
+            if (result instanceof String) {
+                finalResult = strategyService.defaultReplaceValue((String) result, sensitiveContentFilter.replaceVal());
+            }
         }
         return finalResult;
     }

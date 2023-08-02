@@ -11,7 +11,7 @@
  Target Server Version : 80028 (8.0.28)
  File Encoding         : 65001
 
- Date: 31/07/2023 14:48:28
+ Date: 02/08/2023 15:04:57
 */
 
 SET NAMES utf8mb4;
@@ -769,7 +769,7 @@ CREATE TABLE `sys_user_token`  (
   `version` int NULL DEFAULT 0 COMMENT '版本号',
   `user_id` bigint NOT NULL COMMENT '登录人主键',
   `token` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'token key',
-  `last_time` timestamp NOT NULL COMMENT '最新更新时间',
+  `last_time` timestamp NULL DEFAULT NULL COMMENT '最新更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '登录人token信息' ROW_FORMAT = Dynamic;
