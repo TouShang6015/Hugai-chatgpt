@@ -3,10 +3,12 @@ package com.hugai.modules.user.controller;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.core.openai.entity.response.UserAccountResponse;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.core.security.context.bean.LoginUserContextBean;
+import com.hugai.framework.log.annotation.Log;
 import com.hugai.modules.system.entity.vo.auth.ClientRegisterBody;
 import com.hugai.modules.system.entity.vo.auth.LoginBody;
 import com.hugai.modules.user.entity.convert.UserInfoConvert;
@@ -17,6 +19,7 @@ import com.hugai.modules.user.service.login.UserLoginService;
 import com.hugai.modules.user.service.login.UserRegisterService;
 import com.org.bebas.exception.BusinessException;
 import com.org.bebas.exception.UserException;
+import com.org.bebas.utils.page.PageUtil;
 import com.org.bebas.utils.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -79,6 +82,7 @@ public class UserInfoController {
         return Result.success(detail);
     }
 
+    @Log(title = "客户端用户修改信息")
     @PutMapping("/clientUpdateUser")
     @ApiOperation(value = "客户端用户修改信息")
     public Result clientUpdateUser(@RequestBody UserInfoModel param) {
@@ -94,6 +98,7 @@ public class UserInfoController {
         return Result.success();
     }
 
+    @Log(title = "用户背景修改")
     @GetMapping("/editUserBackground")
     @ApiOperation(value = "用户背景修改")
     public Result editUserBackground(String imgUrl) {
@@ -109,6 +114,7 @@ public class UserInfoController {
         return Result.success(list);
     }
 
+    @Log(title = "用户注册发送短信验证码")
     @GetMapping("/registerSendMail")
     @ApiOperation(value = "用户注册发送短信验证码")
     public Result registerSendMail(String email) {

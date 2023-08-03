@@ -8,6 +8,7 @@ import com.hugai.core.session.entity.SessionDrawCreatedOpenaiCacheData;
 import com.hugai.core.session.entity.SessionDrawEditOpenaiCacheData;
 import com.hugai.core.session.lock.SessionLockHandle;
 import com.hugai.core.session.valid.SendDrawOpenAi;
+import com.hugai.framework.log.annotation.Log;
 import com.hugai.framework.sensitiveWord.annotation.SensitiveContentFilter;
 import com.hugai.framework.sensitiveWord.constants.SenWordFilterType;
 import com.hugai.modules.chat.service.DrawOpenaiService;
@@ -39,6 +40,7 @@ public class DrawOpenaiController {
 
     private final DrawOpenaiService service;
 
+    @Log(title = "ai绘图消息发送（openai）")
     @SensitiveContentFilter(attrName = "prompt",resultType = SenWordFilterType.non)
     @ApiOperation(value = "ai绘图消息发送（openai）")
     @PostMapping("/sendAiDraw")
@@ -54,6 +56,7 @@ public class DrawOpenaiController {
         return Result.success(imageResult.get());
     }
 
+    @Log(title = "ai绘图编辑图像（openai）")
     @SensitiveContentFilter(attrName = "prompt",resultType = SenWordFilterType.non)
     @ApiOperation(value = "ai绘图编辑图像（openai）")
     @PostMapping("/sendAiDrawEdit")
