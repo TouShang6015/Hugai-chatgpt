@@ -3,10 +3,12 @@ package com.hugai.modules.user.controller;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.core.openai.entity.response.UserAccountResponse;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.core.security.context.bean.LoginUserContextBean;
+import com.hugai.framework.log.annotation.Log;
 import com.hugai.modules.system.entity.vo.auth.ClientRegisterBody;
 import com.hugai.modules.system.entity.vo.auth.LoginBody;
 import com.hugai.modules.user.entity.convert.UserInfoConvert;
@@ -17,6 +19,7 @@ import com.hugai.modules.user.service.login.UserLoginService;
 import com.hugai.modules.user.service.login.UserRegisterService;
 import com.org.bebas.exception.BusinessException;
 import com.org.bebas.exception.UserException;
+import com.org.bebas.utils.page.PageUtil;
 import com.org.bebas.utils.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -117,5 +120,25 @@ public class UserInfoController {
         service.registerSendMail(email);
         return Result.successMsg(String.format("发送成功！请前往%s的邮箱中查看", email));
     }
+
+    @PostMapping("/queryPageListByParam")
+    @ApiOperation(value = "分页查询（后台）")
+    public Result queryPageListByParam(@RequestBody UserInfoModel param) {
+        IPage<UserInfoModel> page = service.listPageByParam(PageUtil.pageBean(param), param);
+        return Result.success(page);
+    }
+
+    @Log(title = "用户修改信息（后台）")
+    @PutMapping("/updateUserInfo")
+    @ApiOperation(value = "用户修改信息（后台）")
+    public Result updateUserInfo(@RequestBody UserInfoModel param) {
+        param.setIfTourist(null);
+        param.setUserName(null);
+        param.setEmail(null);
+        param.setIpaddress(null);
+        service.updateById(param);
+        return Result.success();
+    }
+
 
 }
