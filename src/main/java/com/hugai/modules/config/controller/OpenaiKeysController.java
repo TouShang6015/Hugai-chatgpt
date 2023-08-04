@@ -3,6 +3,7 @@ package com.hugai.modules.config.controller;
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.common.constants.Constants;
 import com.hugai.core.security.context.SecurityContextUtil;
+import com.hugai.framework.log.annotation.Log;
 import com.hugai.modules.config.entity.model.OpenaiKeysModel;
 import com.hugai.modules.config.service.IOpenaiKeysService;
 import com.org.bebas.utils.result.Result;
@@ -34,6 +35,7 @@ public class OpenaiKeysController {
         return Result.success(list);
     }
 
+    @Log(title = "修改用户api")
     @ApiOperation(value = "修改用户api keys")
     @PutMapping("/updateUserApiKey")
     public Result updateUserApiKey(@RequestBody OpenaiKeysModel param) {
@@ -41,6 +43,7 @@ public class OpenaiKeysController {
         return Result.success();
     }
 
+    @Log(title = "添加用户api")
     @ApiOperation(value = "添加用户api keys")
     @PostMapping("/addUserApiKey")
     public Result addUserApiKey(@RequestBody OpenaiKeysModel param) {
@@ -48,6 +51,7 @@ public class OpenaiKeysController {
         return Result.success();
     }
 
+    @Log(title = "删除用户api")
     @ApiOperation(value = "删除用户api keys")
     @DeleteMapping("/delUserApiKey/{id}")
     public Result delUserApiKey(@PathVariable Long id) {

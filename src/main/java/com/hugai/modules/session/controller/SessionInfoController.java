@@ -5,6 +5,7 @@ import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.core.session.valid.AddDomainSession;
 import com.hugai.core.session.valid.AddDrawSession;
+import com.hugai.framework.log.annotation.Log;
 import com.hugai.modules.session.entity.model.SessionInfoModel;
 import com.hugai.modules.session.entity.vo.SessionBaseRequest;
 import com.hugai.modules.session.service.SessionInfoService;
@@ -35,6 +36,7 @@ public class SessionInfoController {
 
     private final SessionInfoService service;
 
+    @Log(title = "新增会话")
     @GetMapping("/addSession/{sessionType}")
     @ApiOperation(value = "新增会话")
     public Result addSession(@PathVariable String sessionType) {
@@ -42,6 +44,7 @@ public class SessionInfoController {
         return Result.success(sessionInfoModel);
     }
 
+    @Log(title = "新增领域会话")
     @PostMapping("/addDomainSession")
     @ApiOperation(value = "新增领域会话")
     public Result addDomainSession(@RequestBody SessionBaseRequest param) {
@@ -50,6 +53,7 @@ public class SessionInfoController {
         return Result.success(sessionInfoModel);
     }
 
+    @Log(title = "新增画图会话")
     @PostMapping("/addDrawSession")
     @ApiOperation(value = "新增画图会话")
     public Result addDrawSession(@RequestBody SessionBaseRequest param) {
@@ -58,6 +62,7 @@ public class SessionInfoController {
         return Result.success(sessionInfoModel);
     }
 
+    @Log(title = "删除会话")
     @DeleteMapping("/deleteSession/{sessionIds}")
     @ApiOperation(value = "删除会话")
     public Result deleteSession(@PathVariable String sessionIds) {
@@ -109,6 +114,7 @@ public class SessionInfoController {
         return Result.success(lastSession);
     }
 
+    @Log(title = "清空会话列表")
     @GetMapping("/clearSession/{sessionId}")
     @ApiOperation(value = "清空会话列表")
     public Result clearSession(@PathVariable Long sessionId) {

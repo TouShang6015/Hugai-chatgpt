@@ -7,6 +7,7 @@ import com.hugai.core.session.lock.SessionLockHandle;
 import com.hugai.core.session.valid.Send;
 import com.hugai.core.session.valid.SendDomain;
 import com.hugai.core.sse.CacheSsePool;
+import com.hugai.framework.log.annotation.Log;
 import com.hugai.framework.sensitiveWord.annotation.SensitiveContentFilter;
 import com.hugai.modules.chat.service.ChatService;
 import com.org.bebas.core.function.OR;
@@ -37,6 +38,7 @@ public class ChatController {
 
     private final ChatService chatService;
 
+    @Log(title = "聊天会话消息发送")
     @SensitiveContentFilter(attrName = "content")
     @ApiOperation(value = "聊天会话消息发送")
     @PostMapping("/send")
@@ -53,6 +55,7 @@ public class ChatController {
         return Result.success();
     }
 
+    @Log(title = "领域会话消息发送")
     @SensitiveContentFilter(attrName = "content")
     @ApiOperation(value = "领域会话消息发送")
     @PostMapping("/sendDomain")

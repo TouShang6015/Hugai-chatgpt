@@ -82,6 +82,7 @@ public class UserInfoController {
         return Result.success(detail);
     }
 
+    @Log(title = "客户端用户修改信息")
     @PutMapping("/clientUpdateUser")
     @ApiOperation(value = "客户端用户修改信息")
     public Result clientUpdateUser(@RequestBody UserInfoModel param) {
@@ -97,6 +98,7 @@ public class UserInfoController {
         return Result.success();
     }
 
+    @Log(title = "用户背景修改")
     @GetMapping("/editUserBackground")
     @ApiOperation(value = "用户背景修改")
     public Result editUserBackground(String imgUrl) {
@@ -112,6 +114,7 @@ public class UserInfoController {
         return Result.success(list);
     }
 
+    @Log(title = "用户注册发送短信验证码")
     @GetMapping("/registerSendMail")
     @ApiOperation(value = "用户注册发送短信验证码")
     public Result registerSendMail(String email) {
