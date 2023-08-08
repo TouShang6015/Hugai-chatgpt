@@ -30,7 +30,7 @@ public class SessionCacheData {
     /**
      * 会话id
      */
-    @NotNull(message = "sessionId不能为空", groups = {Send.class, SendDomain.class, SendDrawOpenAi.class})
+    @NotNull(message = "sessionId不能为空", groups = {Send.class, SendDomain.class})
     private Long sessionId;
 
     /**

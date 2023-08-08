@@ -88,4 +88,7 @@ public class SysPermissionModel extends BaseModel {
     @ApiModelProperty(value = "接口访问规则", dataType = "Integer")
     private Integer routeVisitRule;
 
+    @ApiModelProperty(value = "是否可用的")
+    private String ifUsable;
+
 }

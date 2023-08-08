@@ -15,9 +15,9 @@ public enum ModulesToken {
 
     DRAW(1024,1024),
 
-    CHAT(512,4000),
+    CHAT(1024,4000),
 
-    SQL(512,4000),
+    SQL(1024,4000),
 
     TEXT(2048,4000),
 

@@ -1,7 +1,7 @@
 package com.hugai.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.alibaba.fastjson2.JSON;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.hugai.common.constants.Constants;
 import com.hugai.common.constants.SecurityConstant;
@@ -153,12 +153,12 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     @Override
     public boolean handleMappingSync() {
         // 获取所有接口列表
-        List<String> originalRoutePathList = OptionalUtil.ofNullList(
+        List<SysPermissionModel> permissionModelList = OptionalUtil.ofNullList(
                 super.lambdaQuery()
-                        .select(SysPermissionModel::getOriginalRoutePath)
                         .eq(SysPermissionModel::getIfRoute, Constants.BOOLEAN.TRUE)
                         .list()
-        ).stream().map(SysPermissionModel::getOriginalRoutePath).collect(Collectors.toList());
+        );
+        List<String> originalRoutePathList = permissionModelList.stream().map(SysPermissionModel::getOriginalRoutePath).collect(Collectors.toList());
 
         List<SysPermissionModel> projectRequestMapping = this.getProjectRequestMapping();
         projectRequestMapping.parallelStream().forEach(item -> {
@@ -177,12 +177,25 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
             }
             item.setPermissionTag(replaceStr);
         });
-        // 筛选需要新增的数据
-        List<SysPermissionModel> INSERT_PARAM = projectRequestMapping.parallelStream().filter(item -> !originalRoutePathList.contains(item.getOriginalRoutePath())).collect(Collectors.toList());
-        if (CollUtil.isNotEmpty(INSERT_PARAM)) {
-            super.saveBatch(INSERT_PARAM);
-            log.info("[路由同步] 同步成功：{}", JSON.toJSONString(INSERT_PARAM));
-        }
+        // 筛选需要新增/修改的数据
+        List<String> projectOriginalRoutePathList = projectRequestMapping.parallelStream().map(SysPermissionModel::getPermissionTag).filter(StrUtil::isNotEmpty).distinct().collect(Collectors.toList());
+        List<SysPermissionModel> updateUNUsableParam = permissionModelList.stream().filter(item -> !projectOriginalRoutePathList.contains(item.getPermissionTag())).peek(item -> item.setIfUsable(Constants.BOOLEAN.FALSE)).collect(Collectors.toList());
+        List<SysPermissionModel> updateUsableParam = permissionModelList.stream().filter(item -> projectOriginalRoutePathList.contains(item.getPermissionTag())).peek(item -> item.setIfUsable(Constants.BOOLEAN.TRUE)).collect(Collectors.toList());
+
+        List<SysPermissionModel> updateParam = CollUtil.newArrayList();
+        updateParam.addAll(updateUNUsableParam);
+        updateParam.addAll(updateUsableParam);
+        OR.run(updateParam,CollUtil::isNotEmpty,() -> {
+            super.updateBatchById(updateParam);
+            log.info("[路由同步] 路由状态更新成功 更新数量：{}", updateParam.size());
+        });
+        OR.run(
+                projectRequestMapping.parallelStream().filter(item -> !originalRoutePathList.contains(item.getOriginalRoutePath())).collect(Collectors.toList()), CollUtil::isNotEmpty,
+                insertParam -> {
+                    super.saveBatch(insertParam);
+                    log.info("[路由同步] 同步成功 同步数量：{}", insertParam.size());
+                }
+        );
         return true;
     }
 
