@@ -1,5 +1,6 @@
 package com.hugai.modules.config.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.hugai.modules.config.entity.model.OpenaiKeysModel;
 import com.org.bebas.mapper.service.IService;
 
@@ -21,6 +22,13 @@ public interface IOpenaiKeysService extends IService<OpenaiKeysModel> {
      * @return
      */
     List<String> getAbleKeys();
+
+    /**
+     * 获取用户可用的key，不包括公共key
+     *
+     * @return
+     */
+    List<String> getUserAbleKeys();
 
     /**
      * 获取公共key
@@ -64,5 +72,16 @@ public interface IOpenaiKeysService extends IService<OpenaiKeysModel> {
      * @param param
      */
     void updateKeys(OpenaiKeysModel param);
+
+    /**
+     * 根据openaikey删除
+     *
+     * @param openAiKeys
+     */
+    void removeByOpenaiKey(List<String> openAiKeys);
+
+    default void removeByOpenaiKey(String openAiKey) {
+        this.removeByOpenaiKey(CollUtil.newArrayList(openAiKey));
+    }
 
 }

@@ -63,7 +63,7 @@ public class AiServiceFactory {
 
         Retrofit retrofit = OpenAiService.defaultRetrofit(client, mapper);
 
-        return new OpenAiService(retrofit.create(OpenAiApi.class), client.dispatcher().executorService());
+        return new OpenAiService(retrofit.create(OpenAiApi.class), client.dispatcher().executorService(), token);
 
     }
 

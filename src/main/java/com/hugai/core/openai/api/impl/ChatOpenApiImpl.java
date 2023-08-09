@@ -10,7 +10,12 @@ import com.hugai.core.openai.factory.AiServiceFactory;
 import com.hugai.core.openai.service.OpenAiService;
 import com.hugai.core.openai.utils.ContentUtil;
 import com.hugai.core.openai.utils.TokenCalculateUtil;
+import com.hugai.modules.config.service.IOpenaiKeysService;
+import com.org.bebas.constants.HttpStatus;
 import com.org.bebas.core.function.OR;
+import com.org.bebas.core.spring.SpringUtils;
+import com.org.bebas.exception.BusinessException;
+import com.theokanning.openai.OpenAiHttpException;
 import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
@@ -87,7 +92,13 @@ public class ChatOpenApiImpl implements ChatOpenApi {
 
         return this.coreSend(chatCompletionRequest, (service, apiResponseMap) -> {
             service.streamChatCompletion(chatCompletionRequest)
-                    .doOnError(Throwable::printStackTrace)
+                    .doOnError(throwable -> {
+                        throwable.printStackTrace();
+                        int statusCode = ((OpenAiHttpException) throwable).statusCode;
+                        if (HttpStatus.UNAUTHORIZED == statusCode){
+                            SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(service.getToken());
+                        }
+                    })
                     .blockingForEach(chunk -> {
                         // 日志打印
                         log.info("[ChatOpenApi] streamChat 响应结果：{}", JSON.toJSONString(chunk));
@@ -134,7 +145,18 @@ public class ChatOpenApiImpl implements ChatOpenApi {
         log.info("[ChatOpenApi] normalChat 请求参数：{}", JSON.toJSONString(chatCompletionRequest));
 
         return this.coreSend(chatCompletionRequest, (service, apiResponseMap) -> {
-            ChatCompletionResult response = service.createChatCompletion(chatCompletionRequest);
+
+            ChatCompletionResult response;
+            try {
+                response = service.createChatCompletion(chatCompletionRequest);
+            }catch (OpenAiHttpException e){
+                e.printStackTrace();
+                int statusCode = e.statusCode;
+                if (HttpStatus.UNAUTHORIZED == statusCode){
+                    SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(service.getToken());
+                }
+                throw new BusinessException(e.getMessage());
+            }
 
             log.info("[ChatOpenApi] normalChat 响应结果：{}", JSON.toJSONString(response));
 

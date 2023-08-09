@@ -12,8 +12,13 @@ import com.hugai.framework.log.annotation.Log;
 import com.hugai.framework.sensitiveWord.annotation.SensitiveContentFilter;
 import com.hugai.framework.sensitiveWord.constants.SenWordFilterType;
 import com.hugai.modules.chat.service.DrawOpenaiService;
+import com.hugai.modules.config.service.IOpenaiKeysService;
+import com.hugai.modules.system.entity.vo.baseResource.ResourceOpenaiVO;
+import com.hugai.modules.system.service.IBaseResourceConfigService;
 import com.org.bebas.core.function.OR;
+import com.org.bebas.core.redis.RedisUtil;
 import com.org.bebas.core.validator.ValidatorUtil;
+import com.org.bebas.exception.BusinessException;
 import com.org.bebas.utils.result.Result;
 import com.theokanning.openai.image.ImageResult;
 import io.swagger.annotations.Api;
@@ -25,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -38,37 +45,67 @@ import java.util.concurrent.atomic.AtomicReference;
 @Api(tags = "绘画控制器（openai）")
 public class DrawOpenaiController {
 
+    String CACHE_KEY = "DRAW-SESSION:%s:OPENAI";
+
+    String errorMessage = "绘图失败，游客用户或未配置openAi key的用户每%s小时可以请求%s次绘图接口，正在努力寻找白嫖或节约openai key的方案，谅解下\uD83D\uDE02\uD83D\uDE02";
+
     private final DrawOpenaiService service;
 
+    private final IBaseResourceConfigService resourceConfigService;
+
+    private final IOpenaiKeysService openaiKeysService;
+
+    private final RedisUtil redisUtil;
+
     @Log(title = "ai绘图消息发送（openai）")
-    @SensitiveContentFilter(attrName = "prompt",resultType = SenWordFilterType.non)
+    @SensitiveContentFilter(attrName = "prompt", resultType = SenWordFilterType.non)
     @ApiOperation(value = "ai绘图消息发送（openai）")
     @PostMapping("/sendAiDraw")
     public Result sendAiDraw(@RequestBody SessionDrawCreatedOpenaiCacheData param) {
         ValidatorUtil.validateEntity(param, SendDrawOpenAi.class);
 
-        OR.run(param.getSize(), StrUtil::isNotEmpty,size -> param.setSize(size + "x" + size));
+        OR.run(param.getSize(), StrUtil::isNotEmpty, size -> param.setSize(size + "x" + size));
 
         AtomicReference<ImageResult> imageResult = new AtomicReference<>();
         SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), DrawType.OPENAI.getKey(), () -> {
+
+            String KEY = String.format(CACHE_KEY, param.getUserId());
+            ResourceOpenaiVO resourceOpenai = resourceConfigService.getResourceOpenai();
+            Integer count = redisUtil.getCacheObject(KEY);
+            if (openaiKeysService.getUserAbleKeys().size() == 0 && Objects.nonNull(resourceOpenai.getDrawApiSendMax()) && (Objects.nonNull(count) && count >= resourceOpenai.getDrawApiSendMax())) {
+                throw new BusinessException(String.format(errorMessage, resourceOpenai.getDrawApiCacheTime(), resourceOpenai.getDrawApiSendMax()));
+            }
             imageResult.set(service.sendDrawCreatedOpenAi(param));
+
+            redisUtil.incrBy(KEY, 1);
+            redisUtil.expire(KEY, 1, TimeUnit.HOURS);
         }, "当前会话正在进行中，请等待结束");
         return Result.success(imageResult.get());
     }
 
     @Log(title = "ai绘图编辑图像（openai）")
-    @SensitiveContentFilter(attrName = "prompt",resultType = SenWordFilterType.non)
+    @SensitiveContentFilter(attrName = "prompt", resultType = SenWordFilterType.non)
     @ApiOperation(value = "ai绘图编辑图像（openai）")
     @PostMapping("/sendAiDrawEdit")
     public Result sendAiDrawEdit(@RequestBody SessionDrawEditOpenaiCacheData param) {
         ValidatorUtil.validateEntity(param, SendDrawOpenAi.class);
 
-        OR.run(param.getSize(), StrUtil::isNotEmpty,size -> param.setSize(size + "x" + size));
-        OR.run(param.getResponseFormat(), StrUtil::isEmpty,item -> param.setResponseFormat("url"));
+        OR.run(param.getSize(), StrUtil::isNotEmpty, size -> param.setSize(size + "x" + size));
+        OR.run(param.getResponseFormat(), StrUtil::isEmpty, item -> param.setResponseFormat("url"));
 
         AtomicReference<ImageResult> imageResult = new AtomicReference<>();
         SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), DrawType.OPENAI.getKey(), () -> {
+            String KEY = String.format(CACHE_KEY, param.getUserId());
+            ResourceOpenaiVO resourceOpenai = resourceConfigService.getResourceOpenai();
+            Integer count = redisUtil.getCacheObject(KEY);
+            if (openaiKeysService.getUserAbleKeys().size() == 0 && Objects.nonNull(resourceOpenai.getDrawApiSendMax()) && (Objects.nonNull(count) && count >= resourceOpenai.getDrawApiSendMax())) {
+                throw new BusinessException(String.format(errorMessage, resourceOpenai.getDrawApiCacheTime(), resourceOpenai.getDrawApiSendMax()));
+            }
+
             imageResult.set(service.sendDrawEditOpenAi(param));
+
+            redisUtil.incrBy(KEY, 1);
+            redisUtil.expire(KEY, 1, TimeUnit.HOURS);
         }, "当前会话正在进行中，请等待结束");
         return Result.success(imageResult.get());
     }

@@ -11,4 +11,14 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class UserInfoDTO extends UserInfoModel {
 
+    /**
+     * 总消耗token
+     */
+    private Integer allCustomerToken;
+
+    /**
+     * 会话数
+     */
+    private Integer sessionCount;
+
 }

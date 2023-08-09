@@ -26,5 +26,13 @@ public class ResourceOpenaiVO implements Serializable {
      * 代理端口
      */
     private Integer proxyPort;
+    /**
+     * 绘图接口缓存超时时间（小时）
+     */
+    private Integer drawApiCacheTime;
+    /**
+     * 绘图接口缓存内最大请求次数
+     */
+    private Integer drawApiSendMax;
 
 }

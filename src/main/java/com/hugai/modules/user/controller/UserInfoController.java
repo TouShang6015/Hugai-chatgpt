@@ -1,5 +1,6 @@
 package com.hugai.modules.user.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;
@@ -9,14 +10,18 @@ import com.hugai.core.openai.entity.response.UserAccountResponse;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.core.security.context.bean.LoginUserContextBean;
 import com.hugai.framework.log.annotation.Log;
+import com.hugai.modules.session.entity.model.SessionInfoModel;
+import com.hugai.modules.session.service.SessionInfoService;
 import com.hugai.modules.system.entity.vo.auth.ClientRegisterBody;
 import com.hugai.modules.system.entity.vo.auth.LoginBody;
 import com.hugai.modules.user.entity.convert.UserInfoConvert;
+import com.hugai.modules.user.entity.dto.UserInfoDTO;
 import com.hugai.modules.user.entity.model.UserInfoModel;
 import com.hugai.modules.user.entity.vo.UserInfoDetailVo;
 import com.hugai.modules.user.service.UserInfoService;
 import com.hugai.modules.user.service.login.UserLoginService;
 import com.hugai.modules.user.service.login.UserRegisterService;
+import com.org.bebas.core.function.OR;
 import com.org.bebas.exception.BusinessException;
 import com.org.bebas.exception.UserException;
 import com.org.bebas.utils.page.PageUtil;
@@ -28,6 +33,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author WuHao
@@ -44,6 +51,8 @@ public class UserInfoController {
     private final UserLoginService loginService;
 
     private final UserRegisterService registerService;
+
+    private final SessionInfoService sessionInfoService;
 
     @PostMapping("/login")
     @ApiOperation(value = "用户登陆", httpMethod = "POST", response = Result.class)
@@ -128,7 +137,22 @@ public class UserInfoController {
     @ApiOperation(value = "分页查询（后台）")
     public Result queryPageListByParam(@RequestBody UserInfoModel param) {
         IPage<UserInfoModel> page = service.listPageByParam(PageUtil.pageBean(param), param);
-        return Result.success(page);
+        IPage<UserInfoDTO> dtoPage = PageUtil.convert(page, UserInfoConvert.INSTANCE::convertToDTO);
+        OR.run(dtoPage.getRecords(), CollUtil::isNotEmpty,list -> {
+            List<Long> userIds = list.stream().map(UserInfoDTO::getId).collect(Collectors.toList());
+            List<SessionInfoModel> sessionModelList = sessionInfoService.lambdaQuery().select(SessionInfoModel::getUserId, SessionInfoModel::getAllConsumerToken).in(SessionInfoModel::getUserId, userIds).list();
+            list.forEach(item -> {
+                List<Integer> allCustomerTokenList = sessionModelList.stream()
+                        .filter(session -> session.getUserId().equals(item.getId()))
+                        .map(SessionInfoModel::getAllConsumerToken)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+                Integer customerTokenNum = allCustomerTokenList.stream().reduce(Integer::sum).orElse(0);
+                item.setAllCustomerToken(customerTokenNum);
+                item.setSessionCount(allCustomerTokenList.size());
+            });
+        });
+        return Result.success(dtoPage);
     }
 
     @Log(title = "用户修改信息（后台）")

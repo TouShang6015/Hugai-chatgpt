@@ -17,16 +17,19 @@ import com.hugai.framework.file.entity.FileResponse;
 import com.hugai.framework.file.service.FileService;
 import com.hugai.modules.chat.convert.DrawOpenaiConvert;
 import com.hugai.modules.chat.service.DrawOpenaiService;
+import com.hugai.modules.config.service.IOpenaiKeysService;
 import com.hugai.modules.session.entity.model.SessionInfoDrawModel;
 import com.hugai.modules.session.entity.model.SessionRecordDrawModel;
 import com.hugai.modules.session.service.SessionInfoDrawService;
 import com.hugai.modules.session.service.SessionRecordDrawService;
 import com.hugai.modules.system.service.SysFileConfigService;
+import com.org.bebas.constants.HttpStatus;
 import com.org.bebas.core.function.OR;
-import com.org.bebas.core.redis.RedisUtil;
+import com.org.bebas.core.spring.SpringUtils;
 import com.org.bebas.core.validator.ValidatorUtil;
 import com.org.bebas.exception.BusinessException;
 import com.org.bebas.utils.OptionalUtil;
+import com.theokanning.openai.OpenAiHttpException;
 import com.theokanning.openai.image.CreateImageEditRequest;
 import com.theokanning.openai.image.CreateImageRequest;
 import com.theokanning.openai.image.Image;
@@ -41,7 +44,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -54,8 +56,6 @@ import java.util.stream.Collectors;
 @Service
 public class DrawOpenaiServiceImpl implements DrawOpenaiService {
 
-    public static final String CACHE_KEY = "DRAW-SESSION:%s:OPENAI";
-
     private final SessionRecordDrawService sessionRecordDrawService;
 
     private final SessionInfoDrawService sessionInfoDrawService;
@@ -63,8 +63,6 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
     private final FileServiceContext fileServiceContext;
 
     private final SysFileConfigService fileConfigService;
-
-    private final RedisUtil redisUtil;
 
     /**
      * ai绘图消息发送
@@ -76,20 +74,23 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
     public ImageResult sendDrawCreatedOpenAi(SessionDrawCreatedOpenaiCacheData param) {
         ValidatorUtil.validateEntity(param, SendDrawOpenAi.class);
 
-        String KEY = String.format(CACHE_KEY,param.getUserId());
-
-        Integer count = redisUtil.getCacheObject(KEY);
-        if (Objects.nonNull(count) && count > 2){
-            throw new BusinessException("绘图失败，每位用户1小时可以请求2次绘图接口，正在努力寻找白嫖或节约openai key的方案，谅解下，😂😂");
-        }
-
         OpenAiService openAiService = AiServiceFactory.createService();
 
         CreateImageRequest apiParam = DrawOpenaiConvert.INSTANCE.convertApiParam(param);
 
         final String prompt = apiParam.getPrompt();
 
-        ImageResult apiResponse = openAiService.createImage(apiParam);
+        ImageResult apiResponse;
+        try {
+            apiResponse = openAiService.createImage(apiParam);
+        } catch (OpenAiHttpException e) {
+            e.printStackTrace();
+            int statusCode = e.statusCode;
+            if (HttpStatus.UNAUTHORIZED == statusCode) {
+                SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getToken());
+            }
+            throw new BusinessException(e.getMessage());
+        }
 
         OR.run(apiResponse, Objects::nonNull, response -> {
             log.info("openai图像生成响应：{}", JSON.toJSONString(response));
@@ -137,8 +138,6 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
 
         });
 
-        redisUtil.incrBy(KEY,1);
-        redisUtil.expire(KEY,1, TimeUnit.HOURS);
         return apiResponse;
     }
 
@@ -151,12 +150,6 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
     @Override
     public ImageResult sendDrawEditOpenAi(SessionDrawEditOpenaiCacheData param) {
         ValidatorUtil.validateEntity(param);
-
-        String KEY = String.format(CACHE_KEY,param.getUserId());
-        Integer count = redisUtil.getCacheObject(KEY);
-        if (Objects.nonNull(count) && count > 2){
-            throw new BusinessException("绘图失败，每位用户1小时可以请求2次绘图接口，正在努力寻找白嫖或节约openai key的方案，谅解下，😂😂");
-        }
 
         final String prompt = param.getPrompt();
 
@@ -177,7 +170,17 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
             maskPath = FilenameUtils.normalize(fileConfigPath + param.getMask());
         }
 
-        ImageResult apiResponse = openAiService.createImageEdit(apiParam, imagePath, maskPath);
+        ImageResult apiResponse;
+        try {
+            apiResponse = openAiService.createImageEdit(apiParam, imagePath, maskPath);
+        } catch (OpenAiHttpException e) {
+            e.printStackTrace();
+            int statusCode = e.statusCode;
+            if (HttpStatus.UNAUTHORIZED == statusCode) {
+                SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getToken());
+            }
+            throw new BusinessException(e.getMessage());
+        }
 
         OR.run(apiResponse, Objects::nonNull, response -> {
             log.info("openai图像生成响应：{}", JSON.toJSONString(response));
@@ -224,9 +227,6 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
             sessionRecordDrawService.saveBatch(sessionRecordSaveParamList);
 
         });
-
-        redisUtil.incrBy(KEY,1);
-        redisUtil.expire(KEY,1, TimeUnit.HOURS);
 
         return apiResponse;
     }

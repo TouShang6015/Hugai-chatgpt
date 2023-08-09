@@ -1,5 +1,6 @@
 package com.hugai.framework.sensitiveWord;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.org.bebas.utils.acword.Emit;
@@ -65,7 +66,9 @@ public class SenWordHolder {
      */
     public boolean exists(String input, boolean ifLog) {
         Emits emits = this.trie.findAll(input);
-        log.warn("存在敏感词：{}", emits.parallelStream().map(Emit::getKeyword).collect(Collectors.joining(",")));
+        if (CollUtil.isNotEmpty(emits)) {
+            log.warn("存在敏感词：{}", emits.parallelStream().map(Emit::getKeyword).collect(Collectors.joining(",")));
+        }
         return emits.size() != 0;
     }
 

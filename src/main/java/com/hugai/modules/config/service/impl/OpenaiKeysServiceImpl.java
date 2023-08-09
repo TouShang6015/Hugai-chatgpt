@@ -85,6 +85,23 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
     }
 
     /**
+     * 获取用户可用的key，不包括公共key
+     *
+     * @return
+     */
+    @Override
+    public List<String> getUserAbleKeys() {
+        LoginUserContextBean loginUser = SecurityContextUtil.getLoginUser();
+
+        Long userId = loginUser.getUserId();
+
+        List<OpenaiKeysModel> userModelList = this.getByUser(userId);
+        List<OpenaiKeysModel> usableUserModelList = OptionalUtil.ofNullList(userModelList).stream().filter(item -> Constants.EnableStatus.USABLE.equals(item.getEnableStatus())).collect(Collectors.toList());
+
+        return usableUserModelList.stream().map(OpenaiKeysModel::getApiKey).distinct().collect(Collectors.toList());
+    }
+
+    /**
      * 获取公共key
      *
      * @return
@@ -95,7 +112,7 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
         List<OpenaiKeysModel> cacheList = redisUtil.getCacheList(key);
         if (CollUtil.isEmpty(cacheList)) {
             cacheList = super.lambdaQuery().eq(OpenaiKeysModel::getIfCommon, Constants.BOOLEAN.TRUE).list();
-            OR.run(cacheList,CollUtil::isNotEmpty,list -> redisUtil.setCacheList(key,list));
+            OR.run(cacheList, CollUtil::isNotEmpty, list -> redisUtil.setCacheList(key, list));
         }
         return cacheList;
     }
@@ -130,7 +147,7 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
         List<OpenaiKeysModel> cacheList = redisUtil.getCacheList(key);
         if (CollUtil.isEmpty(cacheList)) {
             cacheList = super.lambdaQuery().eq(OpenaiKeysModel::getUserId, userId).list();
-            OR.run(cacheList,CollUtil::isNotEmpty,list -> redisUtil.setCacheList(key,list));
+            OR.run(cacheList, CollUtil::isNotEmpty, list -> redisUtil.setCacheList(key, list));
         }
         return cacheList;
     }
@@ -158,7 +175,7 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
             String key = OPENAI_KEYS_CACHE_KEY + "user:" + userId;
             redisUtil.deleteObject(key);
             List<OpenaiKeysModel> list = super.lambdaQuery()
-                    .eq(OpenaiKeysModel::getUserId,userId)
+                    .eq(OpenaiKeysModel::getUserId, userId)
                     .eq(OpenaiKeysModel::getIfCommon, Constants.BOOLEAN.FALSE)
                     .eq(OpenaiKeysModel::getEnableStatus, Constants.EnableStatus.USABLE)
                     .list();
@@ -199,11 +216,11 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
 
         Long id = param.getId();
         String apiKey = param.getApiKey();
-        Assert.notEmpty(apiKey,() -> new BusinessException("必要参数不能为空"));
+        Assert.notEmpty(apiKey, () -> new BusinessException("必要参数不能为空"));
 
         Long userId = SecurityContextUtil.getUserId();
         Assert.isFalse(
-                super.lambdaQuery().eq(OpenaiKeysModel::getUserId,userId).eq(OpenaiKeysModel::getApiKey,apiKey).ne(OpenaiKeysModel::getId,param.getId()).count() > 0,
+                super.lambdaQuery().eq(OpenaiKeysModel::getUserId, userId).eq(OpenaiKeysModel::getApiKey, apiKey).ne(OpenaiKeysModel::getId, param.getId()).count() > 0,
                 () -> new BusinessException("存在重复的openai key，请重新输入")
         );
 
@@ -220,6 +237,41 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
                 }
             }
         });
+    }
+
+    /**
+     * 根据openaikey删除
+     *
+     * @param openAiKeys
+     */
+    @Override
+    public void removeByOpenaiKey(List<String> openAiKeys) {
+        if (CollUtil.isEmpty(openAiKeys)){
+            return;
+        }
+        List<OpenaiKeysModel> openaiKeysModelList = super.lambdaQuery().in(OpenaiKeysModel::getApiKey, openAiKeys).list();
+        if (CollUtil.isEmpty(openaiKeysModelList)){
+            return;
+        }
+        List<Long> userIds = openaiKeysModelList.stream().map(OpenaiKeysModel::getUserId).distinct().collect(Collectors.toList());
+
+        List<OpenaiKeysModel> updateParam = openaiKeysModelList.stream().peek(item -> item.setEnableStatus(Constants.EnableStatus.DISABLE)).collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(updateParam)){
+            super.updateBatchById(updateParam);
+            // 删除缓存
+            // 公共key
+            List<OpenaiKeysModel> commonKeys = openaiKeysModelList.stream().filter(item -> Constants.BOOLEAN.TRUE.equals(item.getIfCommon())).collect(Collectors.toList());
+            if (CollUtil.isNotEmpty(commonKeys)){
+                String key = OPENAI_KEYS_CACHE_KEY + "common";
+                redisUtil.deleteObject(key);
+            }
+            // 用户key
+            if (CollUtil.isNotEmpty(userIds)){
+                List<String> cacheKeys = userIds.stream().distinct().map(userId -> OPENAI_KEYS_CACHE_KEY + "user:" + userId).collect(Collectors.toList());
+                redisUtil.deleteObject(cacheKeys);
+            }
+            log.info("openai key 无用key刷新：{}",JSON.toJSONString(openAiKeys));
+        }
     }
 
 }

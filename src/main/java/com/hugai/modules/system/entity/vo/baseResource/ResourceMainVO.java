@@ -43,5 +43,9 @@ public class ResourceMainVO implements Serializable {
      * 客户端默认背景图
      */
     private String deskImgDefault;
+    /**
+     * 网站发布时间
+     */
+    private String webIssueTime;
 
 }

@@ -1,18 +1,13 @@
 package com.hugai.core.openai.service;
 
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson2.JSON;
 import com.hugai.core.openai.entity.response.UserAccountResponse;
 import com.hugai.core.openai.model.account.Usage;
 import com.hugai.core.openai.model.account.UserGrants;
 import com.org.bebas.utils.futures.FutureUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateUtils;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
-import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -24,11 +19,19 @@ import java.util.concurrent.ExecutorService;
 @Slf4j
 public class OpenAiService extends com.theokanning.openai.service.OpenAiService {
 
+    private String token;
+
     private final OpenAiApi customApi;
 
     public OpenAiService(OpenAiApi api, ExecutorService executorService) {
         super(api, executorService);
         this.customApi = api;
+    }
+
+    public OpenAiService(OpenAiApi api, ExecutorService executorService, String token) {
+        super(api, executorService);
+        this.customApi = api;
+        this.token = token;
     }
 
     /**
@@ -39,9 +42,10 @@ public class OpenAiService extends com.theokanning.openai.service.OpenAiService 
     public UserAccountResponse getUserAccountInfo() {
         Tuple2<CompletableFuture<UserGrants>, CompletableFuture<Usage>> taskData = Tuples.of(
                 FutureUtil.supplyAsync(() -> {
-                    UserGrants userGrants = execute(customApi.getUserGrants());
-                    log.info("获取用户账户信息响应： {}", JSON.toJSONString(userGrants));
-                    return userGrants;
+                    return new UserGrants();
+//                    UserGrants userGrants = execute(customApi.getUserGrants());
+//                    log.info("获取用户账户信息响应： {}", JSON.toJSONString(userGrants));
+//                    return userGrants;
                 }),
                 FutureUtil.supplyAsync(() -> {
                     // todo 接口失效
@@ -73,4 +77,7 @@ public class OpenAiService extends com.theokanning.openai.service.OpenAiService 
         return response;
     }
 
+    public String getToken() {
+        return token;
+    }
 }
