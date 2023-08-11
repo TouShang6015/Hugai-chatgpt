@@ -53,6 +53,7 @@ public class UserDetailsUserTouristServiceImpl implements UserDetailsService {
                 user.getId()
                 , user.getIpaddress()
                 , user.getPassword()
+                , user.getCreateTime()
                 , sysPermissionService.getPermissionByRoleKey(RoleDefaultKeyEnum.tourist.getKey())
         );
         loginUserContextBean.setUserType(UserTypeEnum.USER.getKey());

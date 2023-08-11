@@ -28,6 +28,8 @@ public interface ApiPrefixConstant {
 
         String USER = MODEL_API + "/user";
 
+        String STATISTICS = MODEL_API + "/statistics";
+
     }
 
     interface Common {

@@ -13,10 +13,7 @@ import com.org.bebas.utils.result.ResultUtil;
 import com.org.bebas.web.BaseController;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,7 +39,7 @@ public class DomainController extends BaseController<DomainService, DomainModel>
     }
 
     @Override
-    protected Result baseQueryByParam(DomainModel param) {
+    protected Result baseQueryByParam(@RequestBody DomainModel param) {
         Result result = super.baseQueryByParam(param);
         List<DomainModel> list = ResultUtil.getData(result);
         OptionalUtil.ofNullList(list).forEach(item -> {

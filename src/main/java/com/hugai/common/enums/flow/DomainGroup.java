@@ -21,6 +21,12 @@ public enum DomainGroup implements FlowBaseEnum {
             return ModulesToken.DEFAULT;
         }
     },
+    BIG_TEXT("BIG_TEXT", "大文本") {
+        @Override
+        public ModulesToken modulesToken() {
+            return ModulesToken.TEXT;
+        }
+    },
     AI_WRITING("WRITING", "AI写作") {
         @Override
         public ModulesToken modulesToken() {

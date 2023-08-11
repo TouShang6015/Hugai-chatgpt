@@ -1,7 +1,6 @@
 package com.hugai.modules.session.entity.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.org.bebas.core.model.BaseModel;
 import com.org.bebas.core.validator.group.GroupInsert;
 import com.org.bebas.core.validator.group.GroupUpdate;
@@ -69,5 +68,7 @@ public class DomainModel extends BaseModel {
     @ApiModelProperty(value = "使用模型 可为空")
     private String useModel;
 
+    @ApiModelProperty(value = "是否桌面显示")
+    private String ifDeskShow;
 
 }

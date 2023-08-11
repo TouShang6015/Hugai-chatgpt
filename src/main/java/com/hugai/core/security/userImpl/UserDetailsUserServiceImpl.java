@@ -4,7 +4,6 @@ import com.hugai.common.constants.Constants;
 import com.hugai.common.enums.UserTypeEnum;
 import com.hugai.common.enums.permission.RoleDefaultKeyEnum;
 import com.hugai.core.security.context.bean.LoginUserContextBean;
-import com.hugai.modules.system.entity.model.SysRolePermissionModel;
 import com.hugai.modules.system.service.ISysPermissionService;
 import com.hugai.modules.user.entity.model.UserInfoModel;
 import com.hugai.modules.user.service.UserInfoService;
@@ -18,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -60,6 +58,7 @@ public class UserDetailsUserServiceImpl implements UserDetailsService {
                 user.getId()
                 , user.getUserName()
                 , user.getPassword()
+                , user.getCreateTime()
                 , sysPermissionService.getPermissionByRoleKey(RoleDefaultKeyEnum.tourist.getKey())
         );
         loginUserContextBean.setUserType(UserTypeEnum.USER.getKey());

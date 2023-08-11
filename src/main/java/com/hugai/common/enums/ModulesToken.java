@@ -19,7 +19,7 @@ public enum ModulesToken {
 
     SQL(1024,4000),
 
-    TEXT(2048,4000),
+    TEXT(5000,16000),
 
     ;
 

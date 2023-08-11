@@ -61,6 +61,7 @@ public class UserDetailsSysUserServiceImpl implements UserDetailsService {
                 user.getId()
                 , user.getUserName()
                 , user.getPassword()
+                , user.getCreateTime()
                 , sysPermissionService.getUserPermissionTag(user.getId())
         );
         loginUser.setUserType(UserTypeEnum.SYS.getKey());

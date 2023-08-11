@@ -65,6 +65,8 @@ public class LoginUserContextBean extends BaseSecurityUser implements UserDetail
      */
     private String os;
 
+    private String createTime;
+
     /**
      * 角色列表
      */
@@ -81,6 +83,15 @@ public class LoginUserContextBean extends BaseSecurityUser implements UserDetail
     public LoginUserContextBean(Long userId, String userName, String password, Set<String> permissions) {
         this.userId = userId;
         this.permissions = permissions;
+        super.setUserId(userId);
+        super.setUsername(userName);
+        super.setPassword(password);
+    }
+
+    public LoginUserContextBean(Long userId, String userName, String password, String createTime, Set<String> permissions) {
+        this.userId = userId;
+        this.permissions = permissions;
+        this.createTime = createTime;
         super.setUserId(userId);
         super.setUsername(userName);
         super.setPassword(password);
