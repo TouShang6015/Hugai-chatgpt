@@ -10,7 +10,7 @@ import retrofit2.http.Query;
  * @author WuHao
  * @since 2023/6/1 14:24
  */
-public interface OpenAiApi extends com.theokanning.openai.OpenAiApi {
+public interface OpenAiApi extends com.theokanning.openai.client.OpenAiApi {
 
     @GET("/v1/dashboard/billing/subscription")
     Single<UserGrants> getUserGrants();

@@ -30,6 +30,8 @@ public interface ApiPrefixConstant {
 
         String STATISTICS = MODEL_API + "/statistics";
 
+        String BUSINESS = MODEL_API + "/business";
+
     }
 
     interface Common {

@@ -27,7 +27,6 @@ import com.org.bebas.constants.HttpStatus;
 import com.org.bebas.core.function.OR;
 import com.org.bebas.core.spring.SpringUtils;
 import com.org.bebas.core.validator.ValidatorUtil;
-import com.org.bebas.exception.BusinessException;
 import com.org.bebas.utils.OptionalUtil;
 import com.theokanning.openai.OpenAiHttpException;
 import com.theokanning.openai.image.CreateImageEditRequest;
@@ -89,7 +88,7 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
             if (HttpStatus.UNAUTHORIZED == statusCode) {
                 SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getToken());
             }
-            throw new BusinessException(e.getMessage());
+            return null;
         }
 
         OR.run(apiResponse, Objects::nonNull, response -> {
@@ -179,7 +178,7 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
             if (HttpStatus.UNAUTHORIZED == statusCode) {
                 SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getToken());
             }
-            throw new BusinessException(e.getMessage());
+            return null;
         }
 
         OR.run(apiResponse, Objects::nonNull, response -> {

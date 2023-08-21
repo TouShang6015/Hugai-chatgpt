@@ -27,6 +27,10 @@ public class ResourceOpenaiVO implements Serializable {
      */
     private Integer proxyPort;
     /**
+     * 是否开启绘图接口
+     */
+    private Boolean openDraw;
+    /**
      * 绘图接口缓存超时时间（小时）
      */
     private Integer drawApiCacheTime;

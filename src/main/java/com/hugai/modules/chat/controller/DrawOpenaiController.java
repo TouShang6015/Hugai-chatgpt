@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -48,6 +49,8 @@ public class DrawOpenaiController {
     String CACHE_KEY = "DRAW-SESSION:%s:OPENAI";
 
     String errorMessage = "绘图失败，游客用户或未配置openAi key的用户每%s小时可以请求%s次绘图接口，正在努力寻找白嫖或节约openai key的方案，谅解下\uD83D\uDE02\uD83D\uDE02";
+
+    String errorMessageNoOpenDraw = "无有效的Openai Key。因token消耗大绘图接口暂时关闭了，可以在[个人中心]添加openai key后可畅玩本站功能~~~";
 
     private final DrawOpenaiService service;
 
@@ -69,10 +72,16 @@ public class DrawOpenaiController {
         AtomicReference<ImageResult> imageResult = new AtomicReference<>();
         SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), DrawType.OPENAI.getKey(), () -> {
 
-            String KEY = String.format(CACHE_KEY, param.getUserId());
             ResourceOpenaiVO resourceOpenai = resourceConfigService.getResourceOpenai();
+            List<String> userAbleKeys = openaiKeysService.getUserAbleKeys();
+            // 校验
+            if (userAbleKeys.size() == 0 && Objects.nonNull(resourceOpenai.getOpenDraw()) && !resourceOpenai.getOpenDraw()) {
+                throw new BusinessException(errorMessageNoOpenDraw);
+            }
+
+            String KEY = String.format(CACHE_KEY, param.getUserId());
             Integer count = redisUtil.getCacheObject(KEY);
-            if (openaiKeysService.getUserAbleKeys().size() == 0 && Objects.nonNull(resourceOpenai.getDrawApiSendMax()) && (Objects.nonNull(count) && count >= resourceOpenai.getDrawApiSendMax())) {
+            if (userAbleKeys.size() == 0 && Objects.nonNull(resourceOpenai.getDrawApiSendMax()) && (Objects.nonNull(count) && count >= resourceOpenai.getDrawApiSendMax())) {
                 throw new BusinessException(String.format(errorMessage, resourceOpenai.getDrawApiCacheTime(), resourceOpenai.getDrawApiSendMax()));
             }
             imageResult.set(service.sendDrawCreatedOpenAi(param));
@@ -80,7 +89,11 @@ public class DrawOpenaiController {
             redisUtil.incrBy(KEY, 1);
             redisUtil.expire(KEY, 1, TimeUnit.HOURS);
         }, "当前会话正在进行中，请等待结束");
-        return Result.success(imageResult.get());
+        ImageResult result = imageResult.get();
+        if (Objects.isNull(result)){
+            return Result.fail();
+        }
+        return Result.success();
     }
 
     @Log(title = "ai绘图编辑图像（openai）")
@@ -95,10 +108,16 @@ public class DrawOpenaiController {
 
         AtomicReference<ImageResult> imageResult = new AtomicReference<>();
         SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), DrawType.OPENAI.getKey(), () -> {
-            String KEY = String.format(CACHE_KEY, param.getUserId());
             ResourceOpenaiVO resourceOpenai = resourceConfigService.getResourceOpenai();
+            List<String> userAbleKeys = openaiKeysService.getUserAbleKeys();
+            // 校验
+            if (userAbleKeys.size() == 0 && Objects.nonNull(resourceOpenai.getOpenDraw()) && !resourceOpenai.getOpenDraw()) {
+                throw new BusinessException(errorMessageNoOpenDraw);
+            }
+
+            String KEY = String.format(CACHE_KEY, param.getUserId());
             Integer count = redisUtil.getCacheObject(KEY);
-            if (openaiKeysService.getUserAbleKeys().size() == 0 && Objects.nonNull(resourceOpenai.getDrawApiSendMax()) && (Objects.nonNull(count) && count >= resourceOpenai.getDrawApiSendMax())) {
+            if (userAbleKeys.size() == 0 && Objects.nonNull(resourceOpenai.getDrawApiSendMax()) && (Objects.nonNull(count) && count >= resourceOpenai.getDrawApiSendMax())) {
                 throw new BusinessException(String.format(errorMessage, resourceOpenai.getDrawApiCacheTime(), resourceOpenai.getDrawApiSendMax()));
             }
 
@@ -107,7 +126,11 @@ public class DrawOpenaiController {
             redisUtil.incrBy(KEY, 1);
             redisUtil.expire(KEY, 1, TimeUnit.HOURS);
         }, "当前会话正在进行中，请等待结束");
-        return Result.success(imageResult.get());
+        ImageResult result = imageResult.get();
+        if (Objects.isNull(result)){
+            return Result.fail();
+        }
+        return Result.success();
     }
 
 }

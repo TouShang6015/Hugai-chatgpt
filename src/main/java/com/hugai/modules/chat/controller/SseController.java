@@ -1,6 +1,5 @@
 package com.hugai.modules.chat.controller;
 
-import cn.hutool.core.lang.UUID;
 import com.hugai.core.sse.CacheSsePool;
 import com.org.bebas.utils.uuid.SFIDWorker;
 import io.swagger.annotations.Api;
