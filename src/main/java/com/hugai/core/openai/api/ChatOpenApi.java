@@ -8,7 +8,6 @@ import com.org.bebas.core.spring.SpringUtils;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,19 +23,19 @@ public interface ChatOpenApi {
      * 流式请求
      *
      * @param chatCompletionRequestSupplier
-     * @param sse
+     * @param connectId
      * @return
      */
-    List<ChatResponse> streamChat(Supplier<ChatCompletionRequest> chatCompletionRequestSupplier, SseEmitter sse);
+    List<ChatResponse> streamChat(Supplier<ChatCompletionRequest> chatCompletionRequestSupplier, String connectId);
 
     /**
      * 流式请求
      *
      * @param content
-     * @param sse
+     * @param connectId
      * @return
      */
-    default ChatResponse streamChat(String content, int maxToken, SseEmitter sse) {
+    default ChatResponse streamChat(String content, int maxToken, String connectId) {
         List<ChatMessage> chatMessages = CollUtil.newArrayList(new ChatMessage(ChatMessageRole.SYSTEM.value(), content));
         return this.streamChat(() -> {
                     ResourceOpenaiVO resourceOpenai = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceOpenai();
@@ -48,26 +47,26 @@ public interface ChatOpenApi {
                             .logitBias(new HashMap<>())
                             .build();
                 }
-                , sse).get(0);
+                , connectId).get(0);
     }
 
     /**
      * 非流式请求
      *
      * @param chatCompletionRequestSupplier
-     * @param sse
+     * @param connectId
      * @return
      */
-    List<ChatResponse> normalChat(Supplier<ChatCompletionRequest> chatCompletionRequestSupplier, SseEmitter sse);
+    List<ChatResponse> normalChat(Supplier<ChatCompletionRequest> chatCompletionRequestSupplier, String connectId);
 
     /**
      * 非流式请求
      *
      * @param content
-     * @param sse
+     * @param connectId
      * @return
      */
-    default ChatResponse normalChat(String content, int maxToken, SseEmitter sse) {
+    default ChatResponse normalChat(String content, int maxToken, String connectId) {
         List<ChatMessage> chatMessages = CollUtil.newArrayList(new ChatMessage(ChatMessageRole.SYSTEM.value(), content));
         ResourceOpenaiVO resourceOpenai = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceOpenai();
         return this.normalChat(() ->
@@ -78,7 +77,7 @@ public interface ChatOpenApi {
                                 .maxTokens(maxToken)
                                 .logitBias(new HashMap<>())
                                 .build()
-                , sse).get(0);
+                , connectId).get(0);
     }
 
 }

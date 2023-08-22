@@ -6,16 +6,15 @@ import com.hugai.core.openai.entity.response.api.ChatResponse;
 import com.hugai.core.openai.entity.response.api.CompletionResponse;
 import com.hugai.core.openai.enums.RoleEnum;
 import com.hugai.core.openai.utils.TokenCalculateUtil;
-import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.core.session.entity.SessionCacheData;
 import com.hugai.core.session.sessionType.context.SessionBusinessContext;
 import com.hugai.core.session.sessionType.service.BusinessChatService;
 import com.hugai.core.session.sessionType.service.BusinessDomainService;
 import com.hugai.core.session.valid.Send;
 import com.hugai.core.session.valid.SendDomain;
+import com.hugai.modules.chat.service.ChatService;
 import com.hugai.modules.session.entity.convert.SessionRecordConvert;
 import com.hugai.modules.session.entity.model.SessionRecordModel;
-import com.hugai.modules.chat.service.ChatService;
 import com.hugai.modules.session.service.SessionInfoService;
 import com.hugai.modules.session.service.SessionRecordService;
 import com.org.bebas.core.function.OR;
@@ -59,11 +58,10 @@ public class ChatServiceImpl implements ChatService {
         final Long sessionId = param.getSessionId();
 
         final String sessionType = param.getSessionType();
-        param.setUserId(SecurityContextUtil.getUserId());
 
         List<SessionRecordModel> recordList = handleSessionChat(param, sessionId, sessionType);
 
-        sessionRecordService.responseInsertHandle(param,recordList);
+        sessionRecordService.responseInsertHandle(param, recordList);
     }
 
     /**
@@ -111,12 +109,11 @@ public class ChatServiceImpl implements ChatService {
         final Long sessionId = param.getSessionId();
 
         final String sessionType = param.getSessionType();
-        param.setUserId(SecurityContextUtil.getUserId());
 
 //        List<SessionRecordModel> recordList = handleSessionDomain(param, sessionId, sessionType);
         List<SessionRecordModel> recordList = handleSessionChat(param, sessionId, sessionType);
 
-        sessionRecordService.responseInsertHandle(param,recordList, list -> {
+        sessionRecordService.responseInsertHandle(param, recordList, list -> {
             OptionalUtil.ofNullList(list).forEach(item -> {
                 item.setDomainUniqueKey(param.getDomainUniqueKey());
             });

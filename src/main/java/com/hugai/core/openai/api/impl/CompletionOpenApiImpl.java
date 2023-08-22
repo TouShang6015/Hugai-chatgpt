@@ -1,5 +1,6 @@
 package com.hugai.core.openai.api.impl;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
@@ -8,17 +9,18 @@ import com.hugai.core.openai.entity.response.TokenUsageNum;
 import com.hugai.core.openai.entity.response.api.CompletionResponse;
 import com.hugai.core.openai.factory.AiServiceFactory;
 import com.hugai.core.openai.service.OpenAiService;
-import com.hugai.core.openai.utils.ContentUtil;
 import com.hugai.core.openai.utils.TokenCalculateUtil;
+import com.hugai.core.websocket.pool.ChatSocketPool;
 import com.org.bebas.core.function.OR;
+import com.org.bebas.exception.BusinessException;
 import com.theokanning.openai.Usage;
 import com.theokanning.openai.completion.CompletionChoice;
 import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.completion.CompletionResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import javax.websocket.Session;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -35,14 +37,17 @@ public class CompletionOpenApiImpl implements CompletionOpenApi {
      * 流式请求
      *
      * @param requestSupplier
-     * @param sse
+     * @param connectId
      * @return
      */
     @Override
-    public List<CompletionResponse> streamCompletion(Supplier<CompletionRequest> requestSupplier, SseEmitter sse) {
+    public List<CompletionResponse> streamCompletion(Supplier<CompletionRequest> requestSupplier, String connectId) {
         CompletionRequest completionRequest = requestSupplier.get();
 
         log.info("[CompletionOpenApi] stream 请求参数：{}", JSON.toJSONString(completionRequest));
+
+        Session session = ChatSocketPool.get(connectId);
+        Assert.notNull(session, () -> new BusinessException("没有WebSocket的连接信息，connectId为空"));
 
         return this.coreSend(completionRequest, (service, apiResponseMap) -> {
             service.streamCompletion(completionRequest)
@@ -62,10 +67,9 @@ public class CompletionOpenApiImpl implements CompletionOpenApi {
                             String resContent = Optional.ofNullable(res.getText()).orElse("");
                             apiResponse.setContent(content + resContent);
 
-                            // sse发送
+                            // ws发送消息
                             try {
-                                resContent = ContentUtil.convertNormal(resContent);
-                                sse.send(SseEmitter.event().data(resContent));
+                                session.getBasicRemote().sendText(resContent);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -81,20 +85,24 @@ public class CompletionOpenApiImpl implements CompletionOpenApi {
      * 正常请求
      *
      * @param requestSupplier
-     * @param sse
+     * @param connectId
      * @return
      */
     @Override
-    public List<CompletionResponse> normalCompletion(Supplier<CompletionRequest> requestSupplier, SseEmitter sse) {
+    public List<CompletionResponse> normalCompletion(Supplier<CompletionRequest> requestSupplier, String connectId) {
 
         CompletionRequest request = requestSupplier.get();
 
         log.info("[CompletionOpenApi] normal 请求参数：{}", JSON.toJSONString(request));
+
+        Session session = ChatSocketPool.get(connectId);
+        Assert.notNull(session, () -> new BusinessException("没有WebSocket的连接信息，connectId为空"));
+
         return this.coreSend(request, (service, apiResponseMap) -> {
 
             CompletionResult response = service.createCompletion(request);
 
-            log.info("[CompletionOpenApi] normal 响应结果：{}", JSON.toJSONString(response));
+//            log.info("[CompletionOpenApi] normal 响应结果：{}", JSON.toJSONString(response));
 
             List<CompletionChoice> choices = response.getChoices();
 
@@ -117,10 +125,9 @@ public class CompletionOpenApiImpl implements CompletionOpenApi {
                                 .build()
                 );
 
-                // sse发送
+                // 发送消息
                 try {
-                    resContent = ContentUtil.convertNormal(resContent);
-                    sse.send(resContent);
+                    session.getBasicRemote().sendText(resContent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -9,14 +9,12 @@ import com.hugai.core.openai.entity.response.api.CompletionResponse;
 import com.hugai.core.openai.enums.RoleEnum;
 import com.hugai.core.openai.utils.TokenCalculateUtil;
 import com.hugai.core.session.entity.SessionCacheData;
-import com.hugai.core.sse.CacheSsePool;
 import com.hugai.modules.session.entity.dto.SessionRecordDTO;
 import com.hugai.modules.session.entity.model.SessionRecordModel;
 import com.org.bebas.core.spring.SpringUtils;
 import com.org.bebas.exception.BusinessException;
 import com.org.bebas.utils.OptionalUtil;
 import com.theokanning.openai.completion.CompletionRequest;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -46,13 +44,11 @@ public class DomainDefaultImpl extends DomainSessionStrategyImpl {
         String content = cacheData.getContent();
         Assert.notEmpty(content, () -> new BusinessException("发送内容不能为空"));
 
-        SseEmitter sse = CacheSsePool.get(cacheData.getSseId());
-
         CompletionOpenApi openApi = SpringUtils.getBean(CompletionOpenApi.class);
         CompletionRequest completionRequest = this.openApiRequestBuild().get();
         requestConsumer.accept(completionRequest);
 
-        return openApi.streamCompletion(() -> completionRequest, sse);
+        return openApi.streamCompletion(() -> completionRequest, cacheData.getConnectId());
     }
 
 

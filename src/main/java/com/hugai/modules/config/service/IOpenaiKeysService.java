@@ -1,6 +1,7 @@
 package com.hugai.modules.config.service;
 
 import cn.hutool.core.collection.CollUtil;
+import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.modules.config.entity.model.OpenaiKeysModel;
 import com.org.bebas.mapper.service.IService;
 
@@ -21,14 +22,22 @@ public interface IOpenaiKeysService extends IService<OpenaiKeysModel> {
      *
      * @return
      */
-    List<String> getAbleKeys();
+    default List<String> getAbleKeys() {
+        return this.getAbleKeys(SecurityContextUtil.getUserId());
+    }
+
+    List<String> getAbleKeys(Long userId);
 
     /**
      * 获取用户可用的key，不包括公共key
      *
      * @return
      */
-    List<String> getUserAbleKeys();
+    List<String> getUserAbleKeys(Long userId);
+
+    default List<String> getUserAbleKeys() {
+        return getUserAbleKeys(SecurityContextUtil.getUserId());
+    }
 
     /**
      * 获取公共key

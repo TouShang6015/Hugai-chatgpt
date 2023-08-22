@@ -36,6 +36,14 @@ public class ResourceMainVO implements Serializable {
      */
     private String staticWebsite;
     /**
+     * websocket请求地址
+     */
+    private String websocketUrl;
+    /**
+     * 打字机响应模式
+     */
+    private String streamResponseType;
+    /**
      * 网站域名
      */
     private String website;

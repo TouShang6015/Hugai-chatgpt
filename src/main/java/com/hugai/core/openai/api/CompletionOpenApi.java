@@ -2,7 +2,6 @@ package com.hugai.core.openai.api;
 
 import com.hugai.core.openai.entity.response.api.CompletionResponse;
 import com.theokanning.openai.completion.CompletionRequest;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -17,18 +16,18 @@ public interface CompletionOpenApi {
      * 流式请求
      *
      * @param requestSupplier
-     * @param sse
+     * @param connectId
      * @return
      */
-    List<CompletionResponse> streamCompletion(Supplier<CompletionRequest> requestSupplier, SseEmitter sse);
+    List<CompletionResponse> streamCompletion(Supplier<CompletionRequest> requestSupplier, String connectId);
 
     /**
      * 非流式请求
      *
      * @param requestSupplier
-     * @param sse
+     * @param connectId
      * @return
      */
-    List<CompletionResponse> normalCompletion(Supplier<CompletionRequest> requestSupplier, SseEmitter sse);
+    List<CompletionResponse> normalCompletion(Supplier<CompletionRequest> requestSupplier, String connectId);
 
 }

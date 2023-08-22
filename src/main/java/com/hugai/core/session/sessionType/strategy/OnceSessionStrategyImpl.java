@@ -8,13 +8,11 @@ import com.hugai.core.openai.entity.response.api.ChatResponse;
 import com.hugai.core.session.entity.SessionCacheData;
 import com.hugai.core.session.sessionType.manager.SessionStrategyManager;
 import com.hugai.core.session.sessionType.service.BusinessChatService;
-import com.hugai.core.sse.CacheSsePool;
 import com.org.bebas.core.spring.SpringUtils;
 import com.org.bebas.exception.BusinessException;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,14 +48,12 @@ public class OnceSessionStrategyImpl extends SessionStrategyManager implements B
         String content = cacheData.getContent();
         Assert.notEmpty(content, () -> new BusinessException("发送内容不能为空"));
 
-        SseEmitter sse = CacheSsePool.get(cacheData.getSseId());
-
         ChatOpenApi chatOpenApi = SpringUtils.getBean(ChatOpenApi.class);
 
         ChatCompletionRequest chatCompletionRequest = this.openApiChatRequestBuild().get();
         requestConsumer.accept(chatCompletionRequest);
 
-        return chatOpenApi.streamChat(() -> chatCompletionRequest, sse);
+        return chatOpenApi.streamChat(() -> chatCompletionRequest, cacheData.getConnectId());
     }
 
     /**

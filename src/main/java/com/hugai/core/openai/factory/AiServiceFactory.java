@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hugai.core.apikey.OpenAiKeyFactory;
 import com.hugai.core.openai.service.OpenAiApi;
 import com.hugai.core.openai.service.OpenAiService;
+import com.hugai.core.security.context.UserThreadLocal;
 import com.hugai.modules.system.entity.vo.baseResource.ResourceOpenaiVO;
 import com.hugai.modules.system.service.IBaseResourceConfigService;
 import com.org.bebas.core.spring.SpringUtils;
+import com.org.bebas.exception.BusinessException;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -35,11 +37,11 @@ public class AiServiceFactory {
         Assert.notEmpty(token, () -> new RuntimeException("ApiKey不能为空，请检查参数配置"));
 
         OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
+                .connectTimeout(3, TimeUnit.MINUTES)
                 .writeTimeout(1, TimeUnit.MINUTES)
                 .readTimeout(1, TimeUnit.MINUTES)
                 .addInterceptor(new AuthenticationInterceptor(token))
-                .connectionPool(new ConnectionPool(50, 1L, TimeUnit.MINUTES)).build();
+                .connectionPool(new ConnectionPool(50, 3L, TimeUnit.MINUTES)).build();
 
         OkHttpClient.Builder clientBuilder = client.newBuilder();
         // 设置代理
@@ -73,7 +75,9 @@ public class AiServiceFactory {
      * @return
      */
     public static OpenAiService createService() {
-        String token = OpenAiKeyFactory.getKey();
+        Long userId = UserThreadLocal.getUserId();
+        Assert.notNull(userId,() -> new BusinessException("未获取到线程内的用户信息"));
+        String token = OpenAiKeyFactory.getKey(userId);
         return createService(token);
     }
 

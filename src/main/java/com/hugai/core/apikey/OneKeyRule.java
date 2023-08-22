@@ -8,6 +8,8 @@ public interface OneKeyRule {
 
     String getKey();
 
+    String getKey(Long userId);
+
     void execute();
 
 }

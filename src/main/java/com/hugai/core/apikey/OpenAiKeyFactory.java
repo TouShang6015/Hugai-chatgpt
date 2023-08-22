@@ -23,8 +23,8 @@ public class OpenAiKeyFactory {
      *
      * @return
      */
-    public static String getKey() {
-        return getKey(new RuleRandom());
+    public static String getKey(Long userId) {
+        return getKey(new RuleRandom(userId));
     }
 
 }

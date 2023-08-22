@@ -55,7 +55,7 @@ public interface SessionCacheDataService<Service> {
      */
     default Service initCacheData(SessionCacheData cacheData) {
         return initCacheData(consumer -> {
-            OR.run(cacheData.getSseId(), Objects::nonNull, consumer::setSseId);
+            OR.run(cacheData.getConnectId(), Objects::nonNull, consumer::setConnectId);
             OR.run(cacheData.getSessionId(), Objects::nonNull, consumer::setSessionId);
             OR.run(cacheData.getDomainGroup(), Objects::nonNull, consumer::setDomainGroup);
             OR.run(cacheData.getToken(), Objects::nonNull, consumer::setToken);

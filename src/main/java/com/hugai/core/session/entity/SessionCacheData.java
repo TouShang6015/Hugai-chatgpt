@@ -1,6 +1,5 @@
 package com.hugai.core.session.entity;
 
-import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.core.session.valid.Send;
 import com.hugai.core.session.valid.SendDomain;
 import com.hugai.core.session.valid.SendDrawOpenAi;
@@ -19,11 +18,6 @@ import javax.validation.constraints.NotNull;
 public class SessionCacheData {
 
     /**
-     * 会话缓存id（浏览器传递）
-     */
-    @NotEmpty(message = "sseId不能为空", groups = {Send.class, SendDomain.class})
-    private String sseId;
-    /**
      * 用户id
      */
     private Long userId;
@@ -32,6 +26,11 @@ public class SessionCacheData {
      */
     @NotNull(message = "sessionId不能为空", groups = {Send.class, SendDomain.class})
     private Long sessionId;
+    /**
+     * 会话id
+     */
+    @NotNull(message = "connectId不能为空", groups = {Send.class, SendDomain.class})
+    private String connectId;
 
     /**
      * 内容
@@ -73,7 +72,4 @@ public class SessionCacheData {
      */
     private String useModel;
 
-    public SessionCacheData() {
-        this.userId = SecurityContextUtil.getUserId();
-    }
 }

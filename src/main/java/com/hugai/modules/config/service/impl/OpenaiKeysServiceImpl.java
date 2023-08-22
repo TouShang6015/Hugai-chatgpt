@@ -4,14 +4,14 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson2.JSON;
 import com.hugai.common.constants.Constants;
-import com.hugai.common.enums.UserTypeEnum;
 import com.hugai.core.security.context.SecurityContextUtil;
-import com.hugai.core.security.context.bean.LoginUserContextBean;
 import com.hugai.modules.config.entity.model.OpenaiKeysModel;
 import com.hugai.modules.config.mapper.OpenaiKeysMapper;
 import com.hugai.modules.config.service.IOpenaiKeysService;
 import com.hugai.modules.system.entity.vo.baseResource.ResourceMainVO;
 import com.hugai.modules.system.service.IBaseResourceConfigService;
+import com.hugai.modules.user.entity.model.UserInfoModel;
+import com.hugai.modules.user.service.UserInfoService;
 import com.org.bebas.core.function.OR;
 import com.org.bebas.core.redis.RedisUtil;
 import com.org.bebas.core.validator.ValidatorUtil;
@@ -40,6 +40,8 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
     @Resource
     private IBaseResourceConfigService resourceConfigService;
     @Resource
+    private UserInfoService userInfoService;
+    @Resource
     private RedisUtil redisUtil;
     @Resource
     private RedisTemplate<Object, Object> redisTemplate;
@@ -50,11 +52,10 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
      * @return
      */
     @Override
-    public List<String> getAbleKeys() {
-        LoginUserContextBean loginUser = SecurityContextUtil.getLoginUser();
+    public List<String> getAbleKeys(Long userId) {
+        UserInfoModel userInfoModel = userInfoService.getById(userId);
         ResourceMainVO resourceMain = resourceConfigService.getResourceMain();
 
-        Long userId = loginUser.getUserId();
         List<OpenaiKeysModel> commonKeyModelList = this.getCommonKey();
         List<OpenaiKeysModel> usableCommonModelList = OptionalUtil.ofNullList(commonKeyModelList).stream()
                 .filter(item -> Constants.EnableStatus.USABLE.equals(item.getEnableStatus())).collect(Collectors.toList());
@@ -62,7 +63,8 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
 
         List<String> finalKeys;
         // 普通用户
-        if (loginUser.getUserType().equals(UserTypeEnum.USER.getKey())) {
+
+        if (Objects.nonNull(userInfoModel)) {
             List<OpenaiKeysModel> userModelList = this.getByUser(userId);
             List<OpenaiKeysModel> usableUserModelList = OptionalUtil.ofNullList(userModelList).stream().filter(item -> Constants.EnableStatus.USABLE.equals(item.getEnableStatus())).collect(Collectors.toList());
             // 不开启系统key
@@ -80,7 +82,7 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
             Assert.notEmpty(usableCommonModelList, () -> new BusinessException("openai key为空，请前往openAi官网获取apiKey"));
             finalKeys = usableCommonModelList.stream().map(OpenaiKeysModel::getApiKey).distinct().collect(Collectors.toList());
         }
-        log.info("用户名：[{}]，用户id：[{}] , 获取可用apiKey: {}", loginUser.getUsername(), loginUser.getUserId(), JSON.toJSONString(finalKeys));
+        log.info("用户id：[{}] , 获取可用apiKey: {}", userId, JSON.toJSONString(finalKeys));
         return finalKeys;
     }
 
@@ -90,10 +92,7 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
      * @return
      */
     @Override
-    public List<String> getUserAbleKeys() {
-        LoginUserContextBean loginUser = SecurityContextUtil.getLoginUser();
-
-        Long userId = loginUser.getUserId();
+    public List<String> getUserAbleKeys(Long userId) {
 
         List<OpenaiKeysModel> userModelList = this.getByUser(userId);
         List<OpenaiKeysModel> usableUserModelList = OptionalUtil.ofNullList(userModelList).stream().filter(item -> Constants.EnableStatus.USABLE.equals(item.getEnableStatus())).collect(Collectors.toList());
@@ -246,31 +245,31 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
      */
     @Override
     public void removeByOpenaiKey(List<String> openAiKeys) {
-        if (CollUtil.isEmpty(openAiKeys)){
+        if (CollUtil.isEmpty(openAiKeys)) {
             return;
         }
         List<OpenaiKeysModel> openaiKeysModelList = super.lambdaQuery().in(OpenaiKeysModel::getApiKey, openAiKeys).list();
-        if (CollUtil.isEmpty(openaiKeysModelList)){
+        if (CollUtil.isEmpty(openaiKeysModelList)) {
             return;
         }
         List<Long> userIds = openaiKeysModelList.stream().map(OpenaiKeysModel::getUserId).distinct().collect(Collectors.toList());
 
         List<OpenaiKeysModel> updateParam = openaiKeysModelList.stream().peek(item -> item.setEnableStatus(Constants.EnableStatus.DISABLE)).collect(Collectors.toList());
-        if (CollUtil.isNotEmpty(updateParam)){
+        if (CollUtil.isNotEmpty(updateParam)) {
             super.updateBatchById(updateParam);
             // 删除缓存
             // 公共key
             List<OpenaiKeysModel> commonKeys = openaiKeysModelList.stream().filter(item -> Constants.BOOLEAN.TRUE.equals(item.getIfCommon())).collect(Collectors.toList());
-            if (CollUtil.isNotEmpty(commonKeys)){
+            if (CollUtil.isNotEmpty(commonKeys)) {
                 String key = OPENAI_KEYS_CACHE_KEY + "common";
                 redisUtil.deleteObject(key);
             }
             // 用户key
-            if (CollUtil.isNotEmpty(userIds)){
+            if (CollUtil.isNotEmpty(userIds)) {
                 List<String> cacheKeys = userIds.stream().distinct().map(userId -> OPENAI_KEYS_CACHE_KEY + "user:" + userId).collect(Collectors.toList());
                 redisUtil.deleteObject(cacheKeys);
             }
-            log.info("openai key 无用key刷新：{}",JSON.toJSONString(openAiKeys));
+            log.info("openai key 无用key刷新：{}", JSON.toJSONString(openAiKeys));
         }
     }
 

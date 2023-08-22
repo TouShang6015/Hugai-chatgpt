@@ -13,6 +13,10 @@ import java.util.Random;
  */
 public class RuleRandom extends RuleImplCommon implements OneKeyRule {
 
+    public RuleRandom(Long userId) {
+        super(userId);
+    }
+
     @Override
     public void execute() {
         int size = super.keys.size();
