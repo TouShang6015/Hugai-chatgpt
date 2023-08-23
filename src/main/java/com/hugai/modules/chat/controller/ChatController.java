@@ -47,10 +47,10 @@ public class ChatController {
     public Result send(@RequestBody SessionCacheData param) {
         ValidatorUtil.validateEntity(param, Send.class);
         param.setUserId(SecurityContextUtil.getUserId());
-        UserThreadLocal.set(param.getUserId());
 
         taskExecutor.execute(() -> {
             try {
+                UserThreadLocal.set(param.getUserId());
                 SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), () -> {
                     chatService.sendChatMessage(param);
                 }, "当前会话正在进行中，请等待结束");
@@ -71,10 +71,10 @@ public class ChatController {
     public Result sendDomain(@RequestBody SessionCacheData param) {
         ValidatorUtil.validateEntity(param, SendDomain.class);
         param.setUserId(SecurityContextUtil.getUserId());
-        UserThreadLocal.set(param.getUserId());
 
         taskExecutor.execute(() -> {
             try {
+                UserThreadLocal.set(param.getUserId());
                 SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), param.getDomainUniqueKey(), () -> {
                     chatService.sendDomainMessage(param);
                 }, "当前会话正在进行中，请等待结束");

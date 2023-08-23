@@ -1,11 +1,13 @@
 package com.hugai.core.apikey;
 
 import com.hugai.core.apikey.rules.RuleRandom;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author WuHao
  * @since 2023/5/31 14:40
  */
+@Slf4j
 public class OpenAiKeyFactory {
 
     /**
@@ -15,7 +17,9 @@ public class OpenAiKeyFactory {
      * @return
      */
     public static String getKey(OneKeyRule rule) {
-        return rule.getKey();
+        String key = rule.getKey();
+        log.info("正在使用的OpenAi Key:{}", key);
+        return key;
     }
 
     /**
