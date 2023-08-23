@@ -1,6 +1,5 @@
 package com.hugai.core.openai.api.impl;
 
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
@@ -8,9 +7,9 @@ import com.hugai.core.openai.api.CompletionOpenApi;
 import com.hugai.core.openai.entity.response.TokenUsageNum;
 import com.hugai.core.openai.entity.response.api.CompletionResponse;
 import com.hugai.core.openai.factory.AiServiceFactory;
+import com.hugai.core.openai.service.MessageSendHandler;
 import com.hugai.core.openai.service.OpenAiService;
 import com.hugai.core.openai.utils.TokenCalculateUtil;
-import com.hugai.core.websocket.pool.ChatSocketPool;
 import com.org.bebas.core.function.OR;
 import com.org.bebas.exception.BusinessException;
 import com.theokanning.openai.Usage;
@@ -20,8 +19,6 @@ import com.theokanning.openai.completion.CompletionResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.websocket.Session;
-import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -46,39 +43,43 @@ public class CompletionOpenApiImpl implements CompletionOpenApi {
 
         log.info("[CompletionOpenApi] stream 请求参数：{}", JSON.toJSONString(completionRequest));
 
-        Session session = ChatSocketPool.get(connectId);
-        Assert.notNull(session, () -> new BusinessException("没有WebSocket的连接信息，connectId为空"));
+        MessageSendHandler messageSendHandler = new MessageSendHandler(connectId);
 
-        return this.coreSend(completionRequest, (service, apiResponseMap) -> {
-            service.streamCompletion(completionRequest)
-                    .doOnError(Throwable::printStackTrace)
-                    .blockingForEach(chunk -> {
-                        // 日志打印
-                        log.info("[CompletionOpenApi] stream 响应结果：{}", JSON.toJSONString(chunk));
+        List<CompletionResponse> completionResponses;
+        try {
+            completionResponses = this.coreSend(completionRequest, (service, apiResponseMap) -> {
+                service.streamCompletion(completionRequest)
+                        .doOnError(Throwable::printStackTrace)
+                        .blockingForEach(chunk -> {
+                            // 日志打印
+                            log.info("[CompletionOpenApi] stream 响应结果：{}", JSON.toJSONString(chunk));
 
-                        List<CompletionChoice> choices = chunk.getChoices();
+                            List<CompletionChoice> choices = chunk.getChoices();
 
-                        Optional.ofNullable(choices).orElseGet(ArrayList::new).forEach(res -> {
-                            CompletionResponse apiResponse = apiResponseMap.get(res.getIndex());
+                            Optional.ofNullable(choices).orElseGet(ArrayList::new).forEach(res -> {
+                                CompletionResponse apiResponse = apiResponseMap.get(res.getIndex());
 
-                            OR.run(res.getFinish_reason(), StrUtil::isNotEmpty, apiResponse::setFinishReason);
+                                OR.run(res.getFinish_reason(), StrUtil::isNotEmpty, apiResponse::setFinishReason);
 
-                            String content = Optional.ofNullable(apiResponse.getContent()).orElse("");
-                            String resContent = Optional.ofNullable(res.getText()).orElse("");
-                            apiResponse.setContent(content + resContent);
+                                String content = Optional.ofNullable(apiResponse.getContent()).orElse("");
+                                String resContent = Optional.ofNullable(res.getText()).orElse("");
+                                apiResponse.setContent(content + resContent);
 
-                            // ws发送消息
-                            try {
-                                session.getBasicRemote().sendText(resContent);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                                messageSendHandler.queueAdd(resContent);
+                            });
                         });
-                    });
 
-            // 关闭资源
-            service.shutdownExecutor();
-        });
+                // 关闭资源
+                service.shutdownExecutor();
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        } finally {
+            messageSendHandler.close();
+        }
+
+        return completionResponses;
     }
 
     /**
@@ -95,44 +96,48 @@ public class CompletionOpenApiImpl implements CompletionOpenApi {
 
         log.info("[CompletionOpenApi] normal 请求参数：{}", JSON.toJSONString(request));
 
-        Session session = ChatSocketPool.get(connectId);
-        Assert.notNull(session, () -> new BusinessException("没有WebSocket的连接信息，connectId为空"));
+        MessageSendHandler messageSendHandler = new MessageSendHandler(connectId);
 
-        return this.coreSend(request, (service, apiResponseMap) -> {
+        List<CompletionResponse> completionResponses;
+        try {
+            completionResponses = this.coreSend(request, (service, apiResponseMap) -> {
 
-            CompletionResult response = service.createCompletion(request);
+                CompletionResult response = service.createCompletion(request);
 
-//            log.info("[CompletionOpenApi] normal 响应结果：{}", JSON.toJSONString(response));
+                //            log.info("[CompletionOpenApi] normal 响应结果：{}", JSON.toJSONString(response));
 
-            List<CompletionChoice> choices = response.getChoices();
+                List<CompletionChoice> choices = response.getChoices();
 
-            Usage usage = response.getUsage();
+                Usage usage = response.getUsage();
 
-            Optional.ofNullable(choices).orElseGet(ArrayList::new).forEach(res -> {
-                CompletionResponse apiResponse = apiResponseMap.get(res.getIndex());
+                Optional.ofNullable(choices).orElseGet(ArrayList::new).forEach(res -> {
+                    CompletionResponse apiResponse = apiResponseMap.get(res.getIndex());
 
-                OR.run(res.getFinish_reason(), StrUtil::isNotEmpty, apiResponse::setFinishReason);
+                    OR.run(res.getFinish_reason(), StrUtil::isNotEmpty, apiResponse::setFinishReason);
 
-                String content = Optional.ofNullable(apiResponse.getContent()).orElse("");
-                String resContent = Optional.ofNullable(res.getText()).orElse("");
-                apiResponse.setContent(content + resContent);
+                    String content = Optional.ofNullable(apiResponse.getContent()).orElse("");
+                    String resContent = Optional.ofNullable(res.getText()).orElse("");
+                    apiResponse.setContent(content + resContent);
 
-                apiResponse.setTokenUsageNum(
-                        TokenUsageNum.builder()
-                                .requestTokenUseNum((int) usage.getPromptTokens())
-                                .responseTokenUseNum((int) usage.getCompletionTokens())
-                                .tokenUseNum((int) usage.getTotalTokens())
-                                .build()
-                );
+                    apiResponse.setTokenUsageNum(
+                            TokenUsageNum.builder()
+                                    .requestTokenUseNum((int) usage.getPromptTokens())
+                                    .responseTokenUseNum((int) usage.getCompletionTokens())
+                                    .tokenUseNum((int) usage.getTotalTokens())
+                                    .build()
+                    );
 
-                // 发送消息
-                try {
-                    session.getBasicRemote().sendText(resContent);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    messageSendHandler.queueAdd(resContent);
+                });
             });
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        } finally {
+            messageSendHandler.close();
+        }
+
+        return completionResponses;
     }
 
     /**

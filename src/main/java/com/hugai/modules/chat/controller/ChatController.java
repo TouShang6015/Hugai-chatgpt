@@ -8,7 +8,6 @@ import com.hugai.core.session.entity.SessionCacheData;
 import com.hugai.core.session.lock.SessionLockHandle;
 import com.hugai.core.session.valid.Send;
 import com.hugai.core.session.valid.SendDomain;
-import com.hugai.core.websocket.pool.ChatSocketPool;
 import com.hugai.framework.log.annotation.Log;
 import com.hugai.framework.sensitiveWord.annotation.SensitiveContentFilter;
 import com.hugai.modules.chat.service.ChatService;
@@ -55,11 +54,10 @@ public class ChatController {
                 SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), () -> {
                     chatService.sendChatMessage(param);
                 }, "当前会话正在进行中，请等待结束");
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 UserThreadLocal.remove();
-                ChatSocketPool.remove(param.getConnectId());
             }
         });
 
@@ -80,11 +78,10 @@ public class ChatController {
                 SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), param.getDomainUniqueKey(), () -> {
                     chatService.sendDomainMessage(param);
                 }, "当前会话正在进行中，请等待结束");
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 UserThreadLocal.remove();
-                ChatSocketPool.remove(param.getConnectId());
             }
         });
 

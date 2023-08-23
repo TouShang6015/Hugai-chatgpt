@@ -1,6 +1,5 @@
 package com.hugai.core.openai.api.impl;
 
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
@@ -8,9 +7,9 @@ import com.hugai.core.openai.api.ChatOpenApi;
 import com.hugai.core.openai.entity.response.TokenUsageNum;
 import com.hugai.core.openai.entity.response.api.ChatResponse;
 import com.hugai.core.openai.factory.AiServiceFactory;
+import com.hugai.core.openai.service.MessageSendHandler;
 import com.hugai.core.openai.service.OpenAiService;
 import com.hugai.core.openai.utils.TokenCalculateUtil;
-import com.hugai.core.websocket.pool.ChatSocketPool;
 import com.hugai.modules.config.service.IOpenaiKeysService;
 import com.org.bebas.constants.HttpStatus;
 import com.org.bebas.core.function.OR;
@@ -22,14 +21,12 @@ import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-import javax.websocket.Session;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -91,30 +88,7 @@ public class ChatOpenApiImpl implements ChatOpenApi {
 
         log.info("[ChatOpenApi] streamChat 请求参数：{}", JSON.toJSONString(chatCompletionRequest));
 
-        Session session = ChatSocketPool.get(connectId);
-        Assert.notNull(session, () -> new BusinessException("没有WebSocket的连接信息，connectId为空"));
-
-        // 延时队列
-        AtomicBoolean running = new AtomicBoolean(true);
-        Queue<String> messageQueue = new ConcurrentLinkedQueue<>();
-        SpringUtils.getBean(ThreadPoolTaskExecutor.class).execute(() -> {
-            log.info("connectId:{} - [延时队列] 执行",connectId);
-            while (running.get() && session.isOpen()){
-                try {
-                    StringBuilder message = new StringBuilder();
-                    for (String ignore : messageQueue) {
-                        message.append(messageQueue.poll());
-                    }
-                    if (StrUtil.isNotEmpty(message)){
-                        session.getAsyncRemote().sendText(message.toString());
-                    }
-                    Thread.sleep(100);
-                } catch ( InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            log.info("connectId:{} - [延时队列] 释放",connectId);
-        });
+        MessageSendHandler messageSendHandler = new MessageSendHandler(connectId);
 
         List<ChatResponse> response;
         try {
@@ -145,18 +119,18 @@ public class ChatOpenApiImpl implements ChatOpenApi {
                                 apiResponse.setContent(apiResponse.getContentSB().toString());
 
                                 // 发送消息
-                                messageQueue.add(resContent);
+                                messageSendHandler.queueAdd(resContent);
                             });
                         });
 
                 // 关闭资源
                 service.shutdownExecutor();
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(e.getMessage());
-        }finally {
-            running.set(false);
+        } finally {
+            messageSendHandler.close();
         }
 
         return response;
@@ -175,45 +149,50 @@ public class ChatOpenApiImpl implements ChatOpenApi {
 
         log.info("[ChatOpenApi] normalChat 请求参数：{}", JSON.toJSONString(chatCompletionRequest));
 
-        Session session = ChatSocketPool.get(connectId);
-        Assert.notNull(session, () -> new BusinessException("没有WebSocket的连接信息，connectId为空"));
+        MessageSendHandler messageSendHandler = new MessageSendHandler(connectId);
 
-        return this.coreSend(chatCompletionRequest, (service, apiResponseMap) -> {
+        List<ChatResponse> chatResponses = null;
 
-            ChatCompletionResult response;
-            try {
-                response = service.createChatCompletion(chatCompletionRequest);
-            } catch (OpenAiHttpException e) {
-                e.printStackTrace();
-                int statusCode = e.statusCode;
-                if (HttpStatus.UNAUTHORIZED == statusCode) {
-                    SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(service.getToken());
-                }
-                throw new BusinessException(e.getMessage());
-            }
+        try {
+            chatResponses = this.coreSend(chatCompletionRequest, (service, apiResponseMap) -> {
 
-            log.info("[ChatOpenApi] normalChat 响应结果：{}", JSON.toJSONString(response));
-
-            List<ChatCompletionChoice> choices = response.getChoices();
-
-            Optional.ofNullable(choices).orElseGet(ArrayList::new).forEach(res -> {
-                ChatResponse apiResponse = apiResponseMap.get(res.getIndex());
-                ChatMessage message = Optional.ofNullable(res.getMessage()).orElseGet(ChatMessage::new);
-
-                OR.run(message.getRole(), StrUtil::isNotEmpty, apiResponse::setRole);
-                OR.run(res.getFinishReason(), StrUtil::isNotEmpty, apiResponse::setFinishReason);
-
-                String resContent = Optional.ofNullable(message.getContent()).orElse("");
-                apiResponse.getContentSB().append(resContent);
-
-                // ws发送消息
+                ChatCompletionResult response;
                 try {
-                    session.getBasicRemote().sendText(resContent);
-                } catch (IOException e) {
+                    response = service.createChatCompletion(chatCompletionRequest);
+                } catch (OpenAiHttpException e) {
                     e.printStackTrace();
+                    int statusCode = e.statusCode;
+                    if (HttpStatus.UNAUTHORIZED == statusCode) {
+                        SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(service.getToken());
+                    }
+                    throw new BusinessException(e.getMessage());
                 }
+
+                log.info("[ChatOpenApi] normalChat 响应结果：{}", JSON.toJSONString(response));
+
+                List<ChatCompletionChoice> choices = response.getChoices();
+
+                Optional.ofNullable(choices).orElseGet(ArrayList::new).forEach(res -> {
+                    ChatResponse apiResponse = apiResponseMap.get(res.getIndex());
+                    ChatMessage message = Optional.ofNullable(res.getMessage()).orElseGet(ChatMessage::new);
+
+                    OR.run(message.getRole(), StrUtil::isNotEmpty, apiResponse::setRole);
+                    OR.run(res.getFinishReason(), StrUtil::isNotEmpty, apiResponse::setFinishReason);
+
+                    String resContent = Optional.ofNullable(message.getContent()).orElse("");
+                    apiResponse.getContentSB().append(resContent);
+
+                    messageSendHandler.queueAdd(resContent);
+                });
             });
-        });
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }finally {
+            messageSendHandler.close();
+        }
+
+        return chatResponses;
     }
 
 }

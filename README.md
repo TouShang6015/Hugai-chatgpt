@@ -38,13 +38,13 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，前后�
   - Redis
 - 核心技术
   - Java8+特性，流、函数式接口、Optional等
-  - sse消息推送
+  - websocket、sse消息推送，动态切换
   - 分布式锁redission
   - anji Captcha验证码
   - minio 云文件存储
   - SpringSecurity 鉴权、多用户登陆
   - okhttp
-  - 双端队列
+  - 双端队列、延时队列
   - mapstruct
 - 第三方sdk
   - openai sdk

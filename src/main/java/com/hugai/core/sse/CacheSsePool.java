@@ -3,6 +3,7 @@ package com.hugai.core.sse;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import com.org.bebas.core.function.OR;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.Objects;
@@ -50,6 +51,7 @@ public class CacheSsePool {
     }
 
     public static void remove(String sseId) {
+        OR.run(get(sseId),Objects::nonNull, ResponseBodyEmitter::complete);
         CACHE.remove(sseId);
     }
 
