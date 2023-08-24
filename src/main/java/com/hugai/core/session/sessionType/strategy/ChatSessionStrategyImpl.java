@@ -1,16 +1,9 @@
 package com.hugai.core.session.sessionType.strategy;
 
-import cn.hutool.core.lang.Assert;
 import com.hugai.common.constants.Constants;
 import com.hugai.common.enums.flow.SessionType;
-import com.hugai.core.openai.api.ChatOpenApi;
-import com.hugai.core.openai.entity.response.api.ChatResponse;
-import com.hugai.core.session.entity.SessionCacheData;
 import com.hugai.core.session.sessionType.manager.SessionStrategyManager;
-import com.hugai.core.session.sessionType.service.BusinessChatService;
 import com.hugai.modules.session.entity.convert.SessionRecordConvert;
-import com.org.bebas.core.spring.SpringUtils;
-import com.org.bebas.exception.BusinessException;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
@@ -19,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -28,7 +20,7 @@ import java.util.function.Supplier;
  * @author WuHao
  * @since 2023/6/5 13:15
  */
-public class ChatSessionStrategyImpl extends SessionStrategyManager implements BusinessChatService {
+public class ChatSessionStrategyImpl extends SessionStrategyManager {
     /**
      * sessionType标识
      *
@@ -37,25 +29,6 @@ public class ChatSessionStrategyImpl extends SessionStrategyManager implements B
     @Override
     public SessionType sessionTypeSign() {
         return SessionType.CHAT;
-    }
-
-    /**
-     * 发送消息 聊天/文本
-     *
-     * @return
-     */
-    @Override
-    public List<ChatResponse> requestOpenApiChat(Consumer<ChatCompletionRequest> requestConsumer) {
-        SessionCacheData cacheData = this.getCacheData();
-        String content = cacheData.getContent();
-        Assert.notEmpty(content, () -> new BusinessException("发送内容不能为空"));
-
-        ChatOpenApi chatOpenApi = SpringUtils.getBean(ChatOpenApi.class);
-
-        ChatCompletionRequest chatCompletionRequest = this.openApiChatRequestBuild().get();
-        requestConsumer.accept(chatCompletionRequest);
-
-        return chatOpenApi.streamChat(() -> chatCompletionRequest, cacheData.getConnectId());
     }
 
     /**

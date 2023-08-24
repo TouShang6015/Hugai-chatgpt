@@ -3,7 +3,10 @@ package com.hugai.core.session.sessionType.manager;
 import cn.hutool.core.lang.Assert;
 import com.hugai.common.constants.Constants;
 import com.hugai.common.enums.flow.SessionStatus;
+import com.hugai.core.openai.api.ChatOpenApi;
+import com.hugai.core.openai.entity.response.api.ChatResponse;
 import com.hugai.core.session.entity.SessionCacheData;
+import com.hugai.core.session.sessionType.service.BusinessChatService;
 import com.hugai.core.session.sessionType.service.BusinessService;
 import com.hugai.modules.session.entity.convert.SessionRecordConvert;
 import com.hugai.modules.session.entity.dto.SessionRecordDTO;
@@ -15,8 +18,11 @@ import com.org.bebas.core.flowenum.utils.FlowEnumUtils;
 import com.org.bebas.core.function.OR;
 import com.org.bebas.core.spring.SpringUtils;
 import com.org.bebas.exception.BusinessException;
+import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -25,7 +31,7 @@ import java.util.stream.Collectors;
  * @author WuHao
  * @since 2023/6/5 13:16
  */
-public abstract class SessionStrategyManager extends SessionCacheDataManager<BusinessService> implements BusinessService {
+public abstract class SessionStrategyManager extends SessionCacheDataManager<BusinessService> implements BusinessService, BusinessChatService {
 
     /**
      * 获取领域配置数据
@@ -46,6 +52,27 @@ public abstract class SessionStrategyManager extends SessionCacheDataManager<Bus
     public SessionRecordDTO addSessionInitFirstRecord() {
         return null;
     }
+
+    /**
+     * 发送消息 聊天/文本
+     *
+     * @return
+     */
+    @Override
+    public List<ChatResponse> requestOpenApiChat(Consumer<ChatCompletionRequest> requestConsumer) {
+        SessionCacheData cacheData = this.getCacheData();
+        String content = cacheData.getContent();
+        Assert.notEmpty(content, () -> new BusinessException("发送内容不能为空"));
+
+        ChatOpenApi chatOpenApi = SpringUtils.getBean(ChatOpenApi.class);
+
+        ChatCompletionRequest chatCompletionRequest = this.openApiChatRequestBuild().get();
+        requestConsumer.accept(chatCompletionRequest);
+
+        return chatOpenApi.streamChat(() -> chatCompletionRequest, cacheData.getConnectId());
+    }
+
+    protected abstract Supplier<ChatCompletionRequest> openApiChatRequestBuild();
 
     /**
      * 计算会话可请求的有效上下文信息
@@ -71,21 +98,25 @@ public abstract class SessionStrategyManager extends SessionCacheDataManager<Bus
         if (Objects.nonNull(topRecord)){
             cursorToken += topRecord.getConsumerToken();
         }
-        // 过滤掉领域会话顶部元素
-        List<SessionRecordModel> filterTopRecordList = recordList.stream().filter(item -> Objects.isNull(topRecord) || !item.getId().equals(topRecord.getId())).collect(Collectors.toList());
-        for (SessionRecordModel recordItem : filterTopRecordList) {
-            if (
-                    !Constants.BOOLEAN.TRUE.equals(recordItem.getIfContext())
-                    || Constants.DelFlag.DEL.equals(String.valueOf(recordItem.getDelFlag()))
-            ){
-                // 非上下文、已删除的数据过滤掉
-                continue;
-            }
-            // 超过上限就跳出循环
-            if (cursorToken >= contextMaxToken) break;
+        // 是否连续对话
+        String ifConc = this.getCacheData().getIfConc();
+        if (Objects.isNull(ifConc) || Constants.BOOLEAN.TRUE.equals(ifConc)) {
+            // 过滤掉领域会话顶部元素
+            List<SessionRecordModel> filterTopRecordList = recordList.stream().filter(item -> Objects.isNull(topRecord) || !item.getId().equals(topRecord.getId())).collect(Collectors.toList());
+            for (SessionRecordModel recordItem : filterTopRecordList) {
+                if (
+                        !Constants.BOOLEAN.TRUE.equals(recordItem.getIfContext())
+                                || Constants.DelFlag.DEL.equals(String.valueOf(recordItem.getDelFlag()))
+                ){
+                    // 非上下文、已删除的数据过滤掉
+                    continue;
+                }
+                // 超过上限就跳出循环
+                if (cursorToken >= contextMaxToken) break;
 
-            cursorToken += recordItem.getConsumerToken();
-            deque.offerFirst(recordItem);
+                cursorToken += recordItem.getConsumerToken();
+                deque.offerFirst(recordItem);
+            }
         }
         // 设置始终在上下文中的数据
         OR.run(topRecord, Objects::nonNull,deque::offerFirst);
