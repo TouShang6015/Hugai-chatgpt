@@ -8,6 +8,17 @@
     <artifactId>chatgpt-hugai</artifactId>
     <version>1.0.0</version>
 
+    <repositories>
+        <repository>
+            <id>common</id>
+            <url>https://toushang6015.github.io/bebas-common/maven-repo/</url>
+        </repository>
+        <repository>
+            <id>common-service</id>
+            <url>https://toushang6015.github.io/bebas-common-service/maven-repo/</url>
+        </repository>
+    </repositories>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -222,18 +233,5 @@
             </resource>
         </resources>
     </build>
-
-    <repositories>
-        <repository>
-            <id>rdc-releases</id>
-            <url>https://packages.aliyun.com/maven/repository/2287603-release-LkyBo6/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
 </project>
