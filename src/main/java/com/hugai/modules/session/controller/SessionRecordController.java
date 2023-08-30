@@ -1,15 +1,12 @@
 package com.hugai.modules.session.controller;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.common.constants.Constants;
-import com.hugai.core.openai.enums.RoleEnum;
 import com.hugai.modules.session.entity.dto.SessionRecordDTO;
 import com.hugai.modules.session.entity.model.SessionRecordModel;
 import com.hugai.modules.session.service.SessionRecordService;
-import com.org.bebas.core.function.OR;
 import com.org.bebas.core.model.build.QueryFastLambda;
 import com.org.bebas.exception.BusinessException;
 import com.org.bebas.utils.OptionalUtil;
@@ -23,8 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -63,27 +60,6 @@ public class SessionRecordController {
                 .filter(item -> Constants.BOOLEAN.TRUE.equals(item.getIfShow()))
                 .sorted(Comparator.comparing(SessionRecordModel::getId))
                 .collect(Collectors.toList());
-        return Result.success(result);
-    }
-
-    @ApiOperation(value = "获取会话（最新的一段会话）")
-    @GetMapping("/getLastOneRecordSession")
-    public Result getLastOneRecordSession(SessionRecordDTO param) {
-        Long sessionId = param.getSessionId();
-        Assert.notNull(sessionId, () -> new BusinessException("会话号为空"));
-
-        List<SessionRecordModel> list = service.lambdaQuery()
-                .eq(SessionRecordModel::getSessionId, sessionId)
-                .eq(SessionRecordModel::getIfShow, Constants.BOOLEAN.TRUE)
-                .orderByDesc(SessionRecordModel::getId)
-                .list();
-        int i = 0;
-        List<SessionRecordModel> result = CollUtil.newArrayList();
-        for (SessionRecordModel item : OptionalUtil.ofNullList(list)) {
-            if (i == 2) break;
-            OR.run(item, Objects::nonNull, result::add);
-            i++;
-        }
         return Result.success(result);
     }
 
