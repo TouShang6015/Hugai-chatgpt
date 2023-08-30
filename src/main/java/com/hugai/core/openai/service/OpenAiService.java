@@ -21,6 +21,8 @@ public class OpenAiService extends com.theokanning.openai.service.OpenAiService 
 
     private String token;
 
+    private String decryptToken;
+
     private final OpenAiApi customApi;
 
     public OpenAiService(OpenAiApi api, ExecutorService executorService) {
@@ -32,6 +34,13 @@ public class OpenAiService extends com.theokanning.openai.service.OpenAiService 
         super(api, executorService);
         this.customApi = api;
         this.token = token;
+    }
+
+    public OpenAiService(OpenAiApi api, ExecutorService executorService, String token,String decryptToken) {
+        super(api, executorService);
+        this.customApi = api;
+        this.token = token;
+        this.decryptToken = decryptToken;
     }
 
     /**
@@ -79,5 +88,8 @@ public class OpenAiService extends com.theokanning.openai.service.OpenAiService 
 
     public String getToken() {
         return token;
+    }
+    public String getDecryptToken(){
+        return decryptToken;
     }
 }

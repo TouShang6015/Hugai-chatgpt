@@ -23,10 +23,6 @@ public class RsaUtils {
         System.out.println("\n");
 
         RsaKeyPair keyPair = generateKeyPair();
-//        String publicKeyString = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXQmXv4kZcGCNOLy7hnZN9J8zD/xbMHHi8hAunbHVXGKf7LHl2w5/wbIGQVuQpiRYgEunyxLoJXfWwAtd9CaAyqOBTO0uea4zLpNHeCHAk294mc6gb0y/7WkS7CbDN+/K/XjivaXFISSvYu8DrbbrA9/pEHe9lqNCAM9AgybeJKwIDAQAB";
-//        String privateKeyString = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJdCZe/iRlwYI04vLuGdk30nzMP/FswceLyEC6dsdVcYp/sseXbDn/BsgZBW5CmJFiAS6fLEugld9bAC130JoDKo4FM7S55rjMuk0d4IcCTb3iZzqBvTL/taRLsJsM378r9eOK9pcUhJK9i7wOttusD3+kQd72Wo0IAz0CDJt4krAgMBAAECgYBPVJ+qBH7qZi5+Hvjzk3V7OpiGYw9N1dDs7kQ+dv/Dwka30UeTJl6H9iCt1ySrNB7Ki6DvloYLy5/DxHnINngxyMRrFlwjZp+VnaGHxKd0EaxUnAHVR80k/qPPRTYXUHVzs0gPW5OP80oIDNjE8VeiF44iT+u3vLwDptWGPHyMAQJBAOW6c4OZCWE1fGgKcBi7gfJZ5Nrf75xmWcKyhX/OzIschMNFhESiFV8RawaP9vBolyRyWCFr8i4GwvYSM+vyc4ECQQCojq6hRSyKVW5NFNj9zYlukDcqzXdOg3dCeuXWlhetGYb0tsp48vtzbZyjVwP3KihIfc7718s+Gq4s11wBDWKrAkA1DZUlvA71eyOq51Yx8AO3k1kNzw+H//8UvqOj+38zVTe33PMJ4qCq3tvnnRG7PXxCN4Hw3fwE8xzNNTD2eXyBAkBHnZ/ay246NEQSIgp0A5Eh1cpquDO5uye/qkHfI5RZqp/pd4SdUPe/OlI0IDOCH3pQGowH+s7Syzk3uiTQGaTTAkBH8WZFXo9CFyXEVNQYUOxLSRshCdC1xEUxON9/ByPc2QonxJVNps0cljdj2jEKENWbFUbAI/ygn/MgjOYH0NAN";
-//        RsaKeyPair keyPair = new RsaKeyPair(publicKeyString, privateKeyString);
-
         System.out.println("公钥：" + keyPair.getPublicKey());
         System.out.println("私钥：" + keyPair.getPrivateKey());
         System.out.println("\n");
@@ -118,14 +114,19 @@ public class RsaUtils {
      * @return /
      * @throws Exception /
      */
-    public static String decryptByPrivateKey(String privateKeyText, String text) throws Exception {
-        PKCS8EncodedKeySpec pkcs8EncodedKeySpec5 = new PKCS8EncodedKeySpec(Base64.decodeBase64(privateKeyText));
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PrivateKey privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec5);
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        byte[] result = doLongerCipherFinal(Cipher.DECRYPT_MODE, cipher, Base64.decodeBase64(text));
-        return new String(result);
+    public static String decryptByPrivateKey(String privateKeyText, String text) {
+        try {
+            PKCS8EncodedKeySpec pkcs8EncodedKeySpec5 = new PKCS8EncodedKeySpec(Base64.decodeBase64(privateKeyText));
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PrivateKey privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec5);
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.DECRYPT_MODE, privateKey);
+            byte[] result = doLongerCipherFinal(Cipher.DECRYPT_MODE, cipher, Base64.decodeBase64(text));
+            return new String(result);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -135,14 +136,19 @@ public class RsaUtils {
      * @param text          待加密的文本
      * @return /
      */
-    public static String encryptByPublicKey(String publicKeyText, String text) throws Exception {
-        X509EncodedKeySpec x509EncodedKeySpec2 = new X509EncodedKeySpec(Base64.decodeBase64(publicKeyText));
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec2);
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        byte[] result = doLongerCipherFinal(Cipher.ENCRYPT_MODE, cipher, text.getBytes());
-        return Base64.encodeBase64String(result);
+    public static String encryptByPublicKey(String publicKeyText, String text) {
+        try {
+            X509EncodedKeySpec x509EncodedKeySpec2 = new X509EncodedKeySpec(Base64.decodeBase64(publicKeyText));
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec2);
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            byte[] result = doLongerCipherFinal(Cipher.ENCRYPT_MODE, cipher, text.getBytes());
+            return Base64.encodeBase64String(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private static byte[] doLongerCipherFinal(int opMode, Cipher cipher, byte[] source) throws Exception {

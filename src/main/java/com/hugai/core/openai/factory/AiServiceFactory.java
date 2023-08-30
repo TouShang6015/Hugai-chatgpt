@@ -3,6 +3,8 @@ package com.hugai.core.openai.factory;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hugai.common.utils.RsaUtils;
+import com.hugai.config.properties.KeyRsaConfig;
 import com.hugai.core.apikey.OpenAiKeyFactory;
 import com.hugai.core.openai.service.OpenAiApi;
 import com.hugai.core.openai.service.OpenAiService;
@@ -69,6 +71,17 @@ public class AiServiceFactory {
 
     }
 
+    public static OpenAiService createService(String token,String decryptToken) {
+        OkHttpClient client = getClient(token);
+
+        ObjectMapper mapper = OpenAiService.defaultObjectMapper();
+
+        Retrofit retrofit = OpenAiService.defaultRetrofit(client, mapper);
+
+        return new OpenAiService(retrofit.create(OpenAiApi.class), client.dispatcher().executorService(), token,decryptToken);
+
+    }
+
     /**
      * 创建代理openAiService
      *
@@ -77,8 +90,9 @@ public class AiServiceFactory {
     public static OpenAiService createService() {
         Long userId = UserThreadLocal.getUserId();
         Assert.notNull(userId,() -> new BusinessException("未获取到线程内的用户信息"));
-        String token = OpenAiKeyFactory.getKey(userId);
-        return createService(token);
+        String decryptKey = OpenAiKeyFactory.getKey(userId);
+        String token = RsaUtils.decryptByPrivateKey(KeyRsaConfig.getPrivateKey(), decryptKey);
+        return createService(token,decryptKey);
     }
 
 }

@@ -97,8 +97,9 @@ public class ChatOpenApiImpl implements ChatOpenApi {
                         .doOnError(throwable -> {
                             throwable.printStackTrace();
                             int statusCode = ((OpenAiHttpException) throwable).statusCode;
-                            if (HttpStatus.UNAUTHORIZED == statusCode) {
-                                SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(service.getToken());
+                            String code = ((OpenAiHttpException) throwable).code;
+                            if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
+                                SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(service.getDecryptToken());
                             }
                         })
                         .blockingForEach(chunk -> {
@@ -162,8 +163,9 @@ public class ChatOpenApiImpl implements ChatOpenApi {
                 } catch (OpenAiHttpException e) {
                     e.printStackTrace();
                     int statusCode = e.statusCode;
-                    if (HttpStatus.UNAUTHORIZED == statusCode) {
-                        SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(service.getToken());
+                    String code = e.code;
+                    if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
+                        SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(service.getDecryptToken());
                     }
                     throw new BusinessException(e.getMessage());
                 }

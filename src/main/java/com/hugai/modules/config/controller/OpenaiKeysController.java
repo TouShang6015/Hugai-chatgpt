@@ -1,7 +1,6 @@
 package com.hugai.modules.config.controller;
 
 import com.hugai.common.constants.ApiPrefixConstant;
-import com.hugai.common.constants.Constants;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.framework.log.annotation.Log;
 import com.hugai.modules.config.entity.model.OpenaiKeysModel;
@@ -33,14 +32,6 @@ public class OpenaiKeysController {
     public Result getUserApiKeys() {
         List<OpenaiKeysModel> list = service.lambdaQuery().eq(OpenaiKeysModel::getUserId, SecurityContextUtil.getUserId()).list();
         return Result.success(list);
-    }
-
-    @Log(title = "修改用户api")
-    @ApiOperation(value = "修改用户api keys")
-    @PutMapping("/updateUserApiKey")
-    public Result updateUserApiKey(@RequestBody OpenaiKeysModel param) {
-        service.updateKeys(param);
-        return Result.success();
     }
 
     @Log(title = "添加用户api")

@@ -85,8 +85,9 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
         } catch (OpenAiHttpException e) {
             e.printStackTrace();
             int statusCode = e.statusCode;
-            if (HttpStatus.UNAUTHORIZED == statusCode) {
-                SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getToken());
+            String code = e.code;
+            if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
+                SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getDecryptToken());
             }
             return null;
         }
@@ -175,8 +176,9 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
         } catch (OpenAiHttpException e) {
             e.printStackTrace();
             int statusCode = e.statusCode;
-            if (HttpStatus.UNAUTHORIZED == statusCode) {
-                SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getToken());
+            String code = e.code;
+            if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
+                SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getDecryptToken());
             }
             return null;
         }

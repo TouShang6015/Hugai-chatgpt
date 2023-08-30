@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson2.JSON;
 import com.hugai.common.constants.Constants;
+import com.hugai.common.utils.RsaUtils;
+import com.hugai.config.properties.KeyRsaConfig;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.modules.config.entity.model.OpenaiKeysModel;
 import com.hugai.modules.config.mapper.OpenaiKeysMapper;
@@ -273,4 +275,11 @@ public class OpenaiKeysServiceImpl extends ServiceImpl<OpenaiKeysMapper, OpenaiK
         }
     }
 
+    @Override
+    public boolean save(OpenaiKeysModel entity) {
+        String apiKey = entity.getApiKey();
+        entity.setApiKey(RsaUtils.encryptByPublicKey(KeyRsaConfig.getPublicKey(),apiKey));
+        entity.setEnableStatus(Constants.EnableStatus.USABLE);
+        return super.save(entity);
+    }
 }

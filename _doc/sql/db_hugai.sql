@@ -11,7 +11,7 @@
  Target Server Version : 80028 (8.0.28)
  File Encoding         : 65001
 
- Date: 16/08/2023 15:44:47
+ Date: 30/08/2023 14:35:30
 */
 
 SET NAMES utf8mb4;
@@ -118,7 +118,7 @@ CREATE TABLE `base_resource_config`  (
 -- ----------------------------
 -- Records of base_resource_config
 -- ----------------------------
-INSERT INTO `base_resource_config` VALUES (102061615, NULL, NULL, '2023-08-09 10:44:32', '1000000000', 0, 12, 'main', '{\"maxUserLogin\":5,\"staticWebsite\":\"http://chat.static.equinox19.xyz\",\"website\":\"http://localhost:9000\",\"registerOpen\":true,\"authCodeOpen\":false,\"fileSaveStrategy\":\"qiniu\",\"proxyHost\":\"127.0.0.1\",\"proxyPort\":\"7890\",\"ableSystemApiKey\":true}');
+INSERT INTO `base_resource_config` VALUES (102061615, NULL, NULL, '2023-08-23 08:55:18', '1000000000', 0, 12, 'main', '{\"maxUserLogin\":5,\"staticWebsite\":\"http://chat.static.equinox19.xyz\",\"website\":\"http://localhost:9000\",\"registerOpen\":true,\"authCodeOpen\":false,\"fileSaveStrategy\":\"qiniu\",\"proxyHost\":\"127.0.0.1\",\"proxyPort\":\"7890\",\"ableSystemApiKey\":true,\"streamResponseType\":\"Websocket\"}');
 INSERT INTO `base_resource_config` VALUES (112061615, NULL, NULL, '2023-08-09 10:21:32', '1000000000', 0, 0, 'openai', '{\"proxyHost\":\"127.0.0.1\",\"proxyPort\":\"7890\",\"chatModel\":\"gpt-3.5-turbo\",\"textModel\":\"text-davinci-003\",\"drawApiCacheTime\":\"2\",\"drawApiSendMax\":\"1\"}');
 
 -- ----------------------------
@@ -282,6 +282,7 @@ INSERT INTO `sys_menu` VALUES (1673256869570867202, '2023-06-26 17:08:19', '1000
 INSERT INTO `sys_menu` VALUES (1687035996077555714, '2023-08-03 17:41:39', '1000000000', '2023-08-03 17:41:53', '1000000000', 0, 0, '用户中心', 0, 0, '/userBusiness', NULL, NULL, 0, 0, 'M', '0', '0', 'Users', 1, NULL);
 INSERT INTO `sys_menu` VALUES (1687036271567831042, '2023-08-03 17:42:45', '1000000000', '2023-08-03 17:43:17', '1000000000', 0, 0, '用户信息维护', 1687035996077555714, 0, 'clientUser', 'business/user/index', NULL, 0, 0, 'C', '0', '0', 'User', 1, NULL);
 INSERT INTO `sys_menu` VALUES (1691709718004781057, '2023-08-16 15:13:21', '1000000000', '2023-08-16 15:13:38', '1000000000', 0, 0, '系统秘钥管理', 1673254130736492546, 0, 'apikeymanager', 'business/apikeys/index', NULL, 0, 0, 'C', '0', '0', 'Book', 2, NULL);
+INSERT INTO `sys_menu` VALUES (1692358229926928385, '2023-08-18 10:10:19', '1000000000', '2023-08-18 10:10:19', '1000000000', 0, 0, '通知公告管理', 1673254130736492546, 0, 'noticeClient', 'business/noticeclient/index', NULL, 0, 0, 'C', '0', '0', 'Notification', 3, NULL);
 
 -- ----------------------------
 -- Table structure for sys_minio_secret
@@ -785,8 +786,6 @@ CREATE TABLE `sys_user_token`  (
 -- ----------------------------
 -- Records of sys_user_token
 -- ----------------------------
-INSERT INTO `sys_user_token` VALUES (1689096540762718209, '2023-08-09 10:09:31', NULL, '2023-08-09 10:09:31', NULL, 0, 0, 1000000000, 'cd318b69-af50-481d-9f22-a445f9139c26', '2023-08-09 10:09:31');
-INSERT INTO `sys_user_token` VALUES (1689105972603203585, '2023-08-09 10:47:00', NULL, '2023-08-09 10:47:00', NULL, 0, 0, 1665958959871291394, '877d4c6e-d3b8-4c83-8fa8-26e6ae42390b', '2023-08-09 10:47:00');
 
 -- ----------------------------
 -- Table structure for tb_domain
@@ -807,7 +806,7 @@ CREATE TABLE `tb_domain`  (
   `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `route_path` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '跳转路由（前端跳转）',
   `icon_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '显示名称',
-  `icon_path` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片路径（本地）',
+  `icon_path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片路径（本地）',
   `window_data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '窗口会话数据json',
   `type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '领域类型（domain_type）',
   `if_show` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '是否显示',
@@ -825,6 +824,33 @@ INSERT INTO `tb_domain` VALUES (1, NULL, NULL, '2023-06-29 13:24:09', '100000000
 INSERT INTO `tb_domain` VALUES (1673942163144056834, '2023-06-28 14:31:26', '1000000000', '2023-06-29 14:41:19', '1000000000', 0, 0, 'etranslateChinese', 'Below, I will ask you to act as a translator. Your goal is to translate any language into Chinese,Do not output pronunciation letters, only output Chinese. Please do not use a translation accent when translating, but rather translate naturally, fluently, and authentically, using beautiful and elegant expressions. The first sentence I need to translate: ', 'COMMON', 2, NULL, '/sessionDomain/etranslateChinese', '英文翻译官', 'icon-translate.png', '{\"title\":\"英文翻译官\",\"sessionType\":\"DOMAIN\",\"description\":\"英文翻译成中文\",\"contentShowType\":\"Markdown\",\"inputType\":\"Input\"}', '0', '1', '我是一个英文翻译官，可以进行英语和中文之间的翻译工作，包括但不限于学术文献、商业文档、网站内容、软件界面等。可以保证翻译的准确性和专业性。', NULL, '1');
 INSERT INTO `tb_domain` VALUES (1673993963171753986, '2023-06-28 17:57:16', '1000000000', '2023-07-10 13:35:57', '1000000000', 0, 0, 'svgdesign', 'I hope you become an SVG designer. I will ask you to create an image and provide it with SVG code. Place the result marker in the code block. Only output SVG tag code, do not output other text descriptions or descriptions, nor output base64 data Url. My first requirement is:', 'COMMON', 3, NULL, '/sessionDomain/svgdesign', 'svg设计师', 'icon-svgdesign.png', '{\"title\":\"SVG设计师\",\"sessionType\":\"DOMAIN\",\"description\":\"svg设计师\",\"contentShowType\":\"Html\",\"inputType\":\"Input\"}', '0', '1', '我是一个 SVG 设计师，可以对我说设计需求，我会根据你的需求来设计svg~💪，例如：画一个红色边框空心五角星', NULL, '1');
 INSERT INTO `tb_domain` VALUES (1682289504188231682, '2023-07-21 15:20:47', '1000000000', '2023-07-21 17:25:16', '1000000000', 0, 0, 'minRedCopyWritting', 'You are a copywriting expert in Xiaohongshu. Based on the characteristics of Xiaohongshu\'s copywriting style, please help me generate a copy based on the template I provided.\n\nTemplate:\n[Title]\n[Main text]\n\nRequirements:\n1. There should be 2 emoji emojis before and after the title content. Based on my input, I can infer the type of copy, such as (\"xxx Scenic Spots\"), and the title content is: Xiaohongshu Scenic Spots Recommendation\n2. The Writing style of the text is peaceful. Please use a cute title at the beginning of the text. Judge the main audience according to the content, such as \"dear fairies\", \"dear little brothers\", etc. Do not repeat.\n3. Please introduce the main content of the text based on the characteristics of Xiaohongshu\'s writing. If it is possible to describe the content one by one, please output emoji emoji with a serial number before each description, otherwise there is no need to output emoji emoji emoji\n4. After each paragraph of the main text, please output 2 emoji emojis that match the content and wrap them\n5. The output language is based on the language of the input content, with default Chinese output\n6. emoji, please do not be too repetitive\n\nPlease strictly follow the template and content above for output. The first copy I need to generate is:', 'COMMON', 4, NULL, '/sessionDomain/minRedCopyWritting', '小红书文案', 'domainRedBookCopyWriting.png', '{\"title\":\"小红书文案创作\",\"sessionType\":\"DOMAIN\",\"inputType\":\"Input\",\"contentShowType\":\"Markdown\",\"description\":\"小红书文案创作助手，带你玩转小红书社区~\"}', '0', '1', '我是小红书文案创作助手，您可以对说，例如： 口红色号安利、智能家居推荐等。', NULL, '1');
+INSERT INTO `tb_domain` VALUES (1692066780366766082, '2023-08-17 14:52:12', '1000000000', '2023-08-17 15:10:11', '1000000000', 0, 0, 'travelHelper', 'I want you to make a travel guide. I will write down my location for you, and you will recommend a place close to my location. In some cases, I will also tell you the type of place I will visit. You will also recommend a similar type of place close to my first location. Please output according to my language. My first request for advice is：', 'COMMON', 5, NULL, '/sessionDomain/travelHelper', '旅游指南助手', 'travelIcon.png', '{\"title\":\"旅游指南\",\"sessionType\":\"DOMAIN\",\"inputType\":\"Input\",\"contentShowType\":\"Markdown\",\"description\":\"我是旅游指南助手，我会根据你的诉求来为你提供合适的旅游路线。\"}', '0', '1', '我是旅游指南助手，我会根据你的诉求来为你提供合适的旅游路线，例如你可以问我：我在上海，我只想参观博物馆', 'gpt-3.5-turbo', '0');
+INSERT INTO `tb_domain` VALUES (1692069585513086977, '2023-08-17 15:03:20', '1000000000', '2023-08-17 15:28:14', '1000000000', 0, 0, 'xiaoshuojia', 'I want you to play a novelist. You will come up with creative and engaging stories that can attract readers in the long run. You can choose any type, such as fantasy, romance, historical novels, etc. But your goal is to write works with excellent plot, captivating characters, and unexpected climaxes.Please output according to my language.  My first requirement is:', 'COMMON', 6, NULL, '/sessionDomain/xiaoshuojia', '小说家', 'storyIcon.png', '{\"title\":\"小说家\",\"sessionType\":\"DOMAIN\",\"inputType\":\"Input\",\"contentShowType\":\"Markdown\",\"description\":\"我是一个小说家，能够创造出富有创意、引人入胜的故事\"}', '0', '1', '我是一个小说家，可以根据你的要求创造出富有创意、引人入胜的故事。例如，你可以对我说：我要写一部以未来为背景的科幻小说', 'gpt-3.5-turbo', '1');
+INSERT INTO `tb_domain` VALUES (1692075020353798145, '2023-08-17 15:24:56', '1000000000', '2023-08-17 15:28:28', '1000000000', 0, 0, 'QGDS', 'I want you to serve as a relationship coach. I will provide some details about the two individuals involved in the conflict, and your job is to provide suggestions on how they can solve the problem that caused their separation. This may include suggestions on communication skills or different strategies to improve their understanding of each other\'s perspectives.Please output according to my language.  My first request is:', 'COMMON', 7, NULL, '/sessionDomain/QGDS', '情感大师', 'qgdsIcon.png', '{\"title\":\"情感大师\",\"sessionType\":\"DOMAIN\",\"contentShowType\":\"Markdown\",\"inputType\":\"Input\",\"description\":\"我是一个专门处理人际关系的专家，提供有关冲突的信息与细节，我会给出沟通技巧与建议\"}', '0', '1', '我是一个专门处理人际关系的专家，提供有关冲突的信息与细节，我会给出沟通技巧与建议。例如，你可以对我说：我需要帮助解决我和配偶之间的冲突', 'gpt-3.5-turbo', '1');
+
+-- ----------------------------
+-- Table structure for tb_notice_client
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_notice_client`;
+CREATE TABLE `tb_notice_client`  (
+  `id` bigint NOT NULL COMMENT '主键',
+  `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `create_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '操作时间',
+  `update_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
+  `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
+  `version` int NULL DEFAULT 0 COMMENT '版本号',
+  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '通知标题',
+  `notice_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '通知类型',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '内容',
+  `sort` int NULL DEFAULT NULL COMMENT '排序',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '通告信息' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_notice_client
+-- ----------------------------
+INSERT INTO `tb_notice_client` VALUES (1692361147728060418, '2023-08-18 10:21:54', '1000000000', '2023-08-18 11:10:19', '1000000000', 0, 0, '通知', NULL, '通知', 1);
 
 -- ----------------------------
 -- Table structure for tb_openai_keys
@@ -838,7 +864,7 @@ CREATE TABLE `tb_openai_keys`  (
   `update_oper` varchar(26) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作人',
   `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
   `version` int NULL DEFAULT 0 COMMENT '版本号',
-  `api_key` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'openai key',
+  `api_key` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'openai key',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'key名称',
   `total_amount` decimal(10, 2) NULL DEFAULT NULL COMMENT '总额度',
   `total_usage` decimal(10, 2) NULL DEFAULT NULL COMMENT '使用额度',
