@@ -5,7 +5,6 @@ import cn.hutool.core.lang.Assert;
 import com.hugai.core.session.sessionType.service.BusinessChatService;
 import com.hugai.core.session.sessionType.service.BusinessDomainService;
 import com.hugai.core.session.sessionType.strategy.ChatSessionStrategyImpl;
-import com.hugai.core.session.sessionType.strategy.OnceSessionStrategyImpl;
 import com.hugai.core.session.sessionType.strategy.domain.DomainDefaultImpl;
 import com.org.bebas.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +30,7 @@ public class SessionBusinessContext {
         businessChatServices = new ArrayList<BusinessChatService>();
         businessChatServices.addAll(
                 CollUtil.newArrayList(
-                        new ChatSessionStrategyImpl(),
-                        new OnceSessionStrategyImpl()
+                        new ChatSessionStrategyImpl()
                 )
         );
 

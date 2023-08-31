@@ -12,11 +12,13 @@ import com.hugai.framework.log.annotation.Log;
 import com.hugai.framework.sensitiveWord.annotation.SensitiveContentFilter;
 import com.hugai.modules.chat.service.ChatService;
 import com.org.bebas.core.validator.ValidatorUtil;
+import com.org.bebas.exception.BusinessException;
 import com.org.bebas.utils.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatController {
 
     private final ChatService chatService;
+    private final String lockErrorMessage = "当前会话正在进行中，请等待结束";
 
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
@@ -48,12 +51,18 @@ public class ChatController {
         ValidatorUtil.validateEntity(param, Send.class);
         param.setUserId(SecurityContextUtil.getUserId());
 
+        SessionLockHandle sessionLockHandle = SessionLockHandle.init(LockGroupConstant.SESSION);
+        RLock lock = sessionLockHandle.getLock(param.getSessionType(), param.getSessionId());
+        if (lock.isLocked()) {
+            throw new BusinessException(lockErrorMessage);
+        }
+
         taskExecutor.execute(() -> {
             try {
                 UserThreadLocal.set(param.getUserId());
-                SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), () -> {
+                sessionLockHandle.handle(param.getSessionType(), param.getSessionId(), () -> {
                     chatService.sendChatMessage(param);
-                }, "当前会话正在进行中，请等待结束");
+                }, lockErrorMessage);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -72,12 +81,18 @@ public class ChatController {
         ValidatorUtil.validateEntity(param, SendDomain.class);
         param.setUserId(SecurityContextUtil.getUserId());
 
+        SessionLockHandle sessionLockHandle = SessionLockHandle.init(LockGroupConstant.SESSION);
+        RLock lock = sessionLockHandle.getLock(param.getSessionType(), param.getSessionId(), param.getDomainUniqueKey());
+        if (lock.isLocked()) {
+            throw new BusinessException(lockErrorMessage);
+        }
+
         taskExecutor.execute(() -> {
             try {
                 UserThreadLocal.set(param.getUserId());
-                SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), param.getDomainUniqueKey(), () -> {
+                sessionLockHandle.handle(param.getSessionType(), param.getSessionId(), param.getDomainUniqueKey(), () -> {
                     chatService.sendDomainMessage(param);
-                }, "当前会话正在进行中，请等待结束");
+                }, lockErrorMessage);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

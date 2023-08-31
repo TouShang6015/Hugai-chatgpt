@@ -20,11 +20,11 @@ import retrofit2.Retrofit;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.time.Duration;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
  * openAiService 工厂
- * <p>* 如无需代理配置请使用 {@link OpenAiService}</p>
  *
  * @author WuHao
  * @since 2023/5/24 10:00
@@ -47,7 +47,7 @@ public class AiServiceFactory {
 
         OkHttpClient.Builder clientBuilder = client.newBuilder();
         // 设置代理
-        if (StrUtil.isNotEmpty(resourceOpenai.getProxyHost()) && StrUtil.isNotEmpty(resourceOpenai.getProxyHost())) {
+        if (StrUtil.isNotEmpty(resourceOpenai.getProxyHost()) && Objects.nonNull(resourceOpenai.getProxyPort())) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(resourceOpenai.getProxyHost(), resourceOpenai.getProxyPort()));
             clientBuilder.proxy(proxy);
         }

@@ -62,6 +62,7 @@ public interface SessionCacheDataService<Service> {
             OR.run(cacheData.getUserId(), Objects::nonNull, consumer::setUserId);
             OR.run(cacheData.getContent(), Objects::nonNull, consumer::setContent);
             OR.run(cacheData.getDomainUniqueKey(), Objects::nonNull, consumer::setDomainUniqueKey);
+            OR.run(cacheData.getIfConc(), Objects::nonNull, consumer::setIfConc);
         });
     }
 

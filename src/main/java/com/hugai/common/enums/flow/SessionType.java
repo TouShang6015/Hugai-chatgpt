@@ -15,13 +15,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SessionType implements FlowBaseEnum {
 
-    ONCE("ONCE", "单轮对话") {
-        @Override
-        public ModulesToken modulesToken() {
-            return ModulesToken.DEFAULT;
-        }
-    },
-
     CHAT("CHAT", "聊天/多轮对话") {
         @Override
         public ModulesToken modulesToken() {
