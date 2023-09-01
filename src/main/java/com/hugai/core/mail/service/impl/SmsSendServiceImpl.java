@@ -3,7 +3,7 @@ package com.hugai.core.mail.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
-import com.hugai.common.enums.ChannelEnum;
+import com.hugai.common.constants.MQConstants;
 import com.hugai.core.mail.entity.MailRequest;
 import com.hugai.core.mail.entity.SmsBaseParam;
 import com.hugai.core.mail.enums.SmsCodeEnum;
@@ -15,6 +15,7 @@ import com.org.bebas.exception.BusinessException;
 import com.org.bebas.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,8 @@ public class SmsSendServiceImpl implements SmsSendService {
     private HashOperations<String, Object, SmsBaseParam> hashOperations;
     @Resource
     private MessageService messageService;
+    @Resource
+    private RabbitTemplate rabbitTemplate;
     @Value("${spring.mail.username}")
     private String sender;
 
@@ -60,7 +63,7 @@ public class SmsSendServiceImpl implements SmsSendService {
         Assert.notNull(smsVerifyEnum, () -> new BusinessException("验证码类型不能为空"));
         Assert.notNull(smsVerifyEnum, () -> new BusinessException("验证码唯一键不能为空"));
         // 验证短信次数，每分钟最多发3个短信
-        Assert.isFalse(this.countSendCache(uniqueKey) >= 3,() -> new BusinessException("验证码发送频繁，请稍后重试"));
+        Assert.isFalse(this.countSendCache(uniqueKey) >= 3, () -> new BusinessException("验证码发送频繁，请稍后重试"));
 
         // 短信实体
         SmsBaseParam smsParam = this.getEntity(smsVerifyEnum, uniqueKey);
@@ -89,13 +92,14 @@ public class SmsSendServiceImpl implements SmsSendService {
                 .subject(String.format("hugAi-%s-验证码", SmsTypeEnum.REGISTER.getDescription()))
                 .content(String.format(Optional.ofNullable(content).orElse("%s"), code))
                 .build();
-        messageService.send(ChannelEnum.mail_send, mailRequest);
+        rabbitTemplate.convertAndSend(MQConstants.Exchange.topic, MQConstants.Queue.sms, mailRequest);
+//        messageService.send(ChannelEnum.mail_send, mailRequest);
         // redis存储短信实体
         this.updateEntity(smsVerifyEnum, uniqueKey, smsParam);
         String countKey = KEY_CODE + uniqueKey + ":COUNT";
-        if (!redisUtils.redisTemplate.hasKey(countKey)){
-            redisUtils.setCacheObject(countKey,1,60L, TimeUnit.SECONDS);
-        }else{
+        if (!redisUtils.redisTemplate.hasKey(countKey)) {
+            redisUtils.setCacheObject(countKey, 1, 60L, TimeUnit.SECONDS);
+        } else {
             redisUtils.incr(countKey);
         }
         return code;

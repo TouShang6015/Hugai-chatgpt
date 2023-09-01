@@ -8,6 +8,7 @@ import com.hugai.modules.system.service.ISysPermissionService;
 import com.hugai.modules.user.entity.model.UserInfoModel;
 import com.hugai.modules.user.service.UserInfoService;
 import com.org.bebas.exception.UserException;
+import com.org.bebas.utils.ip.AddressUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +37,7 @@ public class UserDetailsUserTouristServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String ipaddress) throws UsernameNotFoundException {
         UserInfoModel user = userInfoService.selectByIpaddress(ipaddress);
         if (Objects.isNull(user)) {
-            user = UserInfoModel.builder().ipaddress(ipaddress).status(Constants.Disable.NORMAL).ifTourist(Constants.BOOLEAN.TRUE).build();
+            user = UserInfoModel.builder().ipaddress(ipaddress).ipLocation(AddressUtils.getRealAddressByIP(ipaddress)).status(Constants.Disable.NORMAL).ifTourist(Constants.BOOLEAN.TRUE).build();
             userInfoService.save(user);
         } else if (Constants.DelFlag.DEL.equals(String.valueOf(user.getDelFlag()))) {
             log.info("登录用户：{} 已被删除.", ipaddress);

@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 操作日志记录处理
@@ -70,7 +71,7 @@ public class LogAspect {
     protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult) {
         try {
             // 获取当前的用户
-            LoginUserContextBean loginUser = SecurityContextUtil.getLoginUser();
+            LoginUserContextBean loginUser = Optional.ofNullable(SecurityContextUtil.getLoginUserNotThrow()).orElseGet(LoginUserContextBean::new);
 
             // *========数据库日志=========*//
             SysOperLogModel operLog = new SysOperLogModel();
@@ -79,9 +80,7 @@ public class LogAspect {
             String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
             operLog.setOperIp(ip);
             operLog.setOperUrl(ServletUtils.getRequest().getRequestURI());
-            if (loginUser != null) {
-                operLog.setOperName(loginUser.getUsername());
-            }
+            operLog.setOperName(loginUser.getUsername());
 
             if (e != null) {
                 operLog.setStatus(Integer.valueOf(Constants.Status.NO_NORMAL));

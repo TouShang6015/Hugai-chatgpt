@@ -11,7 +11,7 @@
  Target Server Version : 80028 (8.0.28)
  File Encoding         : 65001
 
- Date: 30/08/2023 14:35:30
+ Date: 01/09/2023 17:50:05
 */
 
 SET NAMES utf8mb4;
@@ -227,6 +227,7 @@ CREATE TABLE `sys_logininfor`  (
 -- ----------------------------
 -- Records of sys_logininfor
 -- ----------------------------
+INSERT INTO `sys_logininfor` VALUES (1694145912932175874, '2023-08-23 08:33:55', NULL, '2023-08-23 08:33:56', NULL, 0, 0, 'admin', '127.0.0.1', '内网IP', 'FIREFOX11', 'Windows 10', 0, '登录成功', '2023-08-23 08:33:56', '1');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -339,6 +340,7 @@ CREATE TABLE `sys_oper_log`  (
 -- ----------------------------
 -- Records of sys_oper_log
 -- ----------------------------
+INSERT INTO `sys_oper_log` VALUES (1694151291011371009, '系统参数配置 [编辑系统参数配置信息]', 'com.hugai.modules.system.controller.ResourceConfigController.editByConfigKey()', 'PUT', 0, 'admin', '/module/system/baseresourceconfig/editByConfigKey', '127.0.0.1', '内网IP', '{\"configKey\":\"main\",\"delFlag\":0,\"page\":1,\"paramExtMap\":{},\"queryCondition\":{},\"resourceValue\":\"{\\\"maxUserLogin\\\":5,\\\"staticWebsite\\\":\\\"http://chat.static.equinox19.xyz\\\",\\\"website\\\":\\\"http://localhost:9000\\\",\\\"registerOpen\\\":true,\\\"authCodeOpen\\\":false,\\\"fileSaveStrategy\\\":\\\"qiniu\\\",\\\"proxyHost\\\":\\\"127.0.0.1\\\",\\\"proxyPort\\\":\\\"7890\\\",\\\"ableSystemApiKey\\\":true,\\\"streamResponseType\\\":\\\"Websocket\\\"}\",\"size\":10,\"sortCondition\":{}}', '{\"code\":200,\"message\":\"请求成功\",\"status\":true,\"timestamp\":1692752118177}', 0, '', NULL, '2023-08-23 08:55:18', NULL, '2023-08-23 08:55:18', NULL, 0, 0);
 
 -- ----------------------------
 -- Table structure for sys_permission
@@ -786,6 +788,9 @@ CREATE TABLE `sys_user_token`  (
 -- ----------------------------
 -- Records of sys_user_token
 -- ----------------------------
+INSERT INTO `sys_user_token` VALUES (1689096540762718209, '2023-08-09 10:09:31', NULL, '2023-08-09 10:09:31', NULL, 0, 0, 1000000000, 'cd318b69-af50-481d-9f22-a445f9139c26', '2023-08-09 10:09:31');
+INSERT INTO `sys_user_token` VALUES (1689105972603203585, '2023-08-09 10:47:00', NULL, '2023-08-09 10:47:00', NULL, 0, 0, 1665958959871291394, '877d4c6e-d3b8-4c83-8fa8-26e6ae42390b', '2023-08-09 10:47:00');
+INSERT INTO `sys_user_token` VALUES (1694145912932175875, '2023-08-23 08:33:56', NULL, '2023-08-23 08:33:56', NULL, 0, 0, 1000000000, '806f3704-78c5-435c-a51c-4a8f5fe022d2', '2023-08-23 08:33:55');
 
 -- ----------------------------
 -- Table structure for tb_domain
@@ -1016,13 +1021,14 @@ CREATE TABLE `tb_user_info`  (
   `phone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系方式',
   `qq_number` int NULL DEFAULT NULL COMMENT 'qq号',
   `desk_img_url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '桌面背景',
+  `ip_location` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'ip归属地',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tb_user_info
 -- ----------------------------
-INSERT INTO `tb_user_info` VALUES (1665958959871291394, '2023-06-06 13:49:02', NULL, '2023-07-26 10:22:32', '1665958959871291394', 0, 0, 'test', '$2a$10$f3z0krpEzkHbO6AUAADCnuMC9GwO3JbotZ7SrFzOAnW2BX1dJ2Pmq', 'test', '0', '/image/2023/07/26/2147633666b34baeaf9c23ba3e6463b4.jpeg?e=1690374149&token=y47kvl-NkTt0IHtqKZ2fNJilbsyhW9L16WKdp5JC:0npIiCSxElYDgnC3BU_zx-zGKqc=', '0', '0', NULL, NULL, NULL, NULL, '');
-INSERT INTO `tb_user_info` VALUES (1689104410241765377, '2023-08-09 10:40:48', NULL, '2023-08-09 10:40:48', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, '0', '1', '127.0.0.1', NULL, NULL, NULL, NULL);
+INSERT INTO `tb_user_info` VALUES (1665958959871291394, '2023-06-06 13:49:02', NULL, '2023-07-26 10:22:32', '1665958959871291394', 0, 0, 'test', '$2a$10$f3z0krpEzkHbO6AUAADCnuMC9GwO3JbotZ7SrFzOAnW2BX1dJ2Pmq', 'test', '0', '/image/2023/07/26/2147633666b34baeaf9c23ba3e6463b4.jpeg?e=1690374149&token=y47kvl-NkTt0IHtqKZ2fNJilbsyhW9L16WKdp5JC:0npIiCSxElYDgnC3BU_zx-zGKqc=', '0', '0', NULL, NULL, NULL, NULL, '', NULL);
+INSERT INTO `tb_user_info` VALUES (1689104410241765377, '2023-08-09 10:40:48', NULL, '2023-08-09 10:40:48', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, '0', '1', '127.0.0.1', NULL, NULL, NULL, NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

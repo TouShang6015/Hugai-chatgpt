@@ -48,12 +48,13 @@ public class ResourceMainVO implements Serializable {
      */
     private String website;
     /**
-     * 客户端默认背景图
-     */
-    private String deskImgDefault;
-    /**
      * 网站发布时间
      */
     private String webIssueTime;
+
+    /**
+     * 当前项目版本
+     */
+    private String projectVersion;
 
 }

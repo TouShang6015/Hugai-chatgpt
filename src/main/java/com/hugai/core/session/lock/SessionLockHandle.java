@@ -52,27 +52,28 @@ public class SessionLockHandle {
 
     /**
      * 获取会话redis锁
+     *
      * @param sessionType
      * @param sessionId
      * @return
      */
-    public RLock getLock(String sessionType, Long sessionId){
+    public RLock getLock(String sessionType, Long sessionId) {
         final String KEY = RedisConstant.REDIS_LOCK + groupName + ":" + sessionType + ":" + sessionId;
         return redissonClient.getLock(KEY);
     }
 
     /**
      * 获取领域会话redis锁
+     *
      * @param sessionType
      * @param sessionId
      * @param domainUniqueKey
      * @return
      */
-    public RLock getLock(String sessionType, Long sessionId, String domainUniqueKey){
+    public RLock getLock(String sessionType, Long sessionId, String domainUniqueKey) {
         final String KEY = RedisConstant.REDIS_LOCK + groupName + ":" + sessionType + ":" + domainUniqueKey + ":" + sessionId;
         return redissonClient.getLock(KEY);
     }
-
 
 
     /**
@@ -86,7 +87,7 @@ public class SessionLockHandle {
     public void handle(String sessionType, Long sessionId, SingleFunction singleFunction, String errorMessage) {
         final String KEY = RedisConstant.REDIS_LOCK + groupName + ":" + sessionType + ":" + sessionId;
 
-        RLock lock = redissonClient.getLock(KEY);
+        RLock lock = getLock(sessionType, sessionId);
 
         if (!lock.isLocked()) {
             lock.lock(DEFAULT_TIME_OUT, TimeUnit.SECONDS);
@@ -126,7 +127,7 @@ public class SessionLockHandle {
     public void handle(String sessionType, Long sessionId, String domainUniqueKey, SingleFunction singleFunction, String errorMessage) {
         final String KEY = RedisConstant.REDIS_LOCK + groupName + ":" + sessionType + ":" + domainUniqueKey + ":" + sessionId;
 
-        RLock lock = redissonClient.getLock(KEY);
+        RLock lock = getLock(sessionType, sessionId, domainUniqueKey);
 
         if (!lock.isLocked()) {
             lock.lock(DEFAULT_TIME_OUT, TimeUnit.SECONDS);

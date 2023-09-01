@@ -58,6 +58,17 @@ spring:
             required: false
         # 日志
         debug: false
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual
+      direct:
+        acknowledge-mode: manual
 
 # ---------------- 自定义配置
 # 项目配置

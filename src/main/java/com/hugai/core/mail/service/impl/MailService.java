@@ -2,14 +2,16 @@ package com.hugai.core.mail.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
+import com.hugai.common.constants.MQConstants;
 import com.hugai.common.enums.ChannelEnum;
 import com.hugai.core.mail.entity.MailRequest;
 import com.hugai.framework.asyncMessage.annotation.MessageListener;
-import com.org.bebas.core.function.OR;
 import com.org.bebas.core.validator.ValidatorUtil;
 import com.org.bebas.exception.BusinessException;
+import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,6 +21,7 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Objects;
@@ -39,6 +42,18 @@ public class MailService {
     public void asyncSendMail(byte[] data) {
         MailRequest param = JSON.parseObject(new String(data, Charset.defaultCharset()), MailRequest.class);
         this.sendMail(param, null);
+    }
+
+    @RabbitListener(queues = MQConstants.Queue.sms)
+    public void sendMailListener(MailRequest data, Channel channel, Message message) throws IOException {
+        log.info("[MQ - {}] 接收消息: {}", MQConstants.Queue.sms, JSON.toJSONString(data));
+        try {
+            this.sendMail(data, null);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
+        }
     }
 
     /**

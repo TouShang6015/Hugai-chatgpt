@@ -2,10 +2,10 @@ package com.hugai.modules.statistics.controller;
 
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.modules.statistics.entity.vo.DeskStatisticsDataVO;
-import com.hugai.modules.statistics.entity.vo.UserSessionStatisticsDataVO;
 import com.hugai.modules.statistics.service.StatisticsService;
 import com.org.bebas.core.redis.RedisUtil;
 import com.org.bebas.utils.result.Result;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,18 +28,14 @@ public class StatisticsController {
 
     private final RedisUtil redisUtil;
 
-    @GetMapping("/getUserDeskInfo")
-    public Result getUserDeskInfo() {
+    @ApiOperation(value = "获取用户端设置中相关信息")
+    @GetMapping("/getSettingInfo")
+    public Result getSettingInfo() {
         DeskStatisticsDataVO deskCommonData = service.getDeskCommonData();
-        UserSessionStatisticsDataVO userSessionStatisticsData = new UserSessionStatisticsDataVO();
         Object webClientRequestCount = redisUtil.getCacheObject(WebClientRequestCount);
-        try {
-            userSessionStatisticsData = service.getUserSessionStatisticsData();
-        } catch (Exception ignored) {}
         return Result.success()
-                .put("deskCommonData",deskCommonData)
-                .put("userSessionStatisticsData",userSessionStatisticsData)
-                .put("webClientRequestCount", Optional.ofNullable(webClientRequestCount).orElse(0))
+                .put("info",deskCommonData)
+                .put("requestCount", Optional.ofNullable(webClientRequestCount).orElse(0))
                 ;
     }
 

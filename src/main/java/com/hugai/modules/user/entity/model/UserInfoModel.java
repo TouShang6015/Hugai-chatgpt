@@ -48,6 +48,9 @@ public class UserInfoModel extends BaseModel {
     @ApiModelProperty(value = "ip地址")
     private String ipaddress;
 
+    @ApiModelProperty(value = "ip归属地")
+    private String ipLocation;
+
     @ApiModelProperty(value = "邮箱")
     private String email;
     @ApiModelProperty(value = "联系方式")

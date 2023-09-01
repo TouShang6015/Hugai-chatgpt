@@ -66,6 +66,19 @@ public class SecurityContextUtil {
     }
 
     /**
+     * 获取用户 不抛出异常的
+     *
+     * @return
+     */
+    public static LoginUserContextBean getLoginUserNotThrow() {
+        try {
+            return getLoginUser();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * 获取用户类型
      **/
     public static UserTypeEnum getUserType() {

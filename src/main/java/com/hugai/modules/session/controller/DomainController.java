@@ -12,6 +12,7 @@ import com.org.bebas.utils.result.Result;
 import com.org.bebas.utils.result.ResultUtil;
 import com.org.bebas.web.BaseController;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ import java.util.List;
 @Api(value = "DomainModel", tags = "领域会话")
 public class DomainController extends BaseController<DomainService, DomainModel> {
 
+    @ApiOperation(value = "获取场景对话的配置信息")
     @GetMapping("/getWindowData/{domainKey}")
     public Result getWindowData(@PathVariable String domainKey){
         DomainModel one = service.lambdaQuery()
