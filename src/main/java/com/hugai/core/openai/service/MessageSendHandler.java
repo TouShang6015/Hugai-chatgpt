@@ -53,8 +53,8 @@ public class MessageSendHandler {
     }
 
     private void queueSpin() {
-        ThreadPoolTaskExecutor taskExecutor = SpringUtils.getBean(ThreadPoolTaskExecutor.class);
         if (this.streamResponseType.equals(StreamResponseTypeEnum.Websocket)) {
+            ThreadPoolTaskExecutor taskExecutor = SpringUtils.getBean(ThreadPoolTaskExecutor.class);
             OR.run(this.session, Objects::nonNull, session -> {
                 taskExecutor.execute(() -> {
                     log.info("connectId:{} - [延时队列] 执行", connectId);
