@@ -67,7 +67,7 @@ public class DrawOpenaiController {
     public Result sendAiDraw(@RequestBody SessionDrawCreatedOpenaiCacheData param) {
         ValidatorUtil.validateEntity(param, SendDrawOpenAi.class);
 
-        OR.run(param.getSize(), StrUtil::isNotEmpty, size -> param.setSize(size + "x" + size));
+        param.setSize(param.getSizeWidth() + "x" + param.getSizeHeight());
 
         AtomicReference<ImageResult> imageResult = new AtomicReference<>();
         SessionLockHandle.init(LockGroupConstant.SESSION).handle(param.getSessionType(), param.getSessionId(), DrawType.OPENAI.getKey(), () -> {
@@ -103,7 +103,7 @@ public class DrawOpenaiController {
     public Result sendAiDrawEdit(@RequestBody SessionDrawEditOpenaiCacheData param) {
         ValidatorUtil.validateEntity(param, SendDrawOpenAi.class);
 
-        OR.run(param.getSize(), StrUtil::isNotEmpty, size -> param.setSize(size + "x" + size));
+        param.setSize(param.getSizeWidth() + "x" + param.getSizeHeight());
         OR.run(param.getResponseFormat(), StrUtil::isEmpty, item -> param.setResponseFormat("url"));
 
         AtomicReference<ImageResult> imageResult = new AtomicReference<>();

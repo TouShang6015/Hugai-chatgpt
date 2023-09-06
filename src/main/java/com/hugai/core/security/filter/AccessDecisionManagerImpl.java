@@ -7,7 +7,6 @@ import com.hugai.core.security.context.bean.LoginUserContextBean;
 import com.org.bebas.core.function.OpenRunnable;
 import com.org.bebas.exception.UserException;
 import com.org.bebas.utils.ServletUtils;
-import com.org.bebas.utils.StringUtils;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -45,7 +44,7 @@ public class AccessDecisionManagerImpl implements AccessDecisionManager {
         }
         if (authentication.getPrincipal() instanceof String) {
             if (authentication.getPrincipal().equals("anonymousUser")) {
-                String msg = StringUtils.format("请求访问：{}，认证失败，无法访问系统资源", requestURI);
+                String msg = "系统认证失败，请先登录后在操作";
                 throw new AccessDeniedException(msg);
             }
         }

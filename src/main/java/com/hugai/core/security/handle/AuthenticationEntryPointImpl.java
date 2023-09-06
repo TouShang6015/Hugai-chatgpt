@@ -3,7 +3,6 @@ package com.hugai.core.security.handle;
 import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson2.JSON;
 import com.org.bebas.utils.ServletUtils;
-import com.org.bebas.utils.StringUtils;
 import com.org.bebas.utils.result.Result;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -26,7 +25,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint, S
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
         int code = HttpStatus.HTTP_UNAUTHORIZED;
-        String msg = StringUtils.format("请求访问：{}，认证失败，无法访问系统资源", request.getRequestURI());
+        String msg = "系统认证失败，请先登录后在操作";
         ServletUtils.renderString(response, JSON.toJSONString(Result.fail(code, msg)));
     }
 }

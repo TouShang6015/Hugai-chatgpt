@@ -72,10 +72,10 @@ In my spare time, I will maintain this open source project and develop both the 
 
 ## Project screenshot
 
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1691027744983.jpg)
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1691028127389.jpg)
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1691028170014.jpg)
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1691028204255.jpg)
+![](http://chat.static.equinox19.xyz/hugai-doc/effect/1693874917258.jpg)
+![](http://chat.static.equinox19.xyz/hugai-doc/effect/1693875024839.jpg)
+![](http://chat.static.equinox19.xyz/hugai-doc/effect/1693875097749.jpg)
+![](http://chat.static.equinox19.xyz/hugai-doc/effect/1693875273399.jpg)
 ![](http://chat.static.equinox19.xyz/hugai-doc/effect/1691030140010.jpg)
 ![](http://chat.static.equinox19.xyz/hugai-doc/effect/1691030163684.jpg)
 ![](http://chat.static.equinox19.xyz/hugai-doc/effect/1691030196637.jpg)

@@ -1,12 +1,15 @@
 package com.hugai.core.session.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hugai.core.session.valid.SendDrawOpenAi;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author WuHao
@@ -31,6 +34,8 @@ public class SessionDrawEditOpenaiCacheData extends SessionCacheData {
     /**
      * The number of images to generate. Must be between 1 and 10. Defaults to 1.
      */
+    @Max(value = 1, message = "The number of images to generate. Must be between 1 and 1. Defaults to 1")
+    @Min(value = 1, message = "The number of images to generate. Must be between 1 and 1. Defaults to 1")
     Integer n;
 
     /**
@@ -48,5 +53,10 @@ public class SessionDrawEditOpenaiCacheData extends SessionCacheData {
      * A unique identifier representing your end-user, which will help OpenAI to monitor and detect abuse.
      */
     String user;
+
+    @NotNull(message = "图像长度不能为空", groups = {SendDrawOpenAi.class})
+    private Integer sizeWidth;
+    @NotNull(message = "图像高度不能为空", groups = {SendDrawOpenAi.class})
+    private Integer sizeHeight;
 
 }
