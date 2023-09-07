@@ -5,6 +5,8 @@ import com.org.bebas.core.model.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import java.util.Date;
+
 /**
  * 绘图任务
  *
@@ -24,16 +26,25 @@ public class TaskDrawModel extends BaseModel {
     @ApiModelProperty(value = "绘图任务类型")
     private String drawType;
 
+    @ApiModelProperty(value = "绘图接口标识")
+    private String drawApiKey;
+
     @ApiModelProperty(value = "用户id")
-    private String userId;
+    private Long userId;
 
     @ApiModelProperty(value = "任务状态")
     private String taskStatus;
 
     @ApiModelProperty(value = "绘图会话id")
-    private String sessionInfoDrawId;
+    private Long sessionInfoDrawId;
 
     @ApiModelProperty(value = "任务结束时间")
-    private String taskEndTime;
+    private Date taskEndTime;
+
+    @ApiModelProperty(value = "任务请求参数")
+    private String requestParam;
+
+    @ApiModelProperty(value = "备注")
+    private String remark;
 
 }

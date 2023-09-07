@@ -11,4 +11,6 @@ public interface RedisCacheKey {
      */
     String WebClientRequestCount = "WEB_CLIENT_REQUEST_COUNT";
 
+    String LOCK_DRAW_OPENAI = "DRAW-SESSION:%s:OPENAI";
+
 }

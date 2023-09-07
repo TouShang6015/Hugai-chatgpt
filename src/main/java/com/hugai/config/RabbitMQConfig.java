@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    private final TopicExchange topicExchange = new TopicExchange(MQConstants.Exchange.topic);
+
     /**
      * 队列 邮箱验证码发送
      *
@@ -21,18 +23,37 @@ public class RabbitMQConfig {
      */
     @Bean
     public Queue queueSms() {
-        return QueueBuilder.durable(MQConstants.Queue.sms)
-                .build();
+        return QueueBuilder.durable(MQConstants.Queue.sms).build();
     }
 
     @Bean
-    public TopicExchange topicExchange() {
-        return new TopicExchange(MQConstants.Exchange.topic);
+    public Queue queueDrawOpenai() {
+        return QueueBuilder.durable(MQConstants.Queue.draw_openai).build();
+    }
+
+    @Bean
+    public Queue queueDrawSD() {
+        return QueueBuilder.durable(MQConstants.Queue.draw_sd).build();
     }
 
     @Bean
     public Binding bindingTopicSmsMessage() {
         return BindingBuilder.bind(queueSms()).to(topicExchange()).with(MQConstants.Queue.sms);
+    }
+
+    @Bean
+    public Binding bindingTopicDrawOpenaiMessage() {
+        return BindingBuilder.bind(queueDrawOpenai()).to(topicExchange()).with(MQConstants.Queue.draw_openai);
+    }
+
+    @Bean
+    public Binding bindingTopicDrawSDMessage() {
+        return BindingBuilder.bind(queueDrawSD()).to(topicExchange()).with(MQConstants.Queue.draw_sd);
+    }
+
+    @Bean
+    public TopicExchange topicExchange() {
+        return topicExchange;
     }
 
 }

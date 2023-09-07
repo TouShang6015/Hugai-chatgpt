@@ -3,6 +3,7 @@ package com.hugai.modules.chat.controller;
 import cn.hutool.core.util.StrUtil;
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.common.constants.LockGroupConstant;
+import com.hugai.common.constants.RedisCacheKey;
 import com.hugai.common.enums.flow.DrawType;
 import com.hugai.core.session.entity.SessionDrawCreatedOpenaiCacheData;
 import com.hugai.core.session.entity.SessionDrawEditOpenaiCacheData;
@@ -46,7 +47,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Api(tags = "绘画控制器（openai）")
 public class DrawOpenaiController {
 
-    String CACHE_KEY = "DRAW-SESSION:%s:OPENAI";
+    String CACHE_KEY = RedisCacheKey.LOCK_DRAW_OPENAI;
 
     String errorMessage = "绘图失败，游客用户或未配置openAi key的用户每%s小时可以请求%s次绘图接口，正在努力寻找白嫖或节约openai key的方案，谅解下\uD83D\uDE02\uD83D\uDE02";
 
