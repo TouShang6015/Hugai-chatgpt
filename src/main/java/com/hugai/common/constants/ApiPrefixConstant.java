@@ -32,6 +32,8 @@ public interface ApiPrefixConstant {
 
         String BUSINESS = MODEL_API + "/business";
 
+        String DRAW = MODEL_API + "/draw";
+
     }
 
     interface Common {

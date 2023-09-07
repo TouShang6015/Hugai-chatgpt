@@ -5,18 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 绘图类型
+ * 任务状态
  *
  * @author WuHao
- * @since 2023/6/19 10:08
+ * @since 2023/9/7 16:04
  */
 @Getter
 @AllArgsConstructor
-public enum DrawType implements FlowBaseEnum {
+public enum TaskStatus implements FlowBaseEnum {
 
-    OPENAI("OPENAI", "openAi接口"),
-
-    SD("SD", "stable diffusion")
+    WAIT("WAIT", "待执行"),
+    RUNNING("RUNNING", "进行中"),
+    SUCCESS("SUCCESS", "已完成"),
+    FAIL("FAIL", "失败"),
     ;
 
     private final String key;
