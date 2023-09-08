@@ -2,6 +2,7 @@ package com.hugai.modules.system.service;
 
 import com.hugai.common.constants.ResourceConfigConstant;
 import com.hugai.modules.system.entity.model.BaseResourceConfigModel;
+import com.hugai.modules.system.entity.vo.baseResource.ResourceDrawVO;
 import com.hugai.modules.system.entity.vo.baseResource.ResourceMainVO;
 import com.hugai.modules.system.entity.vo.baseResource.ResourceOpenaiVO;
 import com.org.bebas.mapper.service.IService;
@@ -61,6 +62,14 @@ public interface IBaseResourceConfigService extends IService<BaseResourceConfigM
      */
     default ResourceOpenaiVO getResourceOpenai() {
         return queryValueByConfigKey(ResourceConfigConstant.OPEN_AI, ResourceOpenaiVO.class, true);
+    }
+
+    /**
+     * ResourceDrawVO 配置
+     * @return
+     */
+    default ResourceDrawVO getResourceDraw() {
+        return queryValueByConfigKey(ResourceConfigConstant.DRAW, ResourceDrawVO.class, true);
     }
 
     /**

@@ -14,4 +14,6 @@ public interface ResourceConfigConstant {
 
     String OPEN_AI = "openai";
 
+    String DRAW = "draw";
+
 }

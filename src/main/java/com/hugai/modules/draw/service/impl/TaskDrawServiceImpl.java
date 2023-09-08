@@ -8,9 +8,11 @@ import com.hugai.common.enums.flow.TaskStatus;
 import com.hugai.core.drawTask.valid.CreateTask;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.modules.draw.entity.model.TaskDrawModel;
-import com.hugai.modules.draw.entity.vo.TaskDrawCommonParam;
 import com.hugai.modules.draw.mapper.TaskDrawMapper;
 import com.hugai.modules.draw.service.TaskDrawService;
+import com.hugai.modules.system.entity.vo.baseResource.ResourceDrawVO;
+import com.hugai.modules.system.service.IBaseResourceConfigService;
+import com.org.bebas.core.spring.SpringUtils;
 import com.org.bebas.core.validator.ValidatorUtil;
 import com.org.bebas.exception.BusinessException;
 import com.org.bebas.mapper.cache.ServiceImpl;
@@ -44,6 +46,10 @@ public class TaskDrawServiceImpl extends ServiceImpl<TaskDrawMapper, TaskDrawMod
 
         DrawType.ApiKey apiKeyValue = DrawType.ApiKey.getByName(apiKey);
         DrawType drawType = DrawType.getByApiKey(apiKeyValue);
+        if (drawType.equals(DrawType.OPENAI)){
+            ResourceDrawVO resourceDraw = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceDraw();
+            Assert.isFalse(!resourceDraw.getOpenDrawOpenai(),() -> new BusinessException("openai绘图功能暂时关闭了"));
+        }
 
         // 校验
         Object requestParamObject = JSON.parseObject(JSON.toJSONString(paramMap), apiKeyValue.getMappingCls());
@@ -57,18 +63,12 @@ public class TaskDrawServiceImpl extends ServiceImpl<TaskDrawMapper, TaskDrawMod
                 () -> new BusinessException("有任务正在进行中~请等待任务执行完成")
         );
 
-        TaskDrawCommonParam taskDrawCommonParam = new TaskDrawCommonParam();
-        taskDrawCommonParam.setDrawType(drawType.getKey());
-        taskDrawCommonParam.setApiKey(apiKeyValue.name());
-        taskDrawCommonParam.setUserId(userId);
-        taskDrawCommonParam.setParamJsonString(JSON.toJSONString(paramMap));
-
         TaskDrawModel taskDrawModel = TaskDrawModel.builder()
                 .userId(userId)
                 .drawType(drawType.getKey())
                 .drawApiKey(apiKeyValue.name())
                 .taskStatus(TaskStatus.WAIT.getKey())
-                .requestParam(JSON.toJSONString(taskDrawCommonParam))
+                .requestParam(JSON.toJSONString(paramMap))
                 .build();
 
         super.save(taskDrawModel);
