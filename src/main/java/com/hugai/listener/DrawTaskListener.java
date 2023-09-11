@@ -40,24 +40,55 @@ public class DrawTaskListener {
     private SessionRecordDrawService sessionRecordDrawService;
 
     @RabbitListener(queues = MQConstants.Queue.draw_openai)
-    public void drawListener(TaskDrawModel data, Channel channel, Message message) throws IOException {
+    public void drawListenerOpenai(TaskDrawModel data, Channel channel, Message message) throws IOException {
         log.info("[MQ - {}] 接收消息: {}", MQConstants.Queue.draw_openai, JSON.toJSONString(data));
         try {
             DrawPersistenceCollection collection = handleDrawListener(data);
-            taskDrawService.lambdaUpdate()
-                    .set(TaskDrawModel::getTaskStatus, TaskStatus.SUCCESS.getKey())
-                    .set(TaskDrawModel::getSessionInfoDrawId, collection.getSessionInfoDrawModelInsert().getId())
-                    .set(TaskDrawModel::getTaskEndTime, DateUtils.nowDateFormat())
-                    .eq(TaskDrawModel::getId, data.getId()).update();
+            taskDrawService.endTaskUpdate(service -> {
+                service.lambdaUpdate()
+                        .set(TaskDrawModel::getTaskStatus, TaskStatus.SUCCESS.getKey())
+                        .set(TaskDrawModel::getSessionInfoDrawId, collection.getSessionInfoDrawModelInsert().getId())
+                        .set(TaskDrawModel::getTaskEndTime, DateUtils.nowDateFormat())
+                        .set(TaskDrawModel::getShowImg,collection.getSessionInfoDrawModelInsert().getShowImg())
+                        .eq(TaskDrawModel::getId, data.getId()).update();
+            },data.getUserId());
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             log.info("[绘图任务 - {}] 处理完成。 任务ID： {}", MQConstants.Queue.draw_openai, data.getId());
         } catch (Exception e) {
             e.printStackTrace();
             log.error("[绘图任务 - {}] 处理失败。 任务ID： {}", MQConstants.Queue.draw_openai, data.getId());
-            boolean update = taskDrawService.lambdaUpdate().set(TaskDrawModel::getTaskStatus, TaskStatus.FAIL.getKey()).eq(TaskDrawModel::getId, data.getId()).update();
-            if (!update) {
-                log.error("[绘图任务 - {}] 数据更新失败。 任务ID： {}", MQConstants.Queue.draw_openai, data.getId());
-            }
+            taskDrawService.endTaskUpdate(service -> taskDrawService.lambdaUpdate()
+                    .set(TaskDrawModel::getTaskStatus, TaskStatus.FAIL.getKey())
+                    .eq(TaskDrawModel::getId, data.getId()).update()
+                    ,data.getUserId()
+            );
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
+        }
+    }
+
+    @RabbitListener(queues = MQConstants.Queue.draw_sd)
+    public void drawListenerSD(TaskDrawModel data, Channel channel, Message message) throws IOException {
+        log.info("[MQ - {}] 接收消息: {}", MQConstants.Queue.draw_sd, JSON.toJSONString(data));
+        try {
+            DrawPersistenceCollection collection = handleDrawListener(data);
+            taskDrawService.endTaskUpdate(service -> {
+                service.lambdaUpdate()
+                        .set(TaskDrawModel::getTaskStatus, TaskStatus.SUCCESS.getKey())
+                        .set(TaskDrawModel::getSessionInfoDrawId, collection.getSessionInfoDrawModelInsert().getId())
+                        .set(TaskDrawModel::getTaskEndTime, DateUtils.nowDateFormat())
+                        .set(TaskDrawModel::getShowImg,collection.getSessionInfoDrawModelInsert().getShowImg())
+                        .eq(TaskDrawModel::getId, data.getId()).update();
+            },data.getUserId());
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            log.info("[绘图任务 - {}] 处理完成。 任务ID： {}", MQConstants.Queue.draw_sd, data.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("[绘图任务 - {}] 处理失败。 任务ID： {}", MQConstants.Queue.draw_sd, data.getId());
+            taskDrawService.endTaskUpdate(service -> taskDrawService.lambdaUpdate()
+                            .set(TaskDrawModel::getTaskStatus, TaskStatus.FAIL.getKey())
+                            .eq(TaskDrawModel::getId, data.getId()).update()
+                    ,data.getUserId()
+            );
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
         }
     }

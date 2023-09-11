@@ -1,4 +1,4 @@
-package com.hugai.core.sd.entity;
+package com.hugai.core.sd.entity.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

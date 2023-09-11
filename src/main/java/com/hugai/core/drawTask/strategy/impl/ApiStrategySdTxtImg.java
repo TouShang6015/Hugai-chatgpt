@@ -1,130 +1,124 @@
 package com.hugai.core.drawTask.strategy.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.codec.Base64Decoder;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONWriter;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.hugai.common.enums.flow.DrawType;
 import com.hugai.core.drawTask.strategy.DrawAbstractStrategy;
-import com.hugai.core.openai.factory.AiServiceFactory;
-import com.hugai.core.openai.service.OpenAiService;
-import com.hugai.core.session.entity.SessionDrawEditOpenaiCacheData;
+import com.hugai.core.sd.client.SdApiClientService;
+import com.hugai.core.sd.client.SdClientFactory;
+import com.hugai.core.sd.entity.request.TxtImgRequest;
+import com.hugai.core.sd.entity.response.TxtImgResponse;
 import com.hugai.framework.file.constants.FileHeaderImageEnum;
 import com.hugai.framework.file.constants.FileTypeRootEnum;
 import com.hugai.framework.file.entity.FileResponse;
 import com.hugai.framework.file.service.FileService;
-import com.hugai.modules.config.service.IOpenaiKeysService;
 import com.hugai.modules.draw.entity.model.TaskDrawModel;
 import com.hugai.modules.draw.entity.vo.DrawPersistenceCollection;
 import com.hugai.modules.session.entity.model.SessionInfoDrawModel;
 import com.hugai.modules.session.entity.model.SessionRecordDrawModel;
-import com.hugai.modules.system.service.SysFileConfigService;
-import com.org.bebas.constants.HttpStatus;
+import com.hugai.modules.system.entity.vo.baseResource.ResourceDrawVO;
+import com.hugai.modules.system.service.IBaseResourceConfigService;
 import com.org.bebas.core.function.OR;
 import com.org.bebas.core.spring.SpringUtils;
 import com.org.bebas.utils.OptionalUtil;
 import com.theokanning.openai.OpenAiHttpException;
-import com.theokanning.openai.image.CreateImageEditRequest;
-import com.theokanning.openai.image.Image;
-import com.theokanning.openai.image.ImageResult;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
- * 策略实现类 openai 图生图
+ * 策略实现类 sd 文生图
  *
  * @author WuHao
- * @since 2023/9/8 13:22
+ * @since 2023-09-11 11:12:31
  */
 @Slf4j
-public class ApiStrategyOpenaiImg2img extends DrawAbstractStrategy<SessionDrawEditOpenaiCacheData> {
+public class ApiStrategySdTxtImg extends DrawAbstractStrategy<TxtImgRequest> {
 
-    public ApiStrategyOpenaiImg2img(TaskDrawModel drawData) {
+    private final ResourceDrawVO resourceDrawVO;
+
+    public ApiStrategySdTxtImg(TaskDrawModel drawData) {
         super(drawData);
+        this.resourceDrawVO = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceDraw();
     }
 
     @Override
-    protected Class<SessionDrawEditOpenaiCacheData> getMappingCls() {
-        return SessionDrawEditOpenaiCacheData.class;
+    protected Class<TxtImgRequest> getMappingCls() {
+        return TxtImgRequest.class;
     }
 
     @Override
     public DrawType.ApiKey apiKey() {
-        return DrawType.ApiKey.openai_txt2img;
+        return DrawType.ApiKey.sd_txt2img;
     }
 
     @Override
     public DrawPersistenceCollection executeApiHandle() {
         String requestParam = this.drawData.getRequestParam();
-        SessionDrawEditOpenaiCacheData apiRequestParam = JSON.parseObject(requestParam, this.getMappingCls());
-        apiRequestParam.setSize(apiRequestParam.getSizeWidth() + "x" + apiRequestParam.getSizeHeight());
 
-        final String prompt = apiRequestParam.getPrompt();
+        TxtImgRequest apiRequestParam = JSON.parseObject(requestParam, this.getMappingCls());
+
         final Long userId = this.drawData.getUserId();
 
-        OpenAiService openAiService = AiServiceFactory.createService();
+        SdApiClientService service = SdClientFactory.createService();
 
-        String fileConfigPath = SpringUtils.getBean(SysFileConfigService.class).getFileConfigPath();
+        final String prompt = Optional.ofNullable(apiRequestParam.getPrompt()).orElse("");
+        final String negativePrompt = Optional.ofNullable(apiRequestParam.getNegativePrompt()).orElse("");
 
-        CreateImageEditRequest apiParamBuildParam = CreateImageEditRequest.builder()
-                .n(apiRequestParam.getN())
-                .prompt(apiRequestParam.getPrompt())
-                .size(apiRequestParam.getSize())
-                .responseFormat(apiRequestParam.getResponseFormat())
-                .build();
-        CreateImageEditRequest apiParam = JSON.parseObject(JSON.toJSONString(apiParamBuildParam, JSONWriter.Feature.NullAsDefaultValue), CreateImageEditRequest.class);
-        String imagePath = FilenameUtils.normalize(fileConfigPath + apiRequestParam.getImage());
-        String maskPath = null;
-        if (StrUtil.isNotEmpty(apiRequestParam.getMask())) {
-            maskPath = FilenameUtils.normalize(fileConfigPath + apiRequestParam.getMask());
-        }
+        TxtImgRequest txtImgRequest = JSON.parseObject(resourceDrawVO.getDefaultRequestBean(), this.getMappingCls());
+        BeanUtil.copyProperties(txtImgRequest,apiRequestParam, CopyOptions.create().setIgnoreNullValue(true));
 
-        ImageResult apiResponse;
+        apiRequestParam.setNegativePrompt(resourceDrawVO.getDefaultNegativePrompt() + negativePrompt);
+        TxtImgResponse apiResponse;
         try {
-            apiResponse = openAiService.createImageEdit(apiParam, imagePath, maskPath);
+            log.info("[绘图 - sd] api 请求参数：{}",JSON.toJSONString(apiRequestParam));
+            apiResponse = service.txt2img(apiRequestParam);
         } catch (OpenAiHttpException e) {
             e.printStackTrace();
-            int statusCode = e.statusCode;
-            String code = e.code;
-            if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
-                SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getDecryptToken());
-            }
+            log.error("[绘图 - sd] 响应失败： {}", e.getMessage());
             return null;
         }
 
         DrawPersistenceCollection COLLECTION = new DrawPersistenceCollection();
 
         OR.run(apiResponse, Objects::nonNull, response -> {
-            log.info("openai图像生成响应：{}", JSON.toJSONString(response));
+            log.info("[绘图 - sd] api 请求成功");
 
             long sessionNum = OptionalUtil.ofNullLong(sessionInfoDrawService.lambdaQuery().eq(SessionInfoDrawModel::getUserId, userId).count(), 0L);
+
+            final long sessionInfoDrawId = IdWorker.getId();
 
             // 创建会话实体
             SessionInfoDrawModel sessionInfoSaveParam = SessionInfoDrawModel.builder()
                     .userId(userId)
                     .prompt(prompt)
-                    .drawUniqueKey(DrawType.OPENAI.getKey())
+                    .drawUniqueKey(DrawType.SD.getKey())
                     .sessionNum(Math.toIntExact(sessionNum + 1))
                     .build();
+            sessionInfoSaveParam.setId(sessionInfoDrawId);
             COLLECTION.setSessionInfoDrawModelInsert(sessionInfoSaveParam);
 
             // 响应记录
-            List<Image> images = response.getData();
+            List<String> images = response.getImages();
             FileService fileService = fileServiceContext.getFileService();
 
             // 创建会话记录
             List<SessionRecordDrawModel> sessionRecordSaveParamList = images.stream().filter(Objects::nonNull).map(image -> {
                 // 图片存储至系统
                 AtomicReference<String> imgUrl = new AtomicReference<>();
-                OR.run(image.getUrl(), StrUtil::isNotEmpty, url -> {
-                    try (InputStream inputStream = HttpUtil.createGet(url).execute().bodyStream();) {
+                OR.run(image, StrUtil::isNotEmpty, url -> {
+                    try (InputStream inputStream = new ByteArrayInputStream(Base64Decoder.decode(image));) {
                         FileResponse fileResponse = fileService.upload(FileTypeRootEnum.image, FileHeaderImageEnum.IMAGE_PNG.getValue(), inputStream);
                         imgUrl.set(fileResponse.getFilePath());
                     } catch (IOException e) {
@@ -134,11 +128,10 @@ public class ApiStrategyOpenaiImg2img extends DrawAbstractStrategy<SessionDrawEd
                 });
 
                 return SessionRecordDrawModel.builder()
-                        .userId(apiRequestParam.getUserId())
-                        .sessionInfoDrawId(sessionInfoSaveParam.getId())
+                        .userId(userId)
+                        .sessionInfoDrawId(sessionInfoDrawId)
                         .prompt(prompt)
-                        .drawUniqueKey(DrawType.OPENAI.getKey())
-                        .drawBase64Img(image.getB64Json())
+                        .drawUniqueKey(DrawType.SD.getKey())
                         .drawImgUrl(imgUrl.get())
                         .build();
             }).collect(Collectors.toList());
@@ -147,7 +140,9 @@ public class ApiStrategyOpenaiImg2img extends DrawAbstractStrategy<SessionDrawEd
 
             String showImgUrl = sessionRecordSaveParamList.stream().findFirst().orElseGet(SessionRecordDrawModel::new).getDrawImgUrl();
             sessionInfoSaveParam.setShowImg(showImgUrl);
+
         });
+
 
         return COLLECTION;
 

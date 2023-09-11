@@ -91,7 +91,7 @@ public class ApiStrategyOpenaiTxtImg extends DrawAbstractStrategy<SessionDrawCre
         OR.run(apiResponse, Objects::nonNull, response -> {
             log.info("openai图像生成响应：{}", JSON.toJSONString(response));
 
-            long sessionNum = OptionalUtil.ofNullLong(sessionInfoDrawService.lambdaQuery().eq(SessionInfoDrawModel::getUserId, apiRequestParam.getUser()).count(), 0L);
+            long sessionNum = OptionalUtil.ofNullLong(sessionInfoDrawService.lambdaQuery().eq(SessionInfoDrawModel::getUserId, userId).count(), 0L);
 
             final long sessionInfoDrawId = IdWorker.getId();
 
@@ -135,7 +135,11 @@ public class ApiStrategyOpenaiTxtImg extends DrawAbstractStrategy<SessionDrawCre
 
             COLLECTION.setSessionRecordDrawModelListInsert(sessionRecordSaveParamList);
 
+            String showImgUrl = sessionRecordSaveParamList.stream().findFirst().orElseGet(SessionRecordDrawModel::new).getDrawImgUrl();
+            sessionInfoSaveParam.setShowImg(showImgUrl);
+
         });
+
 
         return COLLECTION;
 

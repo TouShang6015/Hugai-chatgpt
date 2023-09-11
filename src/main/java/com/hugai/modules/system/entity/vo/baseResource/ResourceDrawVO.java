@@ -17,6 +17,14 @@ public class ResourceDrawVO implements Serializable {
      * 是否开启openai绘图接口
      */
     private Boolean openDrawOpenai;
+    /**
+     * 是否开启正向prompt前置内容
+     */
+    private Boolean openBeforePromptContent;
+    /**
+     * 正向prompt固定前置内容
+     */
+    private String beforePromptContent;
 
     /**
      * sd api域名地址
@@ -24,8 +32,18 @@ public class ResourceDrawVO implements Serializable {
     private String sdHostUrl;
 
     /**
+     * sd默认请求参数
+     */
+    private String defaultRequestBean;
+
+    /**
      * 默认反向prompt
      */
     private String defaultNegativePrompt;
+
+    /**
+     * 默认正向prompt
+     */
+    private String defaultPrompt;
 
 }

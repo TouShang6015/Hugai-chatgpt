@@ -34,4 +34,7 @@ public class SessionInfoDrawModel extends BaseModel {
     @ApiModelProperty(value = "用户会话号")
     private Integer sessionNum;
 
+    @ApiModelProperty(value = "展示图")
+    private String showImg;
+
 }

@@ -11,6 +11,15 @@ public interface RedisCacheKey {
      */
     String WebClientRequestCount = "WEB_CLIENT_REQUEST_COUNT";
 
+    /**
+     * 当前openai绘图任务队列
+     */
+    String TASK_DRAW_QUEUE_OPENAI = "TASK_DRAW_QUEUE:OPENAI";
+    /**
+     * 当前sd绘图任务队列
+     */
+    String TASK_DRAW_QUEUE_SD = "TASK_DRAW_QUEUE:SD";
+
     String LOCK_DRAW_OPENAI = "DRAW-SESSION:%s:OPENAI";
 
 }

@@ -11,7 +11,7 @@
  Target Server Version : 80028 (8.0.28)
  File Encoding         : 65001
 
- Date: 01/09/2023 17:50:05
+ Date: 11/09/2023 18:02:15
 */
 
 SET NAMES utf8mb4;
@@ -120,6 +120,7 @@ CREATE TABLE `base_resource_config`  (
 -- ----------------------------
 INSERT INTO `base_resource_config` VALUES (102061615, NULL, NULL, '2023-08-23 08:55:18', '1000000000', 0, 12, 'main', '{\"maxUserLogin\":5,\"staticWebsite\":\"http://chat.static.equinox19.xyz\",\"website\":\"http://localhost:9000\",\"registerOpen\":true,\"authCodeOpen\":false,\"fileSaveStrategy\":\"qiniu\",\"proxyHost\":\"127.0.0.1\",\"proxyPort\":\"7890\",\"ableSystemApiKey\":true,\"streamResponseType\":\"Websocket\"}');
 INSERT INTO `base_resource_config` VALUES (112061615, NULL, NULL, '2023-08-09 10:21:32', '1000000000', 0, 0, 'openai', '{\"proxyHost\":\"127.0.0.1\",\"proxyPort\":\"7890\",\"chatModel\":\"gpt-3.5-turbo\",\"textModel\":\"text-davinci-003\",\"drawApiCacheTime\":\"2\",\"drawApiSendMax\":\"1\"}');
+INSERT INTO `base_resource_config` VALUES (112241615, NULL, NULL, '2023-09-11 13:15:06', '1000000000', 0, 0, 'draw', '{\"sdHostUrl\":\"http://xxxx.com\",\"openDrawOpenai\":false,\"defaultNegativePrompt\":\"(worst quality:2), (low quality:2), (normal quality:2), lowres, normal quality,(monochrome)), ((grayscale)), skin spots, acnes, skin blemishes, age spot, (ugly:1.331),duplicate:1.331), (morbid:1.21), (mutilated:1.21), (tranny:l.331), mutated hands, (poorly drawnands:1.5), blurry, (bad anatomy:1.21), (bad proportions:1.331), extra limbs, (disfigured:1.331),missing arms:1.331), (extra legs:1.331), (fused fingers:1.61051), (too many fingers:1.61051),unclear eyes:1.331), lowers, bad hands, missing fingers, extra digit,bad hands, missing fingers.((extra arms and legs))),lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, bad-hands-5\",\"openSensitiveLimit\":true,\"sensitiveContent\":\"NSFW\",\"openBeforePromptContent\":true,\"beforePromptContent\":\"NSFW\",\"defaultRequestBean\":\"{\\n    \\\"steps\\\": 25,\\n    \\\"sampler_name\\\": \\\"Euler a\\\",\\n    \\\"restore_faces\\\": true,\\n    \\\"seed\\\": -1,\\n    \\\"denoisingStrength\\\": 0.7,\\n    \\\"hrScale\\\": 2.0\\n}\"}');
 
 -- ----------------------------
 -- Table structure for sys_file_config
@@ -925,10 +926,11 @@ CREATE TABLE `tb_session_info_draw`  (
   `update_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
   `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
   `version` int NULL DEFAULT 0 COMMENT '版本号',
-  `prompt` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'prompt',
+  `prompt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'prompt',
   `user_id` bigint NULL DEFAULT NULL COMMENT '用户id',
   `draw_unique_key` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '绘画接口类型唯一表示（DrawType）',
   `session_num` int NULL DEFAULT NULL COMMENT '用户会话号',
+  `show_img` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '展示图',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '绘图会话' ROW_FORMAT = DYNAMIC;
@@ -988,13 +990,41 @@ CREATE TABLE `tb_session_record_draw`  (
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
   `draw_base64_img` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '图片base64内容',
   `draw_img_url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片路径',
-  `prompt` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '输入prompt',
+  `prompt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '输入prompt',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '图像会话详情' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of tb_session_record_draw
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for tb_task_draw
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_task_draw`;
+CREATE TABLE `tb_task_draw`  (
+  `id` bigint NOT NULL COMMENT '主键',
+  `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `create_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '操作时间',
+  `update_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
+  `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
+  `version` int NULL DEFAULT 0 COMMENT '版本号',
+  `draw_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '绘图任务类型',
+  `draw_api_key` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '绘图接口标识',
+  `user_id` bigint NULL DEFAULT NULL COMMENT '用户id',
+  `task_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '任务状态',
+  `session_info_draw_id` bigint NULL DEFAULT NULL COMMENT '绘图会话id',
+  `task_end_time` datetime NULL DEFAULT NULL COMMENT '任务结束时间',
+  `request_param` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '任务请求参数',
+  `show_img` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '展示图',
+  `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '绘图任务列表' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of tb_task_draw
 -- ----------------------------
 
 -- ----------------------------

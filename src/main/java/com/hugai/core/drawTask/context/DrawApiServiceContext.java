@@ -4,6 +4,7 @@ import com.hugai.common.enums.flow.DrawType;
 import com.hugai.core.drawTask.strategy.impl.ApiStrategyOpenaiImg2img;
 import com.hugai.core.drawTask.strategy.impl.ApiStrategyOpenaiTxtImg;
 import com.hugai.core.drawTask.strategy.DrawApiService;
+import com.hugai.core.drawTask.strategy.impl.ApiStrategySdTxtImg;
 import com.hugai.modules.draw.entity.model.TaskDrawModel;
 import com.org.bebas.exception.BusinessException;
 
@@ -29,7 +30,8 @@ public class DrawApiServiceContext {
     public DrawApiService getDrawApiService() {
         DrawApiService[] drawApiServices = {
                 new ApiStrategyOpenaiTxtImg(this.drawData),
-                new ApiStrategyOpenaiImg2img(this.drawData)
+                new ApiStrategyOpenaiImg2img(this.drawData),
+                new ApiStrategySdTxtImg(this.drawData)
         };
         String drawApiKey = drawData.getDrawApiKey();
         for (DrawApiService drawApiService : drawApiServices) {

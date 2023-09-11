@@ -1,9 +1,10 @@
-package com.hugai.core.sd.entity;
+package com.hugai.core.sd.entity.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,6 +28,9 @@ public class TxtImgRequest {
 
     @JsonProperty("styles")
     private List<String> styles;
+    /**
+     * 随机数种子
+     */
     @JsonProperty("seed")
     private Integer seed;
     @JsonProperty("subseed")
@@ -43,12 +47,21 @@ public class TxtImgRequest {
     private Integer batchSize;
     @JsonProperty("n_iter")
     private Integer nIter;
+    /**
+     * 迭代步数
+     */
     @JsonProperty("steps")
     private Integer steps;
     @JsonProperty("cfg_scale")
     private Integer cfgScale;
+    /**
+     * 宽度
+     */
     @JsonProperty("width")
     private Integer width;
+    /**
+     * 高度
+     */
     @JsonProperty("height")
     private Integer height;
     @JsonProperty("restore_faces")
@@ -61,6 +74,10 @@ public class TxtImgRequest {
     private Boolean doNotSaveGrid;
     @JsonProperty("eta")
     private Integer eta;
+
+    /**
+     * 重绘幅度
+     */
     @JsonProperty("denoising_strength")
     private Double denoisingStrength;
     @JsonProperty("s_min_uncond")
@@ -74,7 +91,7 @@ public class TxtImgRequest {
     @JsonProperty("s_noise")
     private Integer sNoise;
     @JsonProperty("override_settings")
-    private OverrideSettings overrideSettings;
+    private HashMap<String, Object> overrideSettings;
     @JsonProperty("override_settings_restore_afterwards")
     private Boolean overrideSettingsRestoreAfterwards;
     @JsonProperty("refiner_checkpoint")
@@ -84,15 +101,19 @@ public class TxtImgRequest {
     @JsonProperty("disable_extra_networks")
     private Boolean disableExtraNetworks;
     @JsonProperty("comments")
-    private Comments comments;
+    private HashMap<String, Object> comments;
     @JsonProperty("enable_hr")
     private Boolean enableHr;
     @JsonProperty("firstphase_width")
     private Integer firstphaseWidth;
     @JsonProperty("firstphase_height")
     private Integer firstphaseHeight;
+
+    /**
+     * 高清修复放大倍数
+     */
     @JsonProperty("hr_scale")
-    private Integer hrScale;
+    private Double hrScale;
     @JsonProperty("hr_upscaler")
     private String hrUpscaler;
     @JsonProperty("hr_second_pass_steps")
@@ -120,20 +141,6 @@ public class TxtImgRequest {
     @JsonProperty("save_images")
     private Boolean saveImages;
     @JsonProperty("alwayson_scripts")
-    private AlwaysonScripts alwaysonScripts;
+    private HashMap<String, Object> alwaysonScripts;
 
-    @NoArgsConstructor
-    @Data
-    public static class OverrideSettings {
-    }
-
-    @NoArgsConstructor
-    @Data
-    public static class Comments {
-    }
-
-    @NoArgsConstructor
-    @Data
-    public static class AlwaysonScripts {
-    }
 }

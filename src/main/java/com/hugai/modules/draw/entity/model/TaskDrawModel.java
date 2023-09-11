@@ -44,6 +44,9 @@ public class TaskDrawModel extends BaseModel {
     @ApiModelProperty(value = "任务请求参数")
     private String requestParam;
 
+    @ApiModelProperty(value = "展示图")
+    private String showImg;
+
     @ApiModelProperty(value = "备注")
     private String remark;
 
