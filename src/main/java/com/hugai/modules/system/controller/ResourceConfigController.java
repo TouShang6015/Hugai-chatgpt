@@ -1,6 +1,7 @@
 package com.hugai.modules.system.controller;
 
 import com.hugai.common.constants.ApiPrefixConstant;
+import com.hugai.common.constants.ResourceConfigConstant;
 import com.hugai.framework.log.annotation.Log;
 import com.hugai.modules.system.entity.model.BaseResourceConfigModel;
 import com.hugai.modules.system.service.IBaseResourceConfigService;
@@ -23,6 +24,13 @@ import org.springframework.web.bind.annotation.*;
 public class ResourceConfigController {
 
     private final IBaseResourceConfigService service;
+
+    @ApiOperation(value = "单独获取main配置信息", httpMethod = "GET", response = Result.class)
+    @GetMapping("/configMain")
+    public Result getConfigMain() {
+        BaseResourceConfigModel model = service.queryByConfigKey(ResourceConfigConstant.MAIN_KEY);
+        return Result.success(model);
+    }
 
     @ApiOperation(value = "根据configKey获取信息", httpMethod = "GET", response = Result.class)
     @GetMapping("/queryByConfigKey/{configKey}")

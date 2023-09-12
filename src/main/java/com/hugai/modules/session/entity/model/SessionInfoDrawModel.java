@@ -37,4 +37,7 @@ public class SessionInfoDrawModel extends BaseModel {
     @ApiModelProperty(value = "展示图")
     private String showImg;
 
+    @ApiModelProperty(value = "sd info响应参数json")
+    private String sdResponseInfo;
+
 }

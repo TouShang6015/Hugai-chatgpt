@@ -20,4 +20,12 @@ public interface SessionInfoDrawService extends IService<SessionInfoDrawModel> {
      */
     SessionInfoDrawDTO getLastSession(String drawUniqueKey);
 
+    /**
+     * 根据主键获取一行 缓存
+     *
+     * @param id
+     * @return
+     */
+    SessionInfoDrawModel cacheGetById(Long id);
+
 }

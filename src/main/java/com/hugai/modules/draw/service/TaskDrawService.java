@@ -15,7 +15,7 @@ public interface TaskDrawService extends IService<TaskDrawModel> {
     /**
      * 创建任务
      *
-     * @param apiKey        {@link com.hugai.common.enums.flow.DrawType.ApiKey}
+     * @param apiKey   {@link com.hugai.common.enums.flow.DrawType.ApiKey}
      * @param paramMap
      */
     void createTask(String apiKey, HashMap<String, Object> paramMap);
@@ -25,6 +25,6 @@ public interface TaskDrawService extends IService<TaskDrawModel> {
      *
      * @param serviceConsumer
      */
-    void endTaskUpdate(Consumer<TaskDrawService> serviceConsumer,Long userId);
+    void endTaskUpdate(Consumer<TaskDrawService> serviceConsumer, Long userId);
 
 }

@@ -54,7 +54,7 @@ public class DrawTaskController {
     public Result userTaskList(@PathVariable String drawType, TaskDrawModel param) {
         param.setDrawType(drawType);
         param.setUserId(SecurityContextUtil.getUserId());
-        QueryFastLambda.build(param).sortCondition(TaskDrawModel::getCreateTime,false);
+        QueryFastLambda.build(param).sortCondition(TaskDrawModel::getCreateTime, false);
         IPage<TaskDrawModel> page = taskDrawService.listPageByParam(PageUtil.pageBean(param), param);
         return Result.success(page);
     }

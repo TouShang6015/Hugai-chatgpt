@@ -79,7 +79,7 @@ public class TaskDrawServiceImpl extends ServiceImpl<TaskDrawMapper, TaskDrawMod
 
         super.save(taskDrawModel);
 
-        log.info("绘图任务创建 - 消息发送完成，channel: {},param:{}",drawType.queueKey(),JSON.toJSONString(taskDrawModel));
+        log.info("绘图任务创建 - 消息发送完成，channel: {},param:{}", drawType.queueKey(), JSON.toJSONString(taskDrawModel));
         rabbitTemplate.convertAndSend(drawType.queueKey(), taskDrawModel);
         redisTemplate.opsForZSet().add(RedisCacheKey.TASK_DRAW_QUEUE_OPENAI, userId, new Date().getTime());
     }

@@ -28,8 +28,6 @@ import java.io.IOException;
 @Slf4j
 public class SdApiClientService {
 
-    private static final String BASE_URL = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceDraw().getSdHostUrl();
-
     private final Api api;
 
     public SdApiClientService(Api api) {
@@ -45,8 +43,9 @@ public class SdApiClientService {
     }
 
     public static Retrofit defaultRetrofit(OkHttpClient client, ObjectMapper mapper) {
+        String sdHostUrl = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceDraw().getSdHostUrl();
         return new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(sdHostUrl)
                 .client(client)
                 .addConverterFactory(JacksonConverterFactory.create(mapper))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

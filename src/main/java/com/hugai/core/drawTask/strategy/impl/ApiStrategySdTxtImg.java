@@ -5,6 +5,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.codec.Base64Decoder;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONReader;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.hugai.common.enums.flow.DrawType;
 import com.hugai.core.drawTask.strategy.DrawAbstractStrategy;
@@ -67,7 +68,7 @@ public class ApiStrategySdTxtImg extends DrawAbstractStrategy<TxtImgRequest> {
     public DrawPersistenceCollection executeApiHandle() {
         String requestParam = this.drawData.getRequestParam();
 
-        TxtImgRequest apiRequestParam = JSON.parseObject(requestParam, this.getMappingCls());
+        TxtImgRequest apiRequestParam = JSON.parseObject(requestParam, this.getMappingCls(), JSONReader.Feature.SupportSmartMatch);
 
         final Long userId = this.drawData.getUserId();
 
@@ -105,6 +106,7 @@ public class ApiStrategySdTxtImg extends DrawAbstractStrategy<TxtImgRequest> {
                     .prompt(prompt)
                     .drawUniqueKey(DrawType.SD.getKey())
                     .sessionNum(Math.toIntExact(sessionNum + 1))
+                    .sdResponseInfo(response.getInfo())
                     .build();
             sessionInfoSaveParam.setId(sessionInfoDrawId);
             COLLECTION.setSessionInfoDrawModelInsert(sessionInfoSaveParam);
