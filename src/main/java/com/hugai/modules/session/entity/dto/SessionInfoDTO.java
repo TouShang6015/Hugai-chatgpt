@@ -1,7 +1,11 @@
 package com.hugai.modules.session.entity.dto;
 
 import com.hugai.modules.session.entity.model.SessionInfoModel;
-import lombok.*;
+import com.hugai.modules.session.entity.model.SessionRecordModel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 /**
  * 会话表 Dto
@@ -12,5 +16,13 @@ import lombok.*;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SessionInfoDTO extends SessionInfoModel {
+
+    private String userName;
+
+    private String userIpAddress;
+
+    private String email;
+
+    private List<SessionRecordModel> recordModelList;
 
 }

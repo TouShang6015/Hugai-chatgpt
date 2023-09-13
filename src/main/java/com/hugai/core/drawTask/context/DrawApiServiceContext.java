@@ -5,6 +5,7 @@ import com.hugai.core.drawTask.strategy.impl.ApiStrategyOpenaiImg2img;
 import com.hugai.core.drawTask.strategy.impl.ApiStrategyOpenaiTxtImg;
 import com.hugai.core.drawTask.strategy.DrawApiService;
 import com.hugai.core.drawTask.strategy.impl.ApiStrategySdTxtImg;
+import com.hugai.core.session.entity.SessionCacheDrawData;
 import com.hugai.modules.draw.entity.model.TaskDrawModel;
 import com.org.bebas.exception.BusinessException;
 
@@ -21,9 +22,16 @@ public class DrawApiServiceContext {
 
     private TaskDrawModel drawData;
 
+    private SessionCacheDrawData cacheData;
+
     public static DrawApiServiceContext init(TaskDrawModel drawData) {
+        return init(drawData, null);
+    }
+
+    public static DrawApiServiceContext init(TaskDrawModel drawData, SessionCacheDrawData cacheData) {
         DrawApiServiceContext context = new DrawApiServiceContext();
         context.drawData = drawData;
+        context.cacheData = cacheData;
         return context;
     }
 
@@ -31,7 +39,7 @@ public class DrawApiServiceContext {
         DrawApiService[] drawApiServices = {
                 new ApiStrategyOpenaiTxtImg(this.drawData),
                 new ApiStrategyOpenaiImg2img(this.drawData),
-                new ApiStrategySdTxtImg(this.drawData)
+                new ApiStrategySdTxtImg(this.drawData, this.cacheData)
         };
         String drawApiKey = drawData.getDrawApiKey();
         for (DrawApiService drawApiService : drawApiServices) {

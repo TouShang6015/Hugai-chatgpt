@@ -1,16 +1,23 @@
 package com.hugai.modules.session.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.core.session.valid.AddDomainSession;
 import com.hugai.core.session.valid.AddDrawSession;
 import com.hugai.framework.log.annotation.Log;
+import com.hugai.modules.session.entity.convert.SessionInfoConvert;
+import com.hugai.modules.session.entity.dto.SessionInfoDTO;
 import com.hugai.modules.session.entity.model.SessionInfoModel;
 import com.hugai.modules.session.entity.vo.SessionBaseRequest;
 import com.hugai.modules.session.service.SessionInfoService;
+import com.hugai.modules.user.entity.model.UserInfoModel;
+import com.hugai.modules.user.service.UserInfoService;
+import com.org.bebas.core.function.OR;
 import com.org.bebas.core.model.build.QueryFastLambda;
 import com.org.bebas.core.validator.ValidatorUtil;
+import com.org.bebas.utils.OptionalUtil;
 import com.org.bebas.utils.StringUtils;
 import com.org.bebas.utils.page.PageUtil;
 import com.org.bebas.utils.result.Result;
@@ -21,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 会话表 控制器
@@ -35,6 +43,8 @@ import java.util.Objects;
 public class SessionInfoController {
 
     private final SessionInfoService service;
+
+    private final UserInfoService userInfoService;
 
     @Log(title = "新增会话")
     @GetMapping("/addSession/{sessionType}")
@@ -134,6 +144,32 @@ public class SessionInfoController {
         queryParam.setUserId(SecurityContextUtil.getUserId());
         QueryFastLambda.build(queryParam).sortCondition(SessionInfoModel::getCreateTime,false);
         IPage<SessionInfoModel> page = service.listPageByParam(PageUtil.pageBean(queryParam), queryParam);
+        return Result.success(page);
+    }
+
+    @ApiOperation(value = "管理端-列表分页")
+    @PostMapping("/baseQueryPageByParam")
+    public Result baseQueryPageByParam(@RequestBody SessionInfoDTO param){
+        IPage<SessionInfoModel> modelPage = service.listPageByParam(PageUtil.pageBean(param), param);
+        IPage<SessionInfoDTO> page = PageUtil.convert(modelPage, SessionInfoConvert.INSTANCE::convertToDTO);
+        OR.run(page.getRecords(), CollUtil::isNotEmpty,dtoPage -> {
+            List<Long> userIds = dtoPage.stream().map(SessionInfoDTO::getUserId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+            List<UserInfoModel> userInfoList = OptionalUtil.ofNullList(
+                    userInfoService.lambdaQuery()
+                            .select(UserInfoModel::getUserName, UserInfoModel::getIpaddress, UserInfoModel::getEmail, UserInfoModel::getId)
+                            .in(UserInfoModel::getId, userIds)
+                            .list()
+            );
+
+            dtoPage.forEach(item -> {
+                UserInfoModel userInfoModel = userInfoList.stream().filter(x -> x.getId().equals(item.getUserId())).findFirst().orElseGet(UserInfoModel::new);
+                item.setEmail(userInfoModel.getEmail());
+                item.setUserName(userInfoModel.getUserName());
+                item.setUserIpAddress(userInfoModel.getIpaddress());
+            });
+
+        });
+
         return Result.success(page);
     }
 

@@ -11,7 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ModulesToken {
 
-    DEFAULT(1024,4000),
+    DEFAULT(1024,3072),
 
     DRAW(1024,1024),
 

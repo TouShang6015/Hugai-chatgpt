@@ -25,6 +25,14 @@ public class ResourceDrawVO implements Serializable {
      * 正向prompt固定前置内容
      */
     private String beforePromptContent;
+    /**
+     * 是否开启反向prompt前置内容
+     */
+    private Boolean openBeforeNegativePromptContent;
+    /**
+     * 反向pprompt固定前置内容
+     */
+    private String beforeNegativePromptContent;
 
     /**
      * sd api域名地址

@@ -1,18 +1,17 @@
 package com.hugai.core.drawTask.strategy.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.codec.Base64Decoder;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONReader;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.hugai.common.enums.flow.DrawType;
-import com.hugai.core.drawTask.strategy.DrawAbstractStrategy;
+import com.hugai.core.drawTask.strategy.DrawSDAbstractStrategy;
 import com.hugai.core.sd.client.SdApiClientService;
 import com.hugai.core.sd.client.SdClientFactory;
 import com.hugai.core.sd.entity.request.TxtImgRequest;
 import com.hugai.core.sd.entity.response.TxtImgResponse;
+import com.hugai.core.session.entity.SessionCacheDrawData;
 import com.hugai.framework.file.constants.FileHeaderImageEnum;
 import com.hugai.framework.file.constants.FileTypeRootEnum;
 import com.hugai.framework.file.entity.FileResponse;
@@ -34,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -45,12 +43,12 @@ import java.util.stream.Collectors;
  * @since 2023-09-11 11:12:31
  */
 @Slf4j
-public class ApiStrategySdTxtImg extends DrawAbstractStrategy<TxtImgRequest> {
+public class ApiStrategySdTxtImg extends DrawSDAbstractStrategy<TxtImgRequest> {
 
     private final ResourceDrawVO resourceDrawVO;
 
-    public ApiStrategySdTxtImg(TaskDrawModel drawData) {
-        super(drawData);
+    public ApiStrategySdTxtImg(TaskDrawModel drawData, SessionCacheDrawData cacheData) {
+        super(drawData, cacheData);
         this.resourceDrawVO = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceDraw();
     }
 
@@ -74,16 +72,14 @@ public class ApiStrategySdTxtImg extends DrawAbstractStrategy<TxtImgRequest> {
 
         SdApiClientService service = SdClientFactory.createService();
 
-        final String prompt = Optional.ofNullable(apiRequestParam.getPrompt()).orElse("");
-        final String negativePrompt = Optional.ofNullable(apiRequestParam.getNegativePrompt()).orElse("");
+        // 优化prompt
+        apiRequestParam.setPrompt(this.optimizePrompt());
+        // 配置加载
+        super.configLoading(resourceDrawVO).accept(apiRequestParam);
 
-        TxtImgRequest txtImgRequest = JSON.parseObject(resourceDrawVO.getDefaultRequestBean(), this.getMappingCls());
-        BeanUtil.copyProperties(txtImgRequest,apiRequestParam, CopyOptions.create().setIgnoreNullValue(true));
-
-        apiRequestParam.setNegativePrompt(resourceDrawVO.getDefaultNegativePrompt() + negativePrompt);
         TxtImgResponse apiResponse;
         try {
-            log.info("[绘图 - sd] api 请求参数：{}",JSON.toJSONString(apiRequestParam));
+            log.info("[绘图 - sd] api 请求参数：{}", JSON.toJSONString(apiRequestParam));
             apiResponse = service.txt2img(apiRequestParam);
         } catch (OpenAiHttpException e) {
             e.printStackTrace();
@@ -103,7 +99,7 @@ public class ApiStrategySdTxtImg extends DrawAbstractStrategy<TxtImgRequest> {
             // 创建会话实体
             SessionInfoDrawModel sessionInfoSaveParam = SessionInfoDrawModel.builder()
                     .userId(userId)
-                    .prompt(prompt)
+                    .prompt(apiRequestParam.getPrompt())
                     .drawUniqueKey(DrawType.SD.getKey())
                     .sessionNum(Math.toIntExact(sessionNum + 1))
                     .sdResponseInfo(response.getInfo())
@@ -132,7 +128,7 @@ public class ApiStrategySdTxtImg extends DrawAbstractStrategy<TxtImgRequest> {
                 return SessionRecordDrawModel.builder()
                         .userId(userId)
                         .sessionInfoDrawId(sessionInfoDrawId)
-                        .prompt(prompt)
+                        .prompt(apiRequestParam.getPrompt())
                         .drawUniqueKey(DrawType.SD.getKey())
                         .drawImgUrl(imgUrl.get())
                         .build();
