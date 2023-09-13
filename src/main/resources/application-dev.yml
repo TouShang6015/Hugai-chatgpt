@@ -87,7 +87,7 @@ project:
     # 事务超时时间（秒）
     timeOut: 20
     # 开始事务路径表达式
-    pointcutExpression: execution(* com.bebas.modules.**.service.impl.*ServiceImpl.*(..))
+    pointcutExpression: execution(* com.hugai.modules.**.service.impl.*ServiceImpl.*(..))
   # **** token配置
   token:
     # 令牌自定义标识

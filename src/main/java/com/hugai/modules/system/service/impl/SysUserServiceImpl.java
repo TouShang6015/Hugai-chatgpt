@@ -3,6 +3,7 @@ package com.hugai.modules.system.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.hugai.common.constants.MessageCode;
 import com.hugai.core.security.context.SecurityContextUtil;
@@ -179,6 +180,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserModel>
             OpenRunnable.run(StrUtil.isEmpty(item.getPassword()), () -> item.setPassword(SecurityContextUtil.encryptPassword(item.getPassword())));
         }).collect(Collectors.toList());
         List<SysUserModel> insertParam = SysUserConvert.INSTANCE.convertToModel(dtoInitList);
+        insertParam.forEach(item -> item.setId(IdWorker.getId()));
         // 新增主表
         boolean result = super.saveBatch(insertParam);
         // 新增子表
