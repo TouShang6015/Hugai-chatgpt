@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: dev
   # 国际化配置
   messages:
     basename: i18n/messages

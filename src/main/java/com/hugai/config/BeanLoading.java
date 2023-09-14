@@ -1,9 +1,11 @@
 package com.hugai.config;
 
+import cn.hutool.core.util.StrUtil;
 import com.hugai.core.security.filter.AccessDecisionManagerImpl;
 import com.hugai.core.security.filter.PermissionSecurityFilter;
 import com.hugai.core.security.filter.SecurityMetadataSource;
 import com.hugai.framework.sensitiveWord.SenWordHolder;
+import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType;
@@ -87,6 +89,19 @@ public class BeanLoading {
         EndpointMapping endpointMapping = new EndpointMapping(basePath);
         boolean shouldRegisterLinksMapping = webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath) || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
         return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes, corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath), shouldRegisterLinksMapping, null);
+    }
+
+    /**
+     * redission无密码配置
+     * @return
+     */
+    @Bean
+    public RedissonAutoConfigurationCustomizer redissonAutoConfigurationCustomizer() {
+        return configuration -> {
+            if (StrUtil.isEmpty(configuration.useSingleServer().getPassword())) {
+                configuration.useSingleServer().setPassword(null);
+            }
+        };
     }
 
 }

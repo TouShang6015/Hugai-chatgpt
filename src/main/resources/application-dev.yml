@@ -15,7 +15,7 @@ spring:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
       type: com.alibaba.druid.pool.xa.DruidXADataSource
-      url: jdbc:mysql://localhost:3306/db_hugai_dev?useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://localhost:3306/db_hugai?useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
       username: root
       password: 123456
       initial-size: 5
@@ -35,7 +35,8 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 8
-    password: 123456
+    # 没有密码就把这行注释掉，redission没密码会报错
+#    password: 123456
     timeout: 10s
     Lettuce:
       pool:
@@ -59,7 +60,7 @@ spring:
         # 日志
         debug: false
   rabbitmq:
-    host: 192.168.2.105
+    host: 127.0.0.1
     port: 5672
     username: guest
     password: guest
