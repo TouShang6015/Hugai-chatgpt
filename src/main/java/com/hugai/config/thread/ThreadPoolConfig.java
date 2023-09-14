@@ -26,7 +26,7 @@ public class ThreadPoolConfig {
     private final int corePoolSize = AVAILABLE_PROCESSORS * AVAILABLE_PROCESSORS + 1;
 
     // 最大可创建的线程数
-    private final int maxPoolSize = AVAILABLE_PROCESSORS * 20;
+    private final int maxPoolSize = AVAILABLE_PROCESSORS * Math.max(20, AVAILABLE_PROCESSORS + 5);
 
     // 队列最大长度
     private final int queueCapacity = 100;
@@ -34,6 +34,11 @@ public class ThreadPoolConfig {
     // 线程池维护线程所允许的空闲时间
     private final int keepAliveSeconds = 300;
 
+    /**
+     * <p>* maxPoolSize 必须大于 corePoolSize </p>
+     * {@link ThreadPoolExecutor#ThreadPoolExecutor(int, int, long, java.util.concurrent.TimeUnit, java.util.concurrent.BlockingQueue, java.util.concurrent.ThreadFactory, java.util.concurrent.RejectedExecutionHandler)}
+     * @return
+     */
     @Bean(name = "threadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
