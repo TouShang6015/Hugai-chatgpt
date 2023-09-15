@@ -22,7 +22,7 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，前后�
 
 ## 特点
 
-✅	ChatGpt聊天对话，支持GPT3.5、4.0、3.5-16K等模型
+✅	ChatGpt聊天对话，支持中断停止响应，支持GPT3.5、4.0、3.5-16K等模型
 
 ✅	支持openAI与Stable Diffusion模型，AI绘图模型，文生图、图生图，AI优化Prompt
 

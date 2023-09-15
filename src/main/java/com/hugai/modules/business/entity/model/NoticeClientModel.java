@@ -26,11 +26,17 @@ public class NoticeClientModel extends BaseModel {
 
     @ApiModelProperty(value = "通知标题")
     private String title;
+
     @ApiModelProperty(value = "通知类型")
     private String noticeType;
+
     @ApiModelProperty(value = "内容")
     private String content;
+
     @ApiModelProperty(value = "排序")
-    private String sort;
+    private Integer sort;
+
+    @ApiModelProperty(value = "是否显示")
+    private String ifShow;
 
 }

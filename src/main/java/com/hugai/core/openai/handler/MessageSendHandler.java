@@ -1,14 +1,17 @@
-package com.hugai.core.openai.service;
+package com.hugai.core.openai.handler;
 
 import cn.hutool.core.util.StrUtil;
 import com.hugai.common.enums.StreamResponseTypeEnum;
+import com.hugai.core.openai.handler.pool.SessionMessageSendPool;
 import com.hugai.core.openai.utils.ContentUtil;
 import com.hugai.core.sse.CacheSsePool;
 import com.hugai.core.websocket.pool.ChatSocketPool;
 import com.hugai.modules.system.entity.vo.baseResource.ResourceMainVO;
 import com.hugai.modules.system.service.IBaseResourceConfigService;
+import com.org.bebas.constants.HttpStatus;
 import com.org.bebas.core.function.OR;
 import com.org.bebas.core.spring.SpringUtils;
+import com.org.bebas.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -41,13 +44,20 @@ public class MessageSendHandler {
 
     private Session session;
 
+    private AtomicBoolean stopState = new AtomicBoolean(false);
+
+    /**
+     * @param connectId
+     */
     public MessageSendHandler(String connectId) {
         this.connectId = connectId;
         ResourceMainVO resourceMain = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceMain();
         this.streamResponseType = StreamResponseTypeEnum.getDefaultType(resourceMain.getStreamResponseType());
-        log.info("[MessageSendHandler] 消息推送 流式响应模式：{}",this.streamResponseType.name());
+        log.info("[MessageSendHandler] 消息推送 流式响应模式：{}", this.streamResponseType.name());
         this.sseEmitter = CacheSsePool.get(this.connectId);
         this.session = ChatSocketPool.get(this.connectId);
+        // 存放缓存池
+        SessionMessageSendPool.add(connectId, this);
         // 执行自旋
         this.queueSpin();
     }
@@ -84,6 +94,9 @@ public class MessageSendHandler {
      * @param content
      */
     public void queueAdd(String content) {
+        if (stopState.get()) {
+            throw new BusinessException(null, HttpStatus.SUCCESS);
+        }
         this.messageQueue.add(content);
         if (this.streamResponseType.equals(StreamResponseTypeEnum.SSE)) {
             String poll = this.messageQueue.poll();
@@ -99,8 +112,14 @@ public class MessageSendHandler {
 
     public void close() {
         this.running.set(false);
-        OR.run(this.sseEmitter,Objects::nonNull,() -> CacheSsePool.remove(this.connectId));
-        OR.run(this.session,Objects::nonNull,() -> ChatSocketPool.remove(this.connectId));
+        OR.run(this.sseEmitter, Objects::nonNull, () -> CacheSsePool.remove(this.connectId));
+        OR.run(this.session, Objects::nonNull, () -> ChatSocketPool.remove(this.connectId));
+        // 释放资源
+        SessionMessageSendPool.remove(this.connectId);
+    }
+
+    public void stop() {
+        this.stopState.set(true);
     }
 
 }

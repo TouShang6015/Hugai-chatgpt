@@ -2,6 +2,8 @@ package com.hugai.modules.chat.controller;
 
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.common.constants.LockGroupConstant;
+import com.hugai.core.openai.handler.MessageSendHandler;
+import com.hugai.core.openai.handler.pool.SessionMessageSendPool;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.core.security.context.UserThreadLocal;
 import com.hugai.core.session.entity.SessionCacheData;
@@ -11,6 +13,7 @@ import com.hugai.core.session.valid.SendDomain;
 import com.hugai.framework.log.annotation.Log;
 import com.hugai.framework.sensitiveWord.annotation.SensitiveContentFilter;
 import com.hugai.modules.chat.service.ChatService;
+import com.org.bebas.core.function.OR;
 import com.org.bebas.core.validator.ValidatorUtil;
 import com.org.bebas.exception.BusinessException;
 import com.org.bebas.utils.result.Result;
@@ -21,10 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 /**
  * @author WuHao
@@ -100,6 +102,13 @@ public class ChatController {
             }
         });
 
+        return Result.success();
+    }
+
+    @ApiOperation(value = "中断流式输出")
+    @GetMapping("/stopStreamResponse/{contentId}")
+    public Result stopStreamResponse(@PathVariable String contentId) {
+        OR.run(SessionMessageSendPool.get(contentId), Objects::nonNull, MessageSendHandler::stop);
         return Result.success();
     }
 

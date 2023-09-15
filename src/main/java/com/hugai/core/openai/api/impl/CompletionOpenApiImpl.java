@@ -7,7 +7,7 @@ import com.hugai.core.openai.api.CompletionOpenApi;
 import com.hugai.core.openai.entity.response.TokenUsageNum;
 import com.hugai.core.openai.entity.response.api.CompletionResponse;
 import com.hugai.core.openai.factory.AiServiceFactory;
-import com.hugai.core.openai.service.MessageSendHandler;
+import com.hugai.core.openai.handler.MessageSendHandler;
 import com.hugai.core.openai.service.OpenAiService;
 import com.hugai.core.openai.utils.TokenCalculateUtil;
 import com.org.bebas.core.function.OR;

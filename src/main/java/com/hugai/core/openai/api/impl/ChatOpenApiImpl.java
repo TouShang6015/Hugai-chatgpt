@@ -7,7 +7,7 @@ import com.hugai.core.openai.api.ChatOpenApi;
 import com.hugai.core.openai.entity.response.TokenUsageNum;
 import com.hugai.core.openai.entity.response.api.ChatResponse;
 import com.hugai.core.openai.factory.AiServiceFactory;
-import com.hugai.core.openai.service.MessageSendHandler;
+import com.hugai.core.openai.handler.MessageSendHandler;
 import com.hugai.core.openai.service.OpenAiService;
 import com.hugai.core.openai.utils.TokenCalculateUtil;
 import com.hugai.modules.config.service.IOpenaiKeysService;
@@ -93,36 +93,44 @@ public class ChatOpenApiImpl implements ChatOpenApi {
         List<ChatResponse> response;
         try {
             response = this.coreSend(chatCompletionRequest, (service, apiResponseMap) -> {
-                service.streamChatCompletion(chatCompletionRequest)
-                        .doOnError(throwable -> {
-                            throwable.printStackTrace();
-                            int statusCode = ((OpenAiHttpException) throwable).statusCode;
-                            String code = ((OpenAiHttpException) throwable).code;
-                            if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
-                                SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(service.getDecryptToken());
-                            }
-                        })
-                        .blockingForEach(chunk -> {
-                            // 日志打印
+
+                try {
+                    service.streamChatCompletion(chatCompletionRequest)
+                            .doOnError(throwable -> {
+                                throwable.printStackTrace();
+                                int statusCode = ((OpenAiHttpException) throwable).statusCode;
+                                String code = ((OpenAiHttpException) throwable).code;
+                                if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
+                                    SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(service.getDecryptToken());
+                                }
+                            })
+                            .blockingForEach(chunk -> {
+                                // 日志打印
 //                            log.info("[ChatOpenApi] streamChat 响应结果：{}", JSON.toJSONString(chunk));
 
-                            List<ChatCompletionChoice> choices = chunk.getChoices();
+                                List<ChatCompletionChoice> choices = chunk.getChoices();
 
-                            Optional.ofNullable(choices).orElseGet(ArrayList::new).forEach(res -> {
-                                ChatResponse apiResponse = apiResponseMap.get(res.getIndex());
-                                ChatMessage message = Optional.ofNullable(res.getMessage()).orElseGet(ChatMessage::new);
+                                Optional.ofNullable(choices).orElseGet(ArrayList::new).forEach(res -> {
+                                    ChatResponse apiResponse = apiResponseMap.get(res.getIndex());
+                                    ChatMessage message = Optional.ofNullable(res.getMessage()).orElseGet(ChatMessage::new);
 
-                                OR.run(message.getRole(), StrUtil::isNotEmpty, apiResponse::setRole);
-                                OR.run(res.getFinishReason(), StrUtil::isNotEmpty, apiResponse::setFinishReason);
+                                    OR.run(message.getRole(), StrUtil::isNotEmpty, apiResponse::setRole);
+                                    OR.run(res.getFinishReason(), StrUtil::isNotEmpty, apiResponse::setFinishReason);
 
-                                String resContent = Optional.ofNullable(message.getContent()).orElse("");
-                                apiResponse.getContentSB().append(resContent);
-                                apiResponse.setContent(apiResponse.getContentSB().toString());
+                                    String resContent = Optional.ofNullable(message.getContent()).orElse("");
+                                    apiResponse.getContentSB().append(resContent);
+                                    apiResponse.setContent(apiResponse.getContentSB().toString());
 
-                                // 发送消息
-                                messageSendHandler.queueAdd(resContent);
+                                    // 发送消息
+                                    messageSendHandler.queueAdd(resContent);
+                                });
                             });
-                        });
+                }catch (BusinessException e){
+                    if (e.getCode() == HttpStatus.SUCCESS){
+                        return;
+                    }
+                    throw e;
+                }
 
                 // 关闭资源
                 service.shutdownExecutor();

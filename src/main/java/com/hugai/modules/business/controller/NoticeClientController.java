@@ -27,7 +27,10 @@ public class NoticeClientController extends BaseController<NoticeClientService, 
     @ApiOperation(value = "获取最新的一条通告信息")
     @GetMapping("/getLastNotice")
     public Result getLastNotice() {
-        NoticeClientModel one = service.lambdaQuery().orderByAsc(NoticeClientModel::getSort).last("limit 1").one();
+        NoticeClientModel one = service.lambdaQuery()
+                .eq(NoticeClientModel::getNoticeType,"NOTIFY")
+                .orderByAsc(NoticeClientModel::getSort).last("limit 1")
+                .one();
         return Result.success(one);
     }
 
