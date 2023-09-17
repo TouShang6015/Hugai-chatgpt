@@ -134,7 +134,7 @@ public class SessionInfoController {
 
     @GetMapping("/getUserSessionList")
     @ApiOperation(value = "获取用户会话列表（分页）")
-    public Result getUserSessionList(SessionInfoModel param){
+    public Result getUserSessionList(SessionInfoModel param) {
         SessionInfoModel queryParam = new SessionInfoModel();
         queryParam.setSize(param.getSize());
         queryParam.setPage(param.getPage());
@@ -142,21 +142,22 @@ public class SessionInfoController {
         queryParam.setDomainUniqueKey(param.getDomainUniqueKey());
         queryParam.setDrawUniqueKey(param.getDrawUniqueKey());
         queryParam.setUserId(SecurityContextUtil.getUserId());
-        QueryFastLambda.build(queryParam).sortCondition(SessionInfoModel::getCreateTime,false);
+        QueryFastLambda.build(queryParam).sortCondition(SessionInfoModel::getCreateTime, false);
         IPage<SessionInfoModel> page = service.listPageByParam(PageUtil.pageBean(queryParam), queryParam);
         return Result.success(page);
     }
 
     @ApiOperation(value = "管理端-列表分页")
     @PostMapping("/baseQueryPageByParam")
-    public Result baseQueryPageByParam(@RequestBody SessionInfoDTO param){
+    public Result baseQueryPageByParam(@RequestBody SessionInfoDTO param) {
         IPage<SessionInfoModel> modelPage = service.listPageByParam(PageUtil.pageBean(param), param);
         IPage<SessionInfoDTO> page = PageUtil.convert(modelPage, SessionInfoConvert.INSTANCE::convertToDTO);
-        OR.run(page.getRecords(), CollUtil::isNotEmpty,dtoPage -> {
+        OR.run(page.getRecords(), CollUtil::isNotEmpty, dtoPage -> {
             List<Long> userIds = dtoPage.stream().map(SessionInfoDTO::getUserId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+
             List<UserInfoModel> userInfoList = OptionalUtil.ofNullList(
                     userInfoService.lambdaQuery()
-                            .select(UserInfoModel::getUserName, UserInfoModel::getIpaddress, UserInfoModel::getEmail, UserInfoModel::getId)
+                            .select(UserInfoModel::getUserName, UserInfoModel::getIpaddress, UserInfoModel::getEmail, UserInfoModel::getIfTourist, UserInfoModel::getId)
                             .in(UserInfoModel::getId, userIds)
                             .list()
             );
@@ -166,6 +167,7 @@ public class SessionInfoController {
                 item.setEmail(userInfoModel.getEmail());
                 item.setUserName(userInfoModel.getUserName());
                 item.setUserIpAddress(userInfoModel.getIpaddress());
+                item.setIfTourist(userInfoModel.getIfTourist());
             });
 
         });

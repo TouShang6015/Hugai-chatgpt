@@ -19,10 +19,12 @@ public class SessionInfoDTO extends SessionInfoModel {
 
     private String userName;
 
+    private String ifTourist;
+
     private String userIpAddress;
 
     private String email;
 
-    private List<SessionRecordModel> recordModelList;
+    private List<SessionRecordModel> recordList;
 
 }
