@@ -1,7 +1,8 @@
-package com.hugai.core.session.entity;
+package com.hugai.core.drawTask.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hugai.core.drawTask.valid.CreateTask;
+import com.hugai.core.session.entity.SessionCacheData;
 import com.hugai.core.session.valid.SendDrawOpenAi;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +19,7 @@ import javax.validation.constraints.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SessionDrawCreatedOpenaiCacheData extends SessionCacheData{
+public class SessionDrawCreatedOpenaiCacheData extends SessionCacheData {
 
 
     /**

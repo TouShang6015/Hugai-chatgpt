@@ -1,6 +1,7 @@
 package com.hugai.modules.session.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.core.security.context.SecurityContextUtil;
@@ -150,6 +151,23 @@ public class SessionInfoController {
     @ApiOperation(value = "管理端-列表分页")
     @PostMapping("/baseQueryPageByParam")
     public Result baseQueryPageByParam(@RequestBody SessionInfoDTO param) {
+        if (
+                StrUtil.isNotEmpty(param.getEmail()) ||
+                StrUtil.isNotEmpty(param.getIfTourist()) ||
+                StrUtil.isNotEmpty(param.getUserIpAddress()) ||
+                StrUtil.isNotEmpty(param.getUserName())
+        ){
+            List<UserInfoModel> userList = userInfoService.lambdaQuery()
+                    .select(UserInfoModel::getId)
+                    .eq(StrUtil.isNotEmpty(param.getEmail()), UserInfoModel::getEmail, param.getEmail())
+                    .like(StrUtil.isNotEmpty(param.getUserName()), UserInfoModel::getUserName, param.getUserName())
+                    .eq(StrUtil.isNotEmpty(param.getUserIpAddress()), UserInfoModel::getIpaddress, param.getUserIpAddress())
+                    .eq(StrUtil.isNotEmpty(param.getIfTourist()), UserInfoModel::getIfTourist, param.getIfTourist())
+                    .list();
+            List<Long> userIds = OptionalUtil.ofNullList(userList).stream().map(UserInfoModel::getId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+            QueryFastLambda.<SessionInfoModel>build(param).queryConditionIn(SessionInfoModel::getUserId,userIds);
+        }
+
         IPage<SessionInfoModel> modelPage = service.listPageByParam(PageUtil.pageBean(param), param);
         IPage<SessionInfoDTO> page = PageUtil.convert(modelPage, SessionInfoConvert.INSTANCE::convertToDTO);
         OR.run(page.getRecords(), CollUtil::isNotEmpty, dtoPage -> {

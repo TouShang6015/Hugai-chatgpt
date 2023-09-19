@@ -1,6 +1,6 @@
 package com.hugai.modules.chat.convert;
 
-import com.hugai.core.session.entity.SessionDrawCreatedOpenaiCacheData;
+import com.hugai.core.drawTask.entity.SessionDrawCreatedOpenaiCacheData;
 import com.theokanning.openai.image.CreateImageRequest;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;

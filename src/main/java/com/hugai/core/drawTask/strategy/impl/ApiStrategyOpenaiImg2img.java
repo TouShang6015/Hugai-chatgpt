@@ -8,7 +8,7 @@ import com.hugai.common.enums.flow.DrawType;
 import com.hugai.core.drawTask.strategy.DrawAbstractStrategy;
 import com.hugai.core.openai.factory.AiServiceFactory;
 import com.hugai.core.openai.service.OpenAiService;
-import com.hugai.core.session.entity.SessionDrawEditOpenaiCacheData;
+import com.hugai.core.drawTask.entity.SessionDrawEditOpenaiCacheData;
 import com.hugai.framework.file.constants.FileHeaderImageEnum;
 import com.hugai.framework.file.constants.FileTypeRootEnum;
 import com.hugai.framework.file.entity.FileResponse;

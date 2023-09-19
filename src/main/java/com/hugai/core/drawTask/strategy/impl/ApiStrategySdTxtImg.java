@@ -11,7 +11,7 @@ import com.hugai.core.sd.client.SdApiClientService;
 import com.hugai.core.sd.client.SdClientFactory;
 import com.hugai.core.sd.entity.request.TxtImgRequest;
 import com.hugai.core.sd.entity.response.TxtImgResponse;
-import com.hugai.core.session.entity.SessionCacheDrawData;
+import com.hugai.core.drawTask.entity.SessionCacheDrawData;
 import com.hugai.framework.file.constants.FileHeaderImageEnum;
 import com.hugai.framework.file.constants.FileTypeRootEnum;
 import com.hugai.framework.file.entity.FileResponse;

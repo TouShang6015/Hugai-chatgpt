@@ -25,12 +25,13 @@ public class ImgBaseRequest implements Serializable {
      */
     @JsonProperty("prompt")
     @NotEmpty(message = "prompt提示词不能为空", groups = {CreateTask.class})
-    @Length(max = 800, message = "内容长度不能超过800个字符", groups = {CreateTask.class})
+    @Length(max = 1000, message = "内容长度不能超过1000个字符", groups = {CreateTask.class})
     private String prompt;
 
     /**
      * 反向提示词
      */
+    @Length(max = 1000, message = "反向提示词内容长度不能超过1000个字符", groups = {CreateTask.class})
     @JsonProperty("negative_prompt")
     private String negativePrompt;
 
@@ -101,6 +102,8 @@ public class ImgBaseRequest implements Serializable {
      * 重绘幅度
      */
     @JsonProperty("denoising_strength")
+    @Max(value = 2, message = "重绘幅度在0.7-2.0之间", groups = {CreateTask.class})
+    @Min(value = 0, message = "重绘幅度在0.7-2.0之间", groups = {CreateTask.class})
     private Double denoisingStrength;
     @JsonProperty("s_min_uncond")
     private Integer sMinUncond;

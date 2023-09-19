@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.hugai.common.constants.Constants;
 import com.hugai.core.sd.entity.request.ImgBaseRequest;
-import com.hugai.core.session.entity.SessionCacheDrawData;
+import com.hugai.core.drawTask.entity.SessionCacheDrawData;
 import com.hugai.modules.draw.entity.model.TaskDrawModel;
 import com.hugai.modules.system.entity.vo.baseResource.ResourceDrawVO;
 

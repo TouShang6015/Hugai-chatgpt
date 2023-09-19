@@ -103,17 +103,10 @@ public class UserInfoController {
         param.setUserName(null);
         param.setEmail(null);
         param.setIpaddress(null);
+        param.setIpLocation(null);
+        param.setStatus(null);
         service.updateById(param);
         return Result.success();
-    }
-
-    @Log(title = "用户背景修改")
-    @GetMapping("/editUserBackground")
-    @ApiOperation(value = "用户背景修改")
-    public Result editUserBackground(String imgUrl) {
-        Long userId = SecurityContextUtil.getUserId();
-        service.lambdaUpdate().set(UserInfoModel::getDeskImgUrl, imgUrl).eq(UserInfoModel::getId, userId).update();
-        return Result.success(imgUrl);
     }
 
     @GetMapping("/getUserGrants")

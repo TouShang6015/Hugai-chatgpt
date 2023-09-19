@@ -10,6 +10,7 @@ import com.hugai.framework.file.entity.FileResponse;
 import com.hugai.framework.file.service.FileService;
 import com.org.bebas.core.flowenum.utils.FlowEnumUtils;
 import com.org.bebas.core.label.LabelOption;
+import com.org.bebas.exception.BusinessException;
 import com.org.bebas.utils.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -100,6 +101,26 @@ public class CommonController {
     @ApiOperation(value = "图片上传")
     @PostMapping("/uploadImage")
     public Result uploadImage(MultipartFile file) throws Exception {
+        FileService fileService = fileUploadContext.getFileService();
+        try {
+            String suffix = FileUtil.getFileSuffix(file.getOriginalFilename(), true);
+            FileTypeRootEnum fileTypeRoot = FileTypeRootEnum.getTypeRootBySuffix(suffix);
+            FileResponse fileResponse = fileService.upload(file, fileTypeRoot, FileTypeConstants.IMAGE_EXTENSION);
+            return Result.success(fileResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.fail("文件上传失败");
+        }
+    }
+
+    @ApiOperation(value = "头像上传")
+    @PostMapping("/uploadHeadImage")
+    public Result uploadHeadImage(MultipartFile file) throws Exception {
+        int maxSize = 1024 * 1024;
+        long size = file.getSize();
+        if (size > maxSize) {
+            throw new BusinessException(StrUtil.format("请上传图片大小小于{}M的图片", 1));
+        }
         FileService fileService = fileUploadContext.getFileService();
         try {
             String suffix = FileUtil.getFileSuffix(file.getOriginalFilename(), true);

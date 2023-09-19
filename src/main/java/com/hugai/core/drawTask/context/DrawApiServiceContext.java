@@ -5,7 +5,7 @@ import com.hugai.core.drawTask.strategy.impl.ApiStrategyOpenaiImg2img;
 import com.hugai.core.drawTask.strategy.impl.ApiStrategyOpenaiTxtImg;
 import com.hugai.core.drawTask.strategy.DrawApiService;
 import com.hugai.core.drawTask.strategy.impl.ApiStrategySdTxtImg;
-import com.hugai.core.session.entity.SessionCacheDrawData;
+import com.hugai.core.drawTask.entity.SessionCacheDrawData;
 import com.hugai.modules.draw.entity.model.TaskDrawModel;
 import com.org.bebas.exception.BusinessException;
 

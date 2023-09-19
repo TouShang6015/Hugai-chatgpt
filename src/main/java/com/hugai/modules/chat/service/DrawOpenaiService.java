@@ -1,7 +1,7 @@
 package com.hugai.modules.chat.service;
 
-import com.hugai.core.session.entity.SessionDrawCreatedOpenaiCacheData;
-import com.hugai.core.session.entity.SessionDrawEditOpenaiCacheData;
+import com.hugai.core.drawTask.entity.SessionDrawCreatedOpenaiCacheData;
+import com.hugai.core.drawTask.entity.SessionDrawEditOpenaiCacheData;
 import com.theokanning.openai.image.ImageResult;
 
 /**

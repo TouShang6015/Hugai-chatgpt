@@ -1,4 +1,4 @@
-package com.hugai.core.session.entity;
+package com.hugai.core.drawTask.entity;
 
 import lombok.Data;
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.common.constants.RedisCacheKey;
 import com.hugai.core.security.context.SecurityContextUtil;
+import com.hugai.modules.draw.entity.dto.TaskDrawDTO;
 import com.hugai.modules.draw.entity.model.TaskDrawModel;
 import com.hugai.modules.draw.service.TaskDrawService;
 import com.org.bebas.core.model.build.QueryFastLambda;
@@ -61,9 +62,16 @@ public class DrawTaskController {
 
     @ApiOperation(value = "创建绘图任务")
     @PostMapping("/createTask/{apiKey}")
-    public Result createTaskOpenai(@PathVariable String apiKey, @RequestBody HashMap<String, Object> paramMap) {
+    public Result createTask(@PathVariable String apiKey, @RequestBody HashMap<String, Object> paramMap) {
         taskDrawService.createTask(apiKey, paramMap);
         return Result.success();
+    }
+
+    @ApiOperation(value = "绘图任务分页查询")
+    @PostMapping("/baseQueryPageByParam")
+    public Result baseQueryPageByParam(@RequestBody TaskDrawDTO param) {
+        IPage<TaskDrawModel> pageDto = taskDrawService.listPageByParam(PageUtil.pageBean(param), param);
+        return Result.success(pageDto);
     }
 
 }

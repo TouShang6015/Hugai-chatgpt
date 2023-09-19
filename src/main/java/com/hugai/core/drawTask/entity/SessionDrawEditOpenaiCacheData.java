@@ -1,6 +1,7 @@
-package com.hugai.core.session.entity;
+package com.hugai.core.drawTask.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hugai.core.session.entity.SessionCacheData;
 import com.hugai.core.session.valid.SendDrawOpenAi;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
