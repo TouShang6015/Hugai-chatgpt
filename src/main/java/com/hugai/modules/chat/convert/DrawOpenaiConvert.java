@@ -1,6 +1,6 @@
 package com.hugai.modules.chat.convert;
 
-import com.hugai.core.drawTask.entity.SessionDrawCreatedOpenaiCacheData;
+import com.hugai.core.openai.entity.request.OpenaiTxt2ImgRequest;
 import com.theokanning.openai.image.CreateImageRequest;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
@@ -15,6 +15,6 @@ public interface DrawOpenaiConvert {
 
     DrawOpenaiConvert INSTANCE = Mappers.getMapper(DrawOpenaiConvert.class);
 
-    CreateImageRequest convertApiParam(SessionDrawCreatedOpenaiCacheData param);
+    CreateImageRequest convertApiParam(OpenaiTxt2ImgRequest param);
 
 }

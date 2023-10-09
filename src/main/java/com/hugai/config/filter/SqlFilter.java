@@ -46,9 +46,6 @@ public class SqlFilter implements Filter {
         Iterator<String[]> values2 = httpRequest.getParameterMap().values().iterator();// 获取所有的表单参数
         boolean isError = false;
         try {
-            // 字符窜标签的正则表达式 可能注入的关键字和被钓鱼利用的参数
-            // SCRIPT|STYLE|IFRAME|IMG|SELECT|UPDATE|AND|OR|DELETE|INSERT|TRANCATE|CHAR|CHR|INTO|SUBSTR|ASCII|DECLARE|EXEC|COUNT|MASTER|INTO|DROP|EXECUTE|
-
             String regEx_sql = "select|update|and|or|delete|insert|trancate|char|chr|into|substr|ascii|declare|exec|count|master|drop|execute";
             // sql注入过滤
             while (values.hasNext()) {
@@ -93,11 +90,6 @@ public class SqlFilter implements Filter {
             }
 
             String serletPath = httpRequest.getServletPath();
-//			if (serletPath.startsWith("sysback/productmain") ||serletPath.startsWith("/sysback/platDfFront/save")
-//					|| serletPath.startsWith("/dfFront")
-//					|| serletPath.startsWith("/storeback/storedecorator/updateStyle")) { //serletPath.startsWith("/sysback/") || serletPath.startsWith("/admin/")
-//				return isError;
-//			} else if (!isError) {
             String regEx_xss = "script|iframe|video";
 
             //新加验证，验证不加空格的

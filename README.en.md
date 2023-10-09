@@ -1,6 +1,8 @@
+![](http://chat.static.equinox19.xyz/hugai-doc/HugAiLogo1-icon.png)
+
 ## Introduced
 
-HugAi is a set of intelligent AI knowledge base developed by Springboot integrated with openAi SDK, and the front and back end source code is completely open source.
+HugAi is a set of intelligent AI knowledge base developed by Springboot integrated with openAi SDK, supporting GPT dialogue, AI drawing Midjourney, Stable Diffusion, openai, the front and back end source code is completely open source.
 
 > Disclaimers-based on the Apache-2.0 protocol, it is free and open source for learning, and cannot be used in commercial projects without my consent.
 
@@ -20,7 +22,25 @@ HugAi is a set of intelligent AI knowledge base developed by Springboot integrat
 
 > Special note: See the help documentation for your deployment project
 
-## 技术栈
+## characteristic
+
+✅	ChatGpt chat dialogue, support interrupt stop response, support GPT3.5, 4.0, 3.5-16K and other models
+
+✅	Support mainstream Midjourney, Stable Diffusion, dall-e AI drawing functions, Vincennes, Tu-sheng, magnification, redrawing, AI optimization Prompt
+
+✅	Play a variety of roles, such as little Red book copywriter, advertising creative, novelist, Prompt optimizer, etc
+
+✅	Support sse and websocket two ways, flow response typewriter output, background dynamic setting, no need to restart
+
+✅	The cloud stores conversation records, conversation maintenance, and context token calculation
+
+✅	ApiKey Multiple policies, polling, random, custom, RSA encryption to ensure security, exception handling mechanism, automatically disable ApiKey
+
+✅	Support multi-user login: administrator, user, visitor, dynamic route authentication, no intrusion code
+
+✅	Supports local, server, minio cloud file storage, and dynamic switching of multiple file upload policies
+
+## Technology stack
 
 The project uses a variety of design patterns, practical application of code abstraction, aop code decoupling, as well as java8 features, streaming programming, functional interfaces and other related skills. This project is a full stack project, carefully read the code, I believe you can further improve your technology.
 
@@ -29,10 +49,11 @@ The project uses a variety of design patterns, practical application of code abs
 ### Server
 
 - Language and framework
-    - Java 8
+    - Java 17
     - Springboot2.7+
     - Maven 3.5+
     - mybatis-plus
+    - rabbitMQ
 - Database：
     - Mysql 8.0
     - Redis
@@ -49,6 +70,8 @@ The project uses a variety of design patterns, practical application of code abs
 - Third party sdk
     - openai sdk
     - minio Qi Niu Yun
+    - Stable Diffusion
+    - Discord、Midjourney
 
 ### Front
 

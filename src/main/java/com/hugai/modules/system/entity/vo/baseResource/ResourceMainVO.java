@@ -57,4 +57,13 @@ public class ResourceMainVO implements Serializable {
      */
     private String projectVersion;
 
+    /**
+     * 代理地址
+     */
+    private String proxyHost;
+    /**
+     * 代理端口
+     */
+    private Integer proxyPort;
+
 }

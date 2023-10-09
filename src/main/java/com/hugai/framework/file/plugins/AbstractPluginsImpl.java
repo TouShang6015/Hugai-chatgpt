@@ -39,8 +39,7 @@ public abstract class AbstractPluginsImpl extends AbstractFileHandle {
         File file = new File(filePath);
         String fileSuffix = fileName.split("\\." )[1];
         switch (Objects.requireNonNull(fileSuffix)) {
-            case "md":
-            case "txt":
+            case "md", "txt" -> {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file));
                 while (reader.ready()) {
@@ -49,8 +48,8 @@ public abstract class AbstractPluginsImpl extends AbstractFileHandle {
                 writer.flush();
                 writer.close();
                 reader.close();
-                break;
-            default:
+            }
+            default -> {
                 BufferedInputStream bis = new BufferedInputStream(inputStream);
                 BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(file.toPath()));
                 byte[] bytes = new byte[1024];
@@ -61,7 +60,7 @@ public abstract class AbstractPluginsImpl extends AbstractFileHandle {
                 bos.flush();
                 bos.close();
                 bis.close();
-                break;
+            }
         }
     }
 

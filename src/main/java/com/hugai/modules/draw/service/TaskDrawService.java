@@ -1,5 +1,6 @@
 package com.hugai.modules.draw.service;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.hugai.modules.draw.entity.model.TaskDrawModel;
 import com.org.bebas.mapper.service.IService;
 
@@ -14,17 +15,17 @@ public interface TaskDrawService extends IService<TaskDrawModel> {
 
     /**
      * 创建任务
-     *
-     * @param apiKey   {@link com.hugai.common.enums.flow.DrawType.ApiKey}
+     *  @param apiKey   {@link com.hugai.common.enums.flow.DrawType.ApiKey}
      * @param paramMap
      */
     void createTask(String apiKey, HashMap<String, Object> paramMap);
 
     /**
-     * 任务状态结束更新操作
+     * 任务失败处理
      *
-     * @param serviceConsumer
+     * @param id
+     * @param paramConsumer
      */
-    void endTaskUpdate(Consumer<TaskDrawService> serviceConsumer, Long userId);
+    void failTask(String id, Consumer<LambdaUpdateWrapper<TaskDrawModel>> paramConsumer);
 
 }

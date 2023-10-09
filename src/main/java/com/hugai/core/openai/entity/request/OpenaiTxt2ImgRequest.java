@@ -1,4 +1,4 @@
-package com.hugai.core.drawTask.entity;
+package com.hugai.core.openai.entity.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hugai.core.drawTask.valid.CreateTask;
@@ -19,14 +19,14 @@ import javax.validation.constraints.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SessionDrawCreatedOpenaiCacheData extends SessionCacheData {
+public class OpenaiTxt2ImgRequest extends SessionCacheData {
 
 
     /**
      * A text description of the desired image(s). The maximum length in 1000 characters.
      */
-    @NotEmpty(message = "请输入内容",groups = {SendDrawOpenAi.class, CreateTask.class})
-    @Length(max = 1000, message = "内容长度不能超过1000个字符",groups = {SendDrawOpenAi.class})
+    @NotEmpty(message = "请输入内容", groups = {CreateTask.class})
+    @Length(max = 1000, message = "内容长度不能超过1000个字符", groups = {CreateTask.class})
     String prompt;
 
     /**
@@ -52,14 +52,14 @@ public class SessionDrawCreatedOpenaiCacheData extends SessionCacheData {
      */
     String user;
 
-    @Max(value = 1560, message = "图像长度取128~1560之间")
-    @Min(value = 128, message = "图像长度取128~1560之间")
-    @NotNull(message = "图像长度不能为空",groups = {SendDrawOpenAi.class, CreateTask.class})
+    @Max(value = 1560, message = "图像长度取128~1560之间", groups = {CreateTask.class})
+    @Min(value = 128, message = "图像长度取128~1560之间", groups = {CreateTask.class})
+    @NotNull(message = "图像长度不能为空", groups = {SendDrawOpenAi.class, CreateTask.class})
     private Integer sizeWidth;
 
-    @Max(value = 1560, message = "图像高度取128~1560之间")
-    @Min(value = 128, message = "图像高度取128~1560之间")
-    @NotNull(message = "图像高度不能为空",groups = {SendDrawOpenAi.class, CreateTask.class})
+    @Max(value = 1560, message = "图像高度取128~1560之间", groups = {CreateTask.class})
+    @Min(value = 128, message = "图像高度取128~1560之间", groups = {CreateTask.class})
+    @NotNull(message = "图像高度不能为空", groups = {SendDrawOpenAi.class, CreateTask.class})
     private Integer sizeHeight;
 
 }

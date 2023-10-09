@@ -9,7 +9,7 @@ import com.hugai.core.apikey.OpenAiKeyFactory;
 import com.hugai.core.openai.service.OpenAiApi;
 import com.hugai.core.openai.service.OpenAiService;
 import com.hugai.core.security.context.UserThreadLocal;
-import com.hugai.modules.system.entity.vo.baseResource.ResourceOpenaiVO;
+import com.hugai.modules.system.entity.vo.baseResource.ResourceMainVO;
 import com.hugai.modules.system.service.IBaseResourceConfigService;
 import com.org.bebas.core.spring.SpringUtils;
 import com.org.bebas.exception.BusinessException;
@@ -34,7 +34,7 @@ public class AiServiceFactory {
     private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
 
     public static OkHttpClient getClient(String token) {
-        ResourceOpenaiVO resourceOpenai = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceOpenai();
+        ResourceMainVO resourceMain = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceMain();
 
         Assert.notEmpty(token, () -> new RuntimeException("ApiKey不能为空，请检查参数配置"));
 
@@ -47,8 +47,8 @@ public class AiServiceFactory {
 
         OkHttpClient.Builder clientBuilder = client.newBuilder();
         // 设置代理
-        if (StrUtil.isNotEmpty(resourceOpenai.getProxyHost()) && Objects.nonNull(resourceOpenai.getProxyPort())) {
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(resourceOpenai.getProxyHost(), resourceOpenai.getProxyPort()));
+        if (StrUtil.isNotEmpty(resourceMain.getProxyHost()) && Objects.nonNull(resourceMain.getProxyPort())) {
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(resourceMain.getProxyHost(), resourceMain.getProxyPort()));
             clientBuilder.proxy(proxy);
         }
         return clientBuilder.build();
@@ -71,14 +71,14 @@ public class AiServiceFactory {
 
     }
 
-    public static OpenAiService createService(String token,String decryptToken) {
+    public static OpenAiService createService(String token, String decryptToken) {
         OkHttpClient client = getClient(token);
 
         ObjectMapper mapper = OpenAiService.defaultObjectMapper();
 
         Retrofit retrofit = OpenAiService.defaultRetrofit(client, mapper);
 
-        return new OpenAiService(retrofit.create(OpenAiApi.class), client.dispatcher().executorService(), token,decryptToken);
+        return new OpenAiService(retrofit.create(OpenAiApi.class), client.dispatcher().executorService(), token, decryptToken);
 
     }
 
@@ -89,10 +89,10 @@ public class AiServiceFactory {
      */
     public static OpenAiService createService() {
         Long userId = UserThreadLocal.getUserId();
-        Assert.notNull(userId,() -> new BusinessException("未获取到线程内的用户信息"));
+        Assert.notNull(userId, () -> new BusinessException("未获取到线程内的用户信息"));
         String decryptKey = OpenAiKeyFactory.getKey(userId);
         String token = RsaUtils.decryptByPrivateKey(KeyRsaConfig.getPrivateKey(), decryptKey);
-        return createService(token,decryptKey);
+        return createService(token, decryptKey);
     }
 
 }

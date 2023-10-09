@@ -1,7 +1,5 @@
 package com.hugai.core.drawTask.strategy;
 
-import com.hugai.modules.draw.entity.vo.DrawPersistenceCollection;
-
 /**
  * 绘图业务接口
  *
@@ -15,6 +13,6 @@ public interface DrawApiService extends DrawStrategySign {
      *
      * @return
      */
-    DrawPersistenceCollection executeApi();
+    void executeApi();
 
 }

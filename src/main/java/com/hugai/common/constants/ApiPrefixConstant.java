@@ -34,6 +34,8 @@ public interface ApiPrefixConstant {
 
         String DRAW = MODEL_API + "/draw";
 
+        String MJ = MODEL_API + "/cmj";
+
     }
 
     interface Common {

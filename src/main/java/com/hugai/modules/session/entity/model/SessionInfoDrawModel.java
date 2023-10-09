@@ -31,13 +31,25 @@ public class SessionInfoDrawModel extends BaseModel {
     @ApiModelProperty(value = "绘画接口类型唯一标识")
     private String drawUniqueKey;
 
+    @ApiModelProperty(value = "绘图接口标识")
+    private String drawApiKey;
+
     @ApiModelProperty(value = "用户会话号")
     private Integer sessionNum;
 
     @ApiModelProperty(value = "展示图")
     private String showImg;
 
+    @ApiModelProperty(value = "底图")
+    private String baseImg;
+
     @ApiModelProperty(value = "sd info响应参数json")
     private String sdResponseInfo;
+
+    @ApiModelProperty(value = "mj原图地址")
+    private String originalImgUrl;
+
+    @ApiModelProperty(value = "任务Id")
+    private String taskId;
 
 }

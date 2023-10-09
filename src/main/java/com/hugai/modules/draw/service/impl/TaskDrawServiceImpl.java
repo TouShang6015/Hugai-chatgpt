@@ -3,7 +3,8 @@ package com.hugai.modules.draw.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson2.JSON;
-import com.hugai.common.constants.RedisCacheKey;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hugai.common.enums.flow.DrawType;
 import com.hugai.common.enums.flow.TaskStatus;
 import com.hugai.core.drawTask.valid.CreateTask;
@@ -17,13 +18,12 @@ import com.org.bebas.core.spring.SpringUtils;
 import com.org.bebas.core.validator.ValidatorUtil;
 import com.org.bebas.exception.BusinessException;
 import com.org.bebas.mapper.cache.ServiceImpl;
+import com.org.bebas.utils.DateUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -36,13 +36,10 @@ public class TaskDrawServiceImpl extends ServiceImpl<TaskDrawMapper, TaskDrawMod
 
     @Resource
     private RabbitTemplate rabbitTemplate;
-    @Resource
-    public RedisTemplate redisTemplate;
 
     /**
      * 创建任务
-     *
-     * @param apiKey
+     *  @param apiKey
      * @param paramMap
      */
     @Transactional
@@ -81,18 +78,18 @@ public class TaskDrawServiceImpl extends ServiceImpl<TaskDrawMapper, TaskDrawMod
 
         log.info("绘图任务创建 - 消息发送完成，channel: {},param:{}", drawType.queueKey(), JSON.toJSONString(taskDrawModel));
         rabbitTemplate.convertAndSend(drawType.queueKey(), taskDrawModel);
-        redisTemplate.opsForZSet().add(RedisCacheKey.TASK_DRAW_QUEUE_OPENAI, userId, new Date().getTime());
     }
 
-    /**
-     * 任务状态结束更新操作
-     *
-     * @param serviceConsumer
-     */
+    @Transactional
     @Override
-    public void endTaskUpdate(Consumer<TaskDrawService> serviceConsumer, Long userId) {
-        serviceConsumer.accept(this);
-        redisTemplate.opsForZSet().remove(RedisCacheKey.TASK_DRAW_QUEUE_OPENAI, userId);
+    public void failTask(String id, Consumer<LambdaUpdateWrapper<TaskDrawModel>> paramConsumer) {
+        Assert.notNull(id);
+        LambdaUpdateWrapper<TaskDrawModel> wrapper = Wrappers.lambdaUpdate();
+        paramConsumer.accept(wrapper);
+        wrapper.eq(TaskDrawModel::getId, id);
+        wrapper.set(TaskDrawModel::getTaskStatus, TaskStatus.FAIL.getKey())
+                .set(TaskDrawModel::getTaskEndTime, DateUtils.nowDateFormat());
+        super.update(wrapper);
     }
 
 }

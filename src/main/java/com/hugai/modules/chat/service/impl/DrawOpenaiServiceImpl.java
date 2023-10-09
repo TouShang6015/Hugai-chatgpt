@@ -5,10 +5,10 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONWriter;
 import com.hugai.common.enums.flow.DrawType;
+import com.hugai.core.openai.entity.request.OpenaiTxt2ImgRequest;
 import com.hugai.core.openai.factory.AiServiceFactory;
 import com.hugai.core.openai.service.OpenAiService;
-import com.hugai.core.drawTask.entity.SessionDrawCreatedOpenaiCacheData;
-import com.hugai.core.drawTask.entity.SessionDrawEditOpenaiCacheData;
+import com.hugai.core.openai.entity.request.OpenaiImg2ImgRequest;
 import com.hugai.core.session.valid.SendDrawOpenAi;
 import com.hugai.framework.file.constants.FileHeaderImageEnum;
 import com.hugai.framework.file.constants.FileTypeRootEnum;
@@ -70,7 +70,7 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
      */
     @Transactional
     @Override
-    public ImageResult sendDrawCreatedOpenAi(SessionDrawCreatedOpenaiCacheData param) {
+    public ImageResult sendDrawCreatedOpenAi(OpenaiTxt2ImgRequest param) {
         ValidatorUtil.validateEntity(param, SendDrawOpenAi.class);
 
         OpenAiService openAiService = AiServiceFactory.createService();
@@ -148,7 +148,7 @@ public class DrawOpenaiServiceImpl implements DrawOpenaiService {
      */
     @Transactional
     @Override
-    public ImageResult sendDrawEditOpenAi(SessionDrawEditOpenaiCacheData param) {
+    public ImageResult sendDrawEditOpenAi(OpenaiImg2ImgRequest param) {
         ValidatorUtil.validateEntity(param);
 
         final String prompt = param.getPrompt();

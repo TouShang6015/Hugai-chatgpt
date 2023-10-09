@@ -7,13 +7,13 @@ import com.alibaba.fastjson2.JSON;
 import com.hugai.common.constants.Constants;
 import com.hugai.common.enums.ModulesToken;
 import com.hugai.common.enums.flow.DrawType;
+import com.hugai.core.drawTask.entity.SessionCacheDrawData;
 import com.hugai.core.openai.factory.AiServiceFactory;
 import com.hugai.core.openai.service.OpenAiService;
 import com.hugai.core.security.context.UserThreadLocal;
-import com.hugai.core.drawTask.entity.SessionCacheDrawData;
 import com.hugai.framework.file.context.FileServiceContext;
 import com.hugai.modules.draw.entity.model.TaskDrawModel;
-import com.hugai.modules.draw.entity.vo.DrawPersistenceCollection;
+import com.hugai.modules.draw.service.TaskDrawService;
 import com.hugai.modules.session.service.SessionInfoDrawService;
 import com.org.bebas.core.function.OR;
 import com.org.bebas.core.spring.SpringUtils;
@@ -44,6 +44,8 @@ public abstract class DrawAbstractStrategy<MappingCls> implements DrawApiService
 
     protected SessionInfoDrawService sessionInfoDrawService;
 
+    protected TaskDrawService taskDrawService;
+
     protected FileServiceContext fileServiceContext;
 
     public DrawAbstractStrategy(TaskDrawModel drawData, SessionCacheDrawData cacheData) {
@@ -54,6 +56,7 @@ public abstract class DrawAbstractStrategy<MappingCls> implements DrawApiService
         this.cacheData = cacheData;
         this.sessionInfoDrawService = SpringUtils.getBean(SessionInfoDrawService.class);
         this.fileServiceContext = SpringUtils.getBean(FileServiceContext.class);
+        this.taskDrawService = SpringUtils.getBean(TaskDrawService.class);
         if (Objects.isNull(cacheData)) {
             OR.run(this.drawData.getRequestParam(), StrUtil::isNotEmpty, requestParamString -> {
                 this.cacheData = JSON.parseObject(requestParamString, SessionCacheDrawData.class);
@@ -71,10 +74,10 @@ public abstract class DrawAbstractStrategy<MappingCls> implements DrawApiService
      * @return
      */
     @Override
-    public DrawPersistenceCollection executeApi() {
+    public void executeApi() {
         UserThreadLocal.set(this.drawData.getUserId());
         try {
-            return this.executeApiHandle();
+            this.executeApiHandle();
         } finally {
             UserThreadLocal.remove();
         }
@@ -123,7 +126,7 @@ public abstract class DrawAbstractStrategy<MappingCls> implements DrawApiService
      *
      * @return
      */
-    protected abstract DrawPersistenceCollection executeApiHandle();
+    protected abstract void executeApiHandle();
 
     /**
      * 获取策略器映射aip映射实体Class

@@ -37,6 +37,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue queueDrawMJ() {
+        return QueueBuilder.durable(MQConstants.Queue.draw_mj).build();
+    }
+
+    @Bean
     public Binding bindingTopicSmsMessage() {
         return BindingBuilder.bind(queueSms()).to(topicExchange()).with(MQConstants.Queue.sms);
     }
@@ -49,6 +54,11 @@ public class RabbitMQConfig {
     @Bean
     public Binding bindingTopicDrawSDMessage() {
         return BindingBuilder.bind(queueDrawSD()).to(topicExchange()).with(MQConstants.Queue.draw_sd);
+    }
+
+    @Bean
+    public Binding bindingTopicDrawMJMessage() {
+        return BindingBuilder.bind(queueDrawMJ()).to(topicExchange()).with(MQConstants.Queue.draw_mj);
     }
 
     @Bean

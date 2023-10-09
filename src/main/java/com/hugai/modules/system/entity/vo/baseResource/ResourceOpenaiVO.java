@@ -19,14 +19,6 @@ public class ResourceOpenaiVO implements Serializable {
      */
     private String textModel;
     /**
-     * 代理地址
-     */
-    private String proxyHost;
-    /**
-     * 代理端口
-     */
-    private Integer proxyPort;
-    /**
      * 是否开启绘图接口
      */
     private Boolean openDraw;

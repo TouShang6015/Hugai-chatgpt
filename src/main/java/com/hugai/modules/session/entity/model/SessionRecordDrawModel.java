@@ -28,8 +28,14 @@ public class SessionRecordDrawModel extends BaseModel {
     @ApiModelProperty(value = "用户id", dataType = "Long")
     private Long userId;
 
+    @ApiModelProperty(value = "任务Id")
+    private String taskId;
+
     @ApiModelProperty(value = "绘画接口类型唯一标识")
     private String drawUniqueKey;
+
+    @ApiModelProperty(value = "绘图接口标识")
+    private String drawApiKey;
 
     @ApiModelProperty(value = "内容", dataType = "String")
     private String content;
@@ -40,7 +46,28 @@ public class SessionRecordDrawModel extends BaseModel {
     @ApiModelProperty(value = "图片路径")
     private String drawImgUrl;
 
+    @ApiModelProperty(value = "底图")
+    private String baseImg;
+
     @ApiModelProperty(value = "prompt")
     private String prompt;
+
+    @ApiModelProperty(value = "是否公开")
+    private String ifCommon;
+
+    @ApiModelProperty(value = "副图1")
+    private String assistantImg1;
+
+    @ApiModelProperty(value = "副图2")
+    private String assistantImg2;
+
+    @ApiModelProperty(value = "原图地址url")
+    private String originalImgUrl;
+
+    @ApiModelProperty(value = "mj扩展参数")
+    private String mjExtendParam;
+
+    @ApiModelProperty(value = "mj u v下标")
+    private Integer mjImageIndex;
 
 }

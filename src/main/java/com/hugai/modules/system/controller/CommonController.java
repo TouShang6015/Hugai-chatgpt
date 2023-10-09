@@ -3,11 +3,16 @@ package com.hugai.modules.system.controller;
 import cn.hutool.core.util.StrUtil;
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.framework.file.FileUtil;
+import com.hugai.framework.file.constants.FileStrategyEnum;
 import com.hugai.framework.file.constants.FileTypeConstants;
 import com.hugai.framework.file.constants.FileTypeRootEnum;
 import com.hugai.framework.file.context.FileServiceContext;
 import com.hugai.framework.file.entity.FileResponse;
 import com.hugai.framework.file.service.FileService;
+import com.hugai.modules.system.entity.model.SysAttachmentModel;
+import com.hugai.modules.system.entity.model.SysFileConfigModel;
+import com.hugai.modules.system.service.ISysAttachmentService;
+import com.hugai.modules.system.service.SysFileConfigService;
 import com.org.bebas.core.flowenum.utils.FlowEnumUtils;
 import com.org.bebas.core.label.LabelOption;
 import com.org.bebas.exception.BusinessException;
@@ -16,6 +21,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +44,12 @@ public class CommonController {
 
     @Resource
     private FileServiceContext fileUploadContext;
+    @Resource
+    private ISysAttachmentService attachmentService;
+    @Resource
+    private FileServiceContext fileServiceContext;
+    @Resource
+    private SysFileConfigService sysFileConfigService;
 
     @ApiOperation(value = "获取枚举下拉")
     @GetMapping("/getEnumLabel/{key}")
@@ -133,5 +145,39 @@ public class CommonController {
         }
     }
 
+    @ApiOperation(value = "图片上传至附件管理")
+    @PostMapping("/uploadImageAttachment")
+    public Result uploadImageBase64(MultipartFile file) throws Exception {
+        int maxSize = 1024 * 1024 * 4;
+        long size = file.getSize();
+        if (size > maxSize) {
+            throw new BusinessException(StrUtil.format("请上传图片大小小于{}M的图片", 4));
+        }
+
+        FileService fileService;
+        String os = System.getProperty("os.name");
+        if (os.toLowerCase().startsWith("win")) {
+            fileService = fileServiceContext.getFileService(FileStrategyEnum.local.name());
+        } else {
+            fileService = fileServiceContext.getFileService(FileStrategyEnum.server.name());
+        }
+
+        String suffix = FileUtil.getFileSuffix(file.getOriginalFilename(), true);
+        FileTypeRootEnum fileTypeRoot = FileTypeRootEnum.getTypeRootBySuffix(suffix);
+        FileResponse fileResponse = fileService.upload(file, fileTypeRoot, FileTypeConstants.IMAGE_EXTENSION);
+
+        SysFileConfigModel fileConfigModel = sysFileConfigService.getByUniqueKye(fileService.strategy().name());
+
+        SysAttachmentModel attachmentModel = SysAttachmentModel.builder()
+                .originalFileName(file.getOriginalFilename())
+                .fileSize(file.getSize())
+                .fileSuffix(fileResponse.getFileSuffix())
+                .fileNameMd5(fileResponse.getFileName())
+                .fileAbsolutePath(FilenameUtils.normalize(fileConfigModel.getSavePath() + fileResponse.getFilePath()))
+                .build();
+        attachmentService.save(attachmentModel);
+
+        return Result.success(attachmentModel.getId());
+    }
 
 }

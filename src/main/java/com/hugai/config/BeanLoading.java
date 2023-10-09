@@ -1,11 +1,14 @@
 package com.hugai.config;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
+import com.hugai.core.midjourney.common.utils.DefaultApiParamJSON;
 import com.hugai.core.security.filter.AccessDecisionManagerImpl;
 import com.hugai.core.security.filter.PermissionSecurityFilter;
 import com.hugai.core.security.filter.SecurityMetadataSource;
 import com.hugai.framework.sensitiveWord.SenWordHolder;
 import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType;
@@ -15,17 +18,17 @@ import org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpoi
 import org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.TimeZone;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Bean加载配置类
@@ -36,6 +39,9 @@ import java.util.TimeZone;
 @Configuration
 @EnableTransactionManagement        // 开启事务
 public class BeanLoading {
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Bean
     public PermissionSecurityFilter dynamicSecurityFilter() {
@@ -93,6 +99,7 @@ public class BeanLoading {
 
     /**
      * redission无密码配置
+     *
      * @return
      */
     @Bean
@@ -102,6 +109,29 @@ public class BeanLoading {
                 configuration.useSingleServer().setPassword(null);
             }
         };
+    }
+
+    /**
+     * mj api请求json
+     *
+     * @return
+     */
+    @Bean
+    public DefaultApiParamJSON defaultApiParamJSON() {
+        DefaultApiParamJSON defaultApiParamJSON = new DefaultApiParamJSON();
+        try {
+            Resource[] resources = this.applicationContext.getResources("classpath:json/mj/*.json");
+            Map<String, String> paramsMap = new HashMap<>();
+            for (Resource resource : resources) {
+                String filename = resource.getFilename();
+                String params = IoUtil.readUtf8(resource.getInputStream());
+                paramsMap.put(filename.substring(0, filename.length() - 5), params);
+            }
+            defaultApiParamJSON.setApiDefaultParamMap(paramsMap);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return defaultApiParamJSON;
     }
 
 }

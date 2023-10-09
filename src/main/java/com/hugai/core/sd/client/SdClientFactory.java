@@ -1,7 +1,9 @@
 package com.hugai.core.sd.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hugai.common.utils.okhttp.OkhttpClientUtil;
 import com.hugai.core.sd.client.api.Api;
+import com.hugai.modules.system.service.IBaseResourceConfigService;
+import com.org.bebas.core.spring.SpringUtils;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -26,7 +28,7 @@ public class SdClientFactory {
                     String token = "";
                     Request request = chain.request()
                             .newBuilder()
-                            .header("Authorization", "Bearer " + token)
+                            .header("Authorization" , "Bearer " + token)
                             .build();
                     return chain.proceed(request);
                 })
@@ -38,9 +40,9 @@ public class SdClientFactory {
     public static SdApiClientService createService() {
         OkHttpClient client = getClient();
 
-        ObjectMapper mapper = SdApiClientService.defaultObjectMapper();
+        String sdHostUrl = SpringUtils.getBean(IBaseResourceConfigService.class).getResourceDraw().getSdHostUrl();
 
-        Retrofit retrofit = SdApiClientService.defaultRetrofit(client, mapper);
+        Retrofit retrofit = OkhttpClientUtil.defaultRetrofit(client, sdHostUrl);
 
         return new SdApiClientService(retrofit.create(Api.class));
 

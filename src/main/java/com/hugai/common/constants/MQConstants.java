@@ -30,6 +30,10 @@ public interface MQConstants {
          * sd绘图队列
          */
         String draw_sd = "queue.draw.sd";
+        /**
+         * mj 绘图队列
+         */
+        String draw_mj = "queue.draw.mj";
     }
 
 }

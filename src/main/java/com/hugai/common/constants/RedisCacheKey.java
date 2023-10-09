@@ -19,7 +19,9 @@ public interface RedisCacheKey {
      * 当前sd绘图任务队列
      */
     String TASK_DRAW_QUEUE_SD = "TASK_DRAW_QUEUE:SD";
-
-    String LOCK_DRAW_OPENAI = "DRAW-SESSION:%s:OPENAI";
+    /**
+     * 当前mj任务队列
+     */
+    String TASK_DRAW_QUEUE_MJ = "TASK_DRAW_QUEUE:MJ";
 
 }

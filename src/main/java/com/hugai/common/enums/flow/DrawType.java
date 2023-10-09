@@ -3,10 +3,14 @@ package com.hugai.common.enums.flow;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import com.hugai.common.constants.MQConstants;
+import com.hugai.common.constants.RedisCacheKey;
+import com.hugai.core.midjourney.common.entity.request.MjBaseRequest;
+import com.hugai.core.midjourney.common.entity.request.MjImg2ImgRequest;
+import com.hugai.core.midjourney.common.entity.request.MjTxt2ImgRequest;
+import com.hugai.core.openai.entity.request.OpenaiImg2ImgRequest;
+import com.hugai.core.openai.entity.request.OpenaiTxt2ImgRequest;
 import com.hugai.core.sd.entity.request.Img2ImgRequest;
 import com.hugai.core.sd.entity.request.TxtImgRequest;
-import com.hugai.core.drawTask.entity.SessionDrawCreatedOpenaiCacheData;
-import com.hugai.core.drawTask.entity.SessionDrawEditOpenaiCacheData;
 import com.org.bebas.core.flowenum.base.FlowBaseEnum;
 import com.org.bebas.exception.BusinessException;
 import lombok.AllArgsConstructor;
@@ -24,7 +28,7 @@ import java.util.List;
 @AllArgsConstructor
 public enum DrawType implements FlowBaseEnum {
 
-    OPENAI("OPENAI", "openAi接口") {
+    OPENAI("OPENAI", "openAi接口", RedisCacheKey.TASK_DRAW_QUEUE_OPENAI) {
         @Override
         public List<ApiKey> getApiKey() {
             return CollUtil.newArrayList(ApiKey.openai_txt2img, ApiKey.openai_img2img);
@@ -36,7 +40,7 @@ public enum DrawType implements FlowBaseEnum {
         }
     },
 
-    SD("SD", "stable diffusion") {
+    SD("SD", "stable diffusion", RedisCacheKey.TASK_DRAW_QUEUE_SD) {
         @Override
         public List<ApiKey> getApiKey() {
             return CollUtil.newArrayList(ApiKey.sd_txt2img, ApiKey.sd_img2img);
@@ -46,12 +50,25 @@ public enum DrawType implements FlowBaseEnum {
         public String queueKey() {
             return MQConstants.Queue.draw_sd;
         }
+    },
+
+    MJ("MJ", "Midjourney", RedisCacheKey.TASK_DRAW_QUEUE_MJ) {
+        @Override
+        public List<ApiKey> getApiKey() {
+            return CollUtil.newArrayList(ApiKey.mj_img2img, ApiKey.mj_txt2img, ApiKey.mj_img2mix, ApiKey.mj_u, ApiKey.mj_v);
+        }
+
+        @Override
+        public String queueKey() {
+            return MQConstants.Queue.draw_mj;
+        }
     };
 
     private final String key;
 
     private final String value;
 
+    private final String taskRedisKey;
 
     /**
      * 获取api key标识
@@ -71,18 +88,35 @@ public enum DrawType implements FlowBaseEnum {
      * 会话api接口标识
      * <p> txt2img  -   文生图</p>
      * <p> img2img  -   图生图</p>
+     * <p> img2mix  -   2图融合</p>
      */
     @Getter
     @AllArgsConstructor
     public enum ApiKey {
 
-        openai_txt2img(SessionDrawCreatedOpenaiCacheData.class),
+        // openai
 
-        openai_img2img(SessionDrawEditOpenaiCacheData.class),
+        openai_txt2img(OpenaiTxt2ImgRequest.class),
+
+        openai_img2img(OpenaiImg2ImgRequest.class),
+
+        // sd
 
         sd_txt2img(TxtImgRequest.class),
 
         sd_img2img(Img2ImgRequest.class),
+
+        // mj
+
+        mj_txt2img(MjTxt2ImgRequest.class),
+
+        mj_img2img(MjImg2ImgRequest.class),
+
+        mj_img2mix(MjBaseRequest.class),
+
+        mj_u(MjBaseRequest.class),
+
+        mj_v(MjBaseRequest.class),
 
         ;
 

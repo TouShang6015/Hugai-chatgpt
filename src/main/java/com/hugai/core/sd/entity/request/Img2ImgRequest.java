@@ -1,10 +1,12 @@
 package com.hugai.core.sd.entity.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hugai.core.drawTask.valid.CreateTask;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -14,7 +16,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Data
-public class Img2ImgRequest extends ImgBaseRequest{
+public class Img2ImgRequest extends ImgBaseRequest {
 
     @JsonProperty("init_images")
     private List<String> initImages;
@@ -44,5 +46,8 @@ public class Img2ImgRequest extends ImgBaseRequest{
     private String latentMask;
     @JsonProperty("include_init_images")
     private Boolean includeInitImages;
+
+    @NotEmpty(message = "垫图不能为空", groups = {CreateTask.class})
+    private String baseImg;
 }
 

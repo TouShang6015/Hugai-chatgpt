@@ -1,24 +1,31 @@
 package com.hugai.modules.draw.controller;
 
+import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hugai.common.constants.ApiPrefixConstant;
-import com.hugai.common.constants.RedisCacheKey;
+import com.hugai.common.enums.flow.DrawType;
+import com.hugai.core.drawTask.manager.DrawTaskDataManager;
+import com.hugai.core.drawTask.manager.queue.DrawTaskMjQueueManager;
+import com.hugai.core.drawTask.manager.queue.DrawTaskOpenaiQueueManager;
+import com.hugai.core.drawTask.manager.queue.DrawTaskSdQueueManager;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.modules.draw.entity.dto.TaskDrawDTO;
 import com.hugai.modules.draw.entity.model.TaskDrawModel;
 import com.hugai.modules.draw.service.TaskDrawService;
+import com.org.bebas.core.flowenum.utils.FlowEnumUtils;
 import com.org.bebas.core.model.build.QueryFastLambda;
+import com.org.bebas.core.spring.SpringUtils;
+import com.org.bebas.exception.BusinessException;
 import com.org.bebas.utils.page.PageUtil;
 import com.org.bebas.utils.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.Locale;
 
 /**
  * @author WuHao
@@ -33,20 +40,35 @@ public class DrawTaskController {
 
     private final TaskDrawService taskDrawService;
 
-    private final RedisTemplate redisTemplate;
-
-    @ApiOperation(value = "获取当前任务明细")
+    @ApiOperation(value = "获取任务明细")
     @GetMapping("/getTaskDetail/{drawType}")
     public Result getTaskList(@PathVariable String drawType) {
-        Long userId = SecurityContextUtil.getUserId();
-        Long taskSize = redisTemplate.opsForZSet().size(RedisCacheKey.TASK_DRAW_QUEUE_OPENAI);
-        Long userIndex = redisTemplate.opsForZSet().rank(RedisCacheKey.TASK_DRAW_QUEUE_OPENAI, userId);
-        if (Objects.nonNull(userIndex)) {
-            userIndex += 1;
+        DrawType drawTypeEnum = FlowEnumUtils.getEnumByKey(drawType.toUpperCase(Locale.ROOT), DrawType.class);
+        Assert.notNull(drawTypeEnum, () -> new BusinessException("不匹配的绘图类型"));
+
+        int runningCount = 0;
+        int sum = 0;
+        switch (drawTypeEnum) {
+            case OPENAI -> {
+                DrawTaskDataManager queueManager = SpringUtils.getBean(DrawTaskOpenaiQueueManager.class);
+                runningCount = queueManager.getRunningCount();
+                sum = queueManager.getWaitTime();
+            }
+            case SD -> {
+                DrawTaskDataManager queueManager = SpringUtils.getBean(DrawTaskSdQueueManager.class);
+                runningCount = queueManager.getRunningCount();
+                sum = queueManager.getWaitTime();
+            }
+            case MJ -> {
+                DrawTaskDataManager queueManager = SpringUtils.getBean(DrawTaskMjQueueManager.class);
+                runningCount = queueManager.getRunningCount();
+                sum = queueManager.getWaitTime();
+            }
         }
+
         return Result.success()
-                .put("taskSize", taskSize)
-                .put("userIndex", userIndex)
+                .put("runningCount", runningCount)
+                .put("sum", sum)
                 ;
     }
 

@@ -1,6 +1,7 @@
-package com.hugai.core.drawTask.entity;
+package com.hugai.core.openai.entity.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hugai.core.drawTask.valid.CreateTask;
 import com.hugai.core.session.entity.SessionCacheData;
 import com.hugai.core.session.valid.SendDrawOpenAi;
 import lombok.Data;
@@ -18,25 +19,27 @@ import javax.validation.constraints.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SessionDrawEditOpenaiCacheData extends SessionCacheData {
+public class OpenaiImg2ImgRequest extends SessionCacheData {
 
     /**
      * A text description of the desired image(s). The maximum length in 1000 characters.
      */
-    @NotEmpty(message = "请输入内容")
-    @Length(max = 1000, message = "内容长度不能超过1000个字符")
+    @NotEmpty(message = "请输入内容", groups = {CreateTask.class})
+    @Length(max = 1000, message = "内容长度不能超过1000个字符", groups = {CreateTask.class})
     String prompt;
 
     String mask;
 
-    @NotEmpty(message = "请上传图片")
     String image;
+
+    @NotEmpty(message = "垫图不能为空", groups = {CreateTask.class})
+    private String baseImg;
 
     /**
      * The number of images to generate. Must be between 1 and 10. Defaults to 1.
      */
-    @Max(value = 1, message = "The number of images to generate. Must be between 1 and 1. Defaults to 1")
-    @Min(value = 1, message = "The number of images to generate. Must be between 1 and 1. Defaults to 1")
+    @Max(value = 1, message = "The number of images to generate. Must be between 1 and 1. Defaults to 1", groups = {CreateTask.class})
+    @Min(value = 1, message = "The number of images to generate. Must be between 1 and 1. Defaults to 1", groups = {CreateTask.class})
     Integer n;
 
     /**

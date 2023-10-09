@@ -11,7 +11,7 @@
  Target Server Version : 80028 (8.0.28)
  File Encoding         : 65001
 
- Date: 19/09/2023 17:52:23
+ Date: 09/10/2023 10:34:01
 */
 
 SET NAMES utf8mb4;
@@ -39,7 +39,7 @@ CREATE TABLE `base_dict_data`  (
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '状态（0正常 1停用）',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `dict_value`(`dict_value` ASC, `dict_type` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典数据表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典数据表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of base_dict_data
@@ -84,7 +84,7 @@ CREATE TABLE `base_dict_type`  (
   `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `dict_type`(`dict_type` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典类型表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '字典类型表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of base_dict_type
@@ -115,14 +115,38 @@ CREATE TABLE `base_resource_config`  (
   `resource_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源值',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `config_key`(`config_key` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统参数配置表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统参数配置表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of base_resource_config
 -- ----------------------------
-INSERT INTO `base_resource_config` VALUES (102061615, NULL, NULL, '2023-09-01 13:42:07', '1000000000', 0, 12, 'main', '{\"maxUserLogin\":5,\"staticWebsite\":\"http://static.xxx.com\",\"website\":\"http://localhost:9000\",\"fileSavePathWin\":\"D:\\\\\\\\resourceServer\\\\\\\\\",\"fileSavePathLinux\":\"/projectResource/temp/file/\",\"registerOpen\":true,\"authCodeOpen\":false,\"fileSaveStrategy\":\"qiniu\",\"proxyHost\":\"127.0.0.1\",\"proxyPort\":\"7890\",\"ableSystemApiKey\":true,\"webIssueTime\":\"2023-08-01\",\"websocketUrl\":\"ws://localhost:7100\",\"streamResponseType\":\"Websocket\",\"projectVersion\":\"v1.0\"}');
-INSERT INTO `base_resource_config` VALUES (112061615, NULL, NULL, '2023-08-25 16:04:29', '1000000000', 0, 0, 'openai', '{\"proxyHost\":\"127.0.0.1\",\"proxyPort\":\"7890\",\"chatModel\":\"gpt-3.5-turbo\",\"textModel\":\"text-davinci-003\",\"openDraw\":false}');
-INSERT INTO `base_resource_config` VALUES (112241615, NULL, NULL, '2023-09-19 17:26:56', '1000000000', 0, 0, 'draw', '{\"sdHostUrl\":\"http://xxxx.com\",\"openDrawOpenai\":false,\"defaultNegativePrompt\":\"(worst quality:2), (low quality:2), (normal quality:2), lowres, normal quality,(monochrome)), ((grayscale)), skin spots, acnes, skin blemishes, age spot, (ugly:1.331),duplicate:1.331), (morbid:1.21), (mutilated:1.21), (tranny:l.331), mutated hands, (poorly drawnands:1.5), blurry, (bad anatomy:1.21), (bad proportions:1.331), extra limbs, (disfigured:1.331),missing arms:1.331), (extra legs:1.331), (fused fingers:1.61051), (too many fingers:1.61051),unclear eyes:1.331), lowers, bad hands, missing fingers, extra digit,bad hands, missing fingers.((extra arms and legs))),lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, bad-hands-5\",\"openSensitiveLimit\":true,\"sensitiveContent\":\"NSFW\",\"openBeforePromptContent\":false,\"beforePromptContent\":\"NSFW\",\"defaultRequestBean\":\"{\\n    \\\"steps\\\": 25,\\n    \\\"sampler_name\\\": \\\"DPM++ 2M Karras\\\",\\n    \\\"restore_faces\\\": true,\\n    \\\"seed\\\": -1,\\n    \\\"denoisingStrength\\\": 0.7,\\n    \\\"hrScale\\\": 2.0\\n}\",\"openBeforeNegativePromptContent\":true,\"beforeNegativePromptContent\":\"nfsw, (nude:1.5) \"}');
+INSERT INTO `base_resource_config` VALUES (102061615, NULL, NULL, '2023-09-28 09:34:43', '1000000000', 0, 12, 'main', '{\"maxUserLogin\":5,\"staticWebsite\":\"http://static.xxx.com\",\"website\":\"http://localhost:9000\",\"fileSavePathWin\":\"D:\\\\\\\\resourceServer\\\\\\\\\",\"fileSavePathLinux\":\"/projectResource/temp/file/\",\"registerOpen\":true,\"authCodeOpen\":false,\"fileSaveStrategy\":\"local\",\"proxyHost\":\"127.0.0.1\",\"proxyPort\":\"7890\",\"ableSystemApiKey\":true,\"webIssueTime\":\"2023-08-01\",\"websocketUrl\":\"ws://localhost:7100\",\"streamResponseType\":\"SSE\",\"projectVersion\":\"v1.0\"}');
+INSERT INTO `base_resource_config` VALUES (112061615, NULL, NULL, '2023-09-26 17:12:14', '1000000000', 0, 0, 'openai', '{\"proxyHost\":\"127.0.0.1\",\"proxyPort\":\"7890\",\"chatModel\":\"gpt-3.5-turbo\",\"textModel\":\"text-davinci-003\",\"openDraw\":false}');
+INSERT INTO `base_resource_config` VALUES (112241615, NULL, NULL, '2023-10-09 09:01:11', '1000000000', 0, 0, 'draw', '{\"sdHostUrl\":\"http://xxxx.com\",\"openDrawOpenai\":false,\"defaultNegativePrompt\":\"(worst quality:2), (low quality:2), (normal quality:2), lowres, normal quality,(monochrome)), ((grayscale)), skin spots, acnes, skin blemishes, age spot, (ugly:1.331),duplicate:1.331), (morbid:1.21), (mutilated:1.21), (tranny:l.331), mutated hands, (poorly drawnands:1.5), blurry, (bad anatomy:1.21), (bad proportions:1.331), extra limbs, (disfigured:1.331),missing arms:1.331), (extra legs:1.331), (fused fingers:1.61051), (too many fingers:1.61051),unclear eyes:1.331), lowers, bad hands, missing fingers, extra digit,bad hands, missing fingers.((extra arms and legs))),lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, bad-hands-5\",\"openSensitiveLimit\":true,\"sensitiveContent\":\"NSFW\",\"openBeforePromptContent\":false,\"beforePromptContent\":\"NSFW\",\"defaultRequestBean\":\"{\\n    \\\"steps\\\": 25,\\n    \\\"sampler_name\\\": \\\"DPM++ 2M Karras\\\",\\n    \\\"restore_faces\\\": true,\\n    \\\"seed\\\": -1,\\n    \\\"denoisingStrength\\\": 0.7,\\n    \\\"hrScale\\\": 2.0\\n}\",\"openBeforeNegativePromptContent\":true,\"beforeNegativePromptContent\":\"nfsw, (nude:1.5) \"}');
+
+-- ----------------------------
+-- Table structure for sys_attachment
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_attachment`;
+CREATE TABLE `sys_attachment`  (
+  `id` bigint NOT NULL,
+  `create_oper` varchar(26) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `update_oper` varchar(26) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '更新时间',
+  `del_flag` int NULL DEFAULT 0,
+  `business_id` bigint NULL DEFAULT NULL COMMENT '业务主键id',
+  `original_file_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '原始文件名',
+  `file_size` int NULL DEFAULT NULL COMMENT '文件大小',
+  `file_name_md5` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件唯一名称',
+  `file_absolute_path` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件绝对路径',
+  `file_suffix` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件后缀',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '附件管理' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_attachment
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_file_config
@@ -138,7 +162,7 @@ CREATE TABLE `sys_file_config`  (
   `unique_key` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '策略标识',
   `save_path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '保存路径',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '文件上传配置' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '文件上传配置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_file_config
@@ -168,7 +192,7 @@ CREATE TABLE `sys_job`  (
   `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
   `version` int NULL DEFAULT 0 COMMENT '版本号',
   PRIMARY KEY (`id`, `job_name`, `job_group`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务调度表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务调度表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_job
@@ -196,7 +220,7 @@ CREATE TABLE `sys_job_log`  (
   `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
   `version` int NULL DEFAULT 0 COMMENT '版本号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务调度日志表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '定时任务调度日志表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_job_log
@@ -225,7 +249,7 @@ CREATE TABLE `sys_logininfor`  (
   `login_time` datetime NULL DEFAULT NULL COMMENT '访问时间',
   `login_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '登陆类型 0 系统用户 1 普通用户',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统访问记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统访问记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_logininfor
@@ -258,7 +282,7 @@ CREATE TABLE `sys_menu`  (
   `sort` int NULL DEFAULT NULL COMMENT '显示顺序',
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '别名',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -288,6 +312,8 @@ INSERT INTO `sys_menu` VALUES (1692358229926928385, '2023-08-18 10:10:19', '1000
 INSERT INTO `sys_menu` VALUES (1701852775748579330, '2023-09-13 14:58:15', '1000000000', '2023-09-15 17:10:44', '1000000000', 0, 0, '文本会话记录', 1687035996077555714, 0, 'txtSession', 'business/session/sessionRecord/index', NULL, 0, 0, 'C', '0', '0', 'Comment Lines', 2, NULL);
 INSERT INTO `sys_menu` VALUES (1703583800203718657, '2023-09-18 09:36:43', '1000000000', '2023-09-18 09:37:26', '1000000000', 0, 0, '绘图记录', 1687035996077555714, 0, 'drawRecord', 'business/session/drawRecord/index', NULL, 0, 0, 'C', '0', '0', 'Pie Chart', 3, NULL);
 INSERT INTO `sys_menu` VALUES (1703942017458929666, '2023-09-19 09:20:09', '1000000000', '2023-09-19 09:20:09', '1000000000', 0, 0, '绘图任务', 1687035996077555714, 0, 'taskDraw', 'business/session/taskDraw/index', NULL, 0, 0, 'C', '0', '0', 'Computer', 4, NULL);
+INSERT INTO `sys_menu` VALUES (1709470336816365570, '2023-10-04 15:27:43', '1000000000', '2023-10-04 15:37:28', '1000000000', 0, 0, 'minio配置', 117256171332567045, 0, 'minioConfig', 'system/webset/minio/minioConfig', NULL, 0, 0, 'C', '0', '0', 'Settings', 2, NULL);
+INSERT INTO `sys_menu` VALUES (1709493291432669186, '2023-10-04 16:58:56', '1000000000', '2023-10-04 16:58:56', '1000000000', 0, 0, 'mj账户配置', 117256171332567045, 0, 'mjconfig', 'system/webset/midjourney/index', NULL, 0, 0, 'C', '0', '0', 'Settings', 3, NULL);
 
 -- ----------------------------
 -- Table structure for sys_minio_secret
@@ -306,12 +332,12 @@ CREATE TABLE `sys_minio_secret`  (
   `bucket_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '存储空间名称',
   `data_handle_domain` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据处理服务域名',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '文件上传配置' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '文件上传配置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_minio_secret
 -- ----------------------------
-INSERT INTO `sys_minio_secret` VALUES (1, NULL, NULL, NULL, NULL, 0, 'qiniu', 'xxxxxx', 'xxx', 'hugai', 'xxx');
+INSERT INTO `sys_minio_secret` VALUES (1, NULL, NULL, '1000000000', '2023-10-04 15:41:02', 0, 'qiniu', 'xxxxxx', 'xxxxxx', 'hugai', 'http://xxxx.com');
 
 -- ----------------------------
 -- Table structure for sys_oper_log
@@ -339,7 +365,7 @@ CREATE TABLE `sys_oper_log`  (
   `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
   `version` int NULL DEFAULT 0 COMMENT '版本号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -352,9 +378,9 @@ DROP TABLE IF EXISTS `sys_permission`;
 CREATE TABLE `sys_permission`  (
   `id` bigint NOT NULL COMMENT '主键',
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `create_oper` varchar(26) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `create_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
   `update_time` timestamp NULL DEFAULT NULL COMMENT '操作时间',
-  `update_oper` varchar(26) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作人',
+  `update_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
   `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
   `version` int NULL DEFAULT 0 COMMENT '版本号',
   `parent_id` bigint NULL DEFAULT 0 COMMENT '父id',
@@ -371,7 +397,7 @@ CREATE TABLE `sys_permission`  (
   `if_usable` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '是否可用的',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `parent_id`(`parent_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '权限管理' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '权限管理' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_permission
@@ -483,7 +509,7 @@ INSERT INTO `sys_permission` VALUES (1674578729612922887, '2023-06-30 08:40:55',
 INSERT INTO `sys_permission` VALUES (1674578729612922888, '2023-06-30 08:40:55', NULL, '2023-06-30 08:40:55', '1000000000', 0, 0, 1674581892462071809, '0,1674579114499035137,1674581892462071809', 'sysLogininforController', '系统访问记录- 控制器', 'baseDeleteByIds', '/module/system/syslogininfor/baseDeleteByIds/{ids}', '/module/system/syslogininfor/baseDeleteByIds/*', 'module:system:syslogininfor:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1674578729612922889, '2023-06-30 08:40:55', NULL, '2023-06-30 08:40:55', '1000000000', 0, 0, 1674582505417658369, '0,1674579384591241218,1674582505417658369', 'sysMenuController', '菜单权限', 'baseDeleteByIds', '/module/system/sysmenu/baseDeleteByIds/{ids}', '/module/system/sysmenu/baseDeleteByIds/*', 'module:system:sysmenu:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1674578729612922890, '2023-06-30 08:40:55', NULL, '2023-06-30 08:40:55', '1000000000', 0, 0, 1674582505417658369, '0,1674579384591241218,1674582505417658369', 'sysMenuController', '菜单权限', 'baseQueryById', '/module/system/sysmenu/baseQueryById/{id}', '/module/system/sysmenu/baseQueryById/*', 'module:system:sysmenu:baseQueryById:*', 'GET', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1674578729612922891, '2023-06-30 08:40:55', NULL, '2023-06-30 08:40:55', '1000000000', 0, 0, 1674582790324146177, '0,1674580535470510082,1674582790324146177', 'baseDictTypeController', '字典类型', 'optionSelect', '/module/system/basedicttype/optionSelect', '/module/system/basedicttype/optionSelect', 'module:system:basedicttype:optionSelect', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1674578729612922891, '2023-06-30 08:40:55', NULL, '2023-06-30 08:40:55', '1000000000', 0, 0, 1674582790324146177, '0,1674580535470510082,1674582790324146177', 'baseDictTypeController', '字典类型', 'optionSelect', '/module/system/basedicttype/optionSelect', '/module/system/basedicttype/optionSelect', 'module:system:basedicttype:optionSelect', 'GET', 1, 3, '1');
 INSERT INTO `sys_permission` VALUES (1674578729612922892, '2023-06-30 08:40:55', NULL, '2023-06-30 08:40:55', '1000000000', 0, 0, 1674581645400788994, '0,1674579089589063681,1674581645400788994', 'sessionInfoController', '会话表', 'userLastDomainSession', '/module/session/sessioninfo/userLastDomainSession', '/module/session/sessioninfo/userLastDomainSession', 'module:session:sessioninfo:userLastDomainSession', 'GET', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1674578729612922893, '2023-06-30 08:40:55', NULL, '2023-06-30 08:40:55', '1000000000', 0, 0, 1674582491907805185, '0,1674579384591241218,1674582491907805185', 'sysRoleController', '角色信息', 'baseEdit', '/module/system/sysrole/baseEdit', '/module/system/sysrole/baseEdit', 'module:system:sysrole:baseEdit', 'PUT', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1674578729612922894, '2023-06-30 08:40:55', NULL, '2023-06-30 08:40:55', '1000000000', 0, 0, 1674579182287376385, '0,1674578853248421890,1674579182287376385', 'sysUserOnlineController', '在线用户监控', 'baseQueryPageByParam', '/module/system/monitor/online/baseQueryPageByParam', '/module/system/monitor/online/baseQueryPageByParam', 'module:system:monitor:online:baseQueryPageByParam', 'POST', 1, 1, '1');
@@ -552,17 +578,15 @@ INSERT INTO `sys_permission` VALUES (1675793439851036680, '2023-07-03 17:07:45',
 INSERT INTO `sys_permission` VALUES (1676790579284992001, '2023-07-06 11:10:02', '1000000000', '2023-07-06 11:10:02', '1000000000', 0, 0, 1674580535470510082, '0,1674580535470510082', '文件配置', '文件配置', '文件配置', '0', NULL, NULL, NULL, 0, NULL, '1');
 INSERT INTO `sys_permission` VALUES (1676790618824695810, '2023-07-06 11:10:11', NULL, '2023-07-06 11:10:11', '1000000000', 0, 0, 1674580956448608258, '0,1674578853248421890,1674580956448608258', 'userInfoController', '用户控制器', 'getUserGrants', '/module/user/userinfo/getUserGrants', '/module/user/userinfo/getUserGrants', 'module:user:userinfo:getUserGrants', 'GET', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1676790618824695811, '2023-07-06 11:10:11', NULL, '2023-07-06 11:10:11', '1000000000', 0, 0, 1674581584893759489, '0,1674579089589063681,1674581584893759489', 'sseController', 'sse通用请求控制器', 'connect', '/sse/connect', '/sse/connect', 'sse:connect', 'GET', 1, 3, '1');
-INSERT INTO `sys_permission` VALUES (1677188224147001346, '2023-07-07 13:30:07', NULL, '2023-07-07 13:30:07', '1000000000', 0, 0, 1674580956448608258, '0,1674578853248421890,1674580956448608258', 'userInfoController', '用户修改桌面背景', 'editUserBackground', '/module/user/userinfo/editUserBackground', '/module/user/userinfo/editUserBackground', 'module:user:userinfo:editUserBackground', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1677188224147001346, '2023-07-07 13:30:07', NULL, '2023-07-07 13:30:07', '1000000000', 0, 0, 1674580956448608258, '0,1674578853248421890,1674580956448608258', 'userInfoController', '用户修改桌面背景', 'editUserBackground', '/module/user/userinfo/editUserBackground', '/module/user/userinfo/editUserBackground', 'module:user:userinfo:editUserBackground', 'GET', 1, 1, '0');
 INSERT INTO `sys_permission` VALUES (1683755122745708546, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1674582856791281665, '0,1674580535470510082,1674582856791281665', 'openaiKeysController', 'apikeys', 'delUserApiKey', '/module/config/openaikeys/delUserApiKey/{id}', '/module/config/openaikeys/delUserApiKey/*', 'module:config:openaikeys:delUserApiKey:*', 'DELETE', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1683755122808623105, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1674581645400788994, '0,1674579089589063681,1674581645400788994', 'sessionInfoController', '会话表', 'addDrawSession', '/module/session/sessioninfo/addDrawSession', '/module/session/sessioninfo/addDrawSession', 'module:session:sessioninfo:addDrawSession', 'POST', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1683755122808623106, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1674582856791281665, '0,1674580535470510082,1674582856791281665', 'openaiKeysController', 'apikeys', 'addUserApiKey', '/module/config/openaikeys/addUserApiKey', '/module/config/openaikeys/addUserApiKey', 'module:config:openaikeys:addUserApiKey', 'POST', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1683755122808623107, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1684019553161465857, '0,1674580535470510082,1684019553161465857', 'captchaController', '验证码校验', 'check', '/captcha/check', '/captcha/check', 'captcha:check', 'POST', 1, 3, '1');
-INSERT INTO `sys_permission` VALUES (1683755122808623108, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'drawOpenaiController', '绘画控制器（openai）', 'sendAiDraw', '/module/draw/openai/sendAiDraw', '/module/draw/openai/sendAiDraw', 'module:draw:openai:sendAiDraw', 'POST', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1683755122808623110, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1674580956448608258, '0,1674578853248421890,1674580956448608258', 'userInfoController', '用户控制器注册验证码发送', 'registerSendMail', '/module/user/userinfo/registerSendMail', '/module/user/userinfo/registerSendMail', 'module:user:userinfo:registerSendMail', 'GET', 1, 3, '1');
 INSERT INTO `sys_permission` VALUES (1683755122808623112, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1674581584893759489, '0,1674579089589063681,1674581584893759489', 'chatController', '聊天会话控制器', 'send', '/module/chat/send', '/module/chat/send', 'module:chat:send', 'POST', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1683755122808623114, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1674581584893759489, '0,1674579089589063681,1674581584893759489', 'chatController', '聊天会话控制器', 'sendDomain', '/module/chat/sendDomain', '/module/chat/sendDomain', 'module:chat:sendDomain', 'POST', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1683755122808623115, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1674582856791281665, '0,1674580535470510082,1674582856791281665', 'openaiKeysController', 'apikeys', 'getUserApiKeys', '/module/config/openaikeys/getUserApiKeys', '/module/config/openaikeys/getUserApiKeys', 'module:config:openaikeys:getUserApiKeys', 'GET', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1683755122808623116, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'drawOpenaiController', '绘画控制器（openai）', 'sendAiDrawEdit', '/module/draw/openai/sendAiDrawEdit', '/module/draw/openai/sendAiDrawEdit', 'module:draw:openai:sendAiDrawEdit', 'POST', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1683755122808623117, '2023-07-25 16:24:38', NULL, '2023-07-25 16:24:38', '1000000000', 0, 0, 1674581645400788994, '0,1674579089589063681,1674581645400788994', 'sessionInfoController', '会话表', 'userLastDrawSession', '/module/session/sessioninfo/userLastDrawSession', '/module/session/sessioninfo/userLastDrawSession', 'module:session:sessioninfo:userLastDrawSession', 'GET', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1683755420184776705, '2023-07-25 16:25:49', '1000000000', '2023-07-25 16:25:49', '1000000000', 0, 0, 1674579089589063681, '0,1674579089589063681', '绘图会话管理', '绘图会话管理', '绘图会话管理', '0', NULL, NULL, NULL, 0, NULL, '1');
 INSERT INTO `sys_permission` VALUES (1684018183868010497, '2023-07-26 09:49:57', NULL, '2023-07-26 09:49:57', '1000000000', 0, 0, 1684019553161465857, '0,1674580535470510082,1684019553161465857', 'captchaController', '验证码获取', 'get', '/captcha/get', '/captcha/get', 'captcha:get', 'POST', 1, 3, '1');
@@ -571,38 +595,62 @@ INSERT INTO `sys_permission` VALUES (1688829555168522242, '2023-08-08 16:28:37',
 INSERT INTO `sys_permission` VALUES (1688829555168522243, '2023-08-08 16:28:37', NULL, '2023-08-08 16:28:37', '1000000000', 0, 0, 1674580956448608258, '0,1674578853248421890,1674580956448608258', 'userInfoController', '用户控制器', 'updateUserInfo', '/module/user/userinfo/updateUserInfo', '/module/user/userinfo/updateUserInfo', 'module:user:userinfo:updateUserInfo', 'PUT', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1688829555168522244, '2023-08-08 16:28:37', NULL, '2023-08-08 16:28:37', '1000000000', 0, 0, 1674581645400788994, '0,1674579089589063681,1674581645400788994', 'sessionInfoController', '获取用户会话列表（分页）', 'getUserSessionList', '/module/session/sessioninfo/getUserSessionList', '/module/session/sessioninfo/getUserSessionList', 'module:session:sessioninfo:getUserSessionList', 'GET', 1, 1, '1');
 INSERT INTO `sys_permission` VALUES (1688829555168522245, '2023-08-08 16:28:37', NULL, '2023-08-08 16:28:37', '1000000000', 0, 0, 1674580956448608258, '0,1674578853248421890,1674580956448608258', 'userInfoController', '用户控制器', 'queryPageListByParam', '/module/user/userinfo/queryPageListByParam', '/module/user/userinfo/queryPageListByParam', 'module:user:userinfo:queryPageListByParam', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342058033154, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1703680656887889922, '0,1703680586339696641,1703680656887889922', 'noticeClientController', '通知公告', 'baseDeleteByIds', '/module/business/noticeclient/baseDeleteByIds/{ids}', '/module/business/noticeclient/baseDeleteByIds/*', 'module:business:noticeclient:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342091587586, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1703680656887889922, '0,1703680586339696641,1703680656887889922', 'noticeClientController', '通知公告', 'baseEdit', '/module/business/noticeclient/baseEdit', '/module/business/noticeclient/baseEdit', 'module:business:noticeclient:baseEdit', 'PUT', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342091587587, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1674582856791281665, '0,1674580535470510082,1674582856791281665', 'openaiKeysAdminController', 'apikeys（后台）', 'baseQueryByParam', '/module/config/admin/openaikeys/baseQueryByParam', '/module/config/admin/openaikeys/baseQueryByParam', 'module:config:admin:openaikeys:baseQueryByParam', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342091587588, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1674582856791281665, '0,1674580535470510082,1674582856791281665', 'openaiKeysAdminController', 'apikeys（后台）', 'baseQueryPageByParam', '/module/config/admin/openaikeys/baseQueryPageByParam', '/module/config/admin/openaikeys/baseQueryPageByParam', 'module:config:admin:openaikeys:baseQueryPageByParam', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342091587589, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1674582856791281665, '0,1674580535470510082,1674582856791281665', 'openaiKeysAdminController', 'apikeys（后台）', 'baseQueryById', '/module/config/admin/openaikeys/baseQueryById/{id}', '/module/config/admin/openaikeys/baseQueryById/*', 'module:config:admin:openaikeys:baseQueryById:*', 'GET', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342091587590, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1674582856791281665, '0,1674580535470510082,1674582856791281665', 'openaiKeysAdminController', 'apikeys（后台）', 'baseAdd', '/module/config/admin/openaikeys/baseAdd', '/module/config/admin/openaikeys/baseAdd', 'module:config:admin:openaikeys:baseAdd', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342091587592, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1674582856791281665, '0,1674580535470510082,1674582856791281665', 'openaiKeysAdminController', 'apikeys（后台）', 'baseEdit', '/module/config/admin/openaikeys/baseEdit', '/module/config/admin/openaikeys/baseEdit', 'module:config:admin:openaikeys:baseEdit', 'PUT', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342091587593, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1674582856791281665, '0,1674580535470510082,1674582856791281665', 'openaiKeysAdminController', 'apikeys（后台）', 'baseDeleteByIds', '/module/config/admin/openaikeys/baseDeleteByIds/{ids}', '/module/config/admin/openaikeys/baseDeleteByIds/*', 'module:config:admin:openaikeys:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342154502146, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1692413494814584834, '0,1692413494814584834', 'interfaceStatistics', '统计接口访问次数', 'incr', '/common/interface/info', '/common/interface/info', 'common:interface:info', 'GET', 1, 3, '1');
-INSERT INTO `sys_permission` VALUES (1692413342154502147, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1703680656887889922, '0,1703680586339696641,1703680656887889922', 'noticeClientController', '通知公告', 'baseQueryPageByParam', '/module/business/noticeclient/baseQueryPageByParam', '/module/business/noticeclient/baseQueryPageByParam', 'module:business:noticeclient:baseQueryPageByParam', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342154502148, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1703680656887889922, '0,1703680586339696641,1703680656887889922', 'noticeClientController', '通知公告', 'baseQueryByParam', '/module/business/noticeclient/baseQueryByParam', '/module/business/noticeclient/baseQueryByParam', 'module:business:noticeclient:baseQueryByParam', 'POST', 1, 3, '1');
-INSERT INTO `sys_permission` VALUES (1692413342154502149, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1703680656887889922, '0,1703680586339696641,1703680656887889922', 'noticeClientController', '通知公告', 'baseQueryById', '/module/business/noticeclient/baseQueryById/{id}', '/module/business/noticeclient/baseQueryById/*', 'module:business:noticeclient:baseQueryById:*', 'GET', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342154502150, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1703680656887889922, '0,1703680586339696641,1703680656887889922', 'noticeClientController', '通知公告', 'getLastNotice', '/module/business/noticeclient/getLastNotice', '/module/business/noticeclient/getLastNotice', 'module:business:noticeclient:getLastNotice', 'GET', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413342154502151, '2023-08-18 13:49:18', NULL, '2023-08-18 13:49:18', '1000000000', 0, 0, 1703680656887889922, '0,1703680586339696641,1703680656887889922', 'noticeClientController', '通知公告', 'baseAdd', '/module/business/noticeclient/baseAdd', '/module/business/noticeclient/baseAdd', 'module:business:noticeclient:baseAdd', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1692413494814584834, '2023-08-18 13:49:55', '1000000000', '2023-08-18 13:49:55', '1000000000', 0, 0, 0, '0', '统计相关', '统计相关', '统计相关', '0', NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `sys_permission` VALUES (1703678801793368066, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1703680091864809473, '0,1674579089589063681,1703680091864809473', 'sessionRecordDrawController', '绘图会话记录', 'baseAdd', '/module/session/sessionrecorddraw/baseAdd', '/module/session/sessionrecorddraw/baseAdd', 'module:session:sessionrecorddraw:baseAdd', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368067, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'drawTaskController', '绘画控制器', 'createTaskOpenai', '/module/draw/task/createTask/{apiKey}', '/module/draw/task/createTask/*', 'module:draw:task:createTask:*', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368068, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'sessionInfoDrawController', '绘图会话', 'getSessionDetail', '/module/session/sessioninfodraw/getSessionDetail/{id}', '/module/session/sessioninfodraw/getSessionDetail/*', 'module:session:sessioninfodraw:getSessionDetail:*', 'GET', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368069, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1703680091864809473, '0,1674579089589063681,1703680091864809473', 'sessionRecordDrawController', '绘图会话记录', 'baseQueryByParam', '/module/session/sessionrecorddraw/baseQueryByParam', '/module/session/sessionrecorddraw/baseQueryByParam', 'module:session:sessionrecorddraw:baseQueryByParam', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368070, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1703680091864809473, '0,1674579089589063681,1703680091864809473', 'sessionRecordDrawController', '绘图会话记录', 'baseDeleteByIds', '/module/session/sessionrecorddraw/baseDeleteByIds/{ids}', '/module/session/sessionrecorddraw/baseDeleteByIds/*', 'module:session:sessionrecorddraw:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368071, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1703680091864809473, '0,1674579089589063681,1703680091864809473', 'sessionRecordDrawController', '绘图会话记录', 'baseEdit', '/module/session/sessionrecorddraw/baseEdit', '/module/session/sessionrecorddraw/baseEdit', 'module:session:sessionrecorddraw:baseEdit', 'PUT', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368072, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1674582818715389954, '0,1674580535470510082,1674582818715389954', 'resourceConfigController', '系统参数配置', 'getConfigMain', '/module/system/baseresourceconfig/configMain', '/module/system/baseresourceconfig/configMain', 'module:system:baseresourceconfig:configMain', 'GET', 1, 3, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368073, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1703680091864809473, '0,1674579089589063681,1703680091864809473', 'sessionRecordDrawController', '绘图会话记录', 'baseQueryPageByParam', '/module/session/sessionrecorddraw/baseQueryPageByParam', '/module/session/sessionrecorddraw/baseQueryPageByParam', 'module:session:sessionrecorddraw:baseQueryPageByParam', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368074, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'drawTaskController', '绘画控制器', 'userTaskList', '/module/draw/task/userTaskList/{drawType}', '/module/draw/task/userTaskList/*', 'module:draw:task:userTaskList:*', 'GET', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368075, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'drawTaskController', '绘画控制器', 'getTaskList', '/module/draw/task/getTaskDetail/{drawType}', '/module/draw/task/getTaskDetail/*', 'module:draw:task:getTaskDetail:*', 'GET', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368076, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1674581584893759489, '0,1674579089589063681,1674581584893759489', 'chatController', '聊天会话控制器', 'stopStreamResponse', '/module/chat/stopStreamResponse/{contentId}', '/module/chat/stopStreamResponse/*', 'module:chat:stopStreamResponse:*', 'GET', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368077, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1674581645400788994, '0,1674579089589063681,1674581645400788994', 'sessionInfoController', '会话表', 'baseQueryPageByParam', '/module/session/sessioninfo/baseQueryPageByParam', '/module/session/sessioninfo/baseQueryPageByParam', 'module:session:sessioninfo:baseQueryPageByParam', 'POST', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368078, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1703680091864809473, '0,1674579089589063681,1703680091864809473', 'sessionRecordDrawController', '绘图会话记录', 'baseQueryById', '/module/session/sessionrecorddraw/baseQueryById/{id}', '/module/session/sessionrecorddraw/baseQueryById/*', 'module:session:sessionrecorddraw:baseQueryById:*', 'GET', 1, 1, '1');
-INSERT INTO `sys_permission` VALUES (1703678801793368079, '2023-09-18 15:54:13', NULL, '2023-09-18 15:54:13', '1000000000', 0, 0, 1692413494814584834, '0,1692413494814584834', 'statisticsController', '统计 设置', 'getSettingInfo', '/module/statistics/getSettingInfo', '/module/statistics/getSettingInfo', 'module:statistics:getSettingInfo', 'GET', 1, 3, '1');
-INSERT INTO `sys_permission` VALUES (1703680091864809473, '2023-09-18 15:59:21', '1000000000', '2023-09-18 15:59:21', '1000000000', 0, 0, 1674579089589063681, '0,1674579089589063681', '绘图记录', '绘图记录', '绘图记录', '0', NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `sys_permission` VALUES (1703680586339696641, '2023-09-18 16:01:19', '1000000000', '2023-09-18 16:01:19', '1000000000', 0, 0, 0, '0', '业务', '业务', '业务', '0', NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `sys_permission` VALUES (1703680656887889922, '2023-09-18 16:01:36', '1000000000', '2023-09-18 16:01:36', '1000000000', 0, 0, 1703680586339696641, '0,1703680586339696641', '通知公告', '通知公告', '通知公告', '0', NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `sys_permission` VALUES (1692413616569528321, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414232754728962, '0,1692414190664888321,1692414232754728962', 'noticeClientController', '通知公告', 'baseQueryById', '/module/business/noticeclient/baseQueryById/{id}', '/module/business/noticeclient/baseQueryById/*', 'module:business:noticeclient:baseQueryById:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413616573722625, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414232754728962, '0,1692414190664888321,1692414232754728962', 'noticeClientController', '通知公告', 'getLastNotice', '/module/business/noticeclient/getLastNotice', '/module/business/noticeclient/getLastNotice', 'module:business:noticeclient:getLastNotice', 'GET', 1, 3, '1');
+INSERT INTO `sys_permission` VALUES (1692413616573722626, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414285837840386, '0,1692414190664888321,1692414285837840386', 'openaiKeysAdminController', 'apikeys（后台）', 'baseEdit', '/module/config/admin/openaikeys/baseEdit', '/module/config/admin/openaikeys/baseEdit', 'module:config:admin:openaikeys:baseEdit', 'PUT', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413616573722627, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414232754728962, '0,1692414190664888321,1692414232754728962', 'noticeClientController', '通知公告', 'baseEdit', '/module/business/noticeclient/baseEdit', '/module/business/noticeclient/baseEdit', 'module:business:noticeclient:baseEdit', 'PUT', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413616573722628, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414232754728962, '0,1692414190664888321,1692414232754728962', 'noticeClientController', '通知公告', 'baseDeleteByIds', '/module/business/noticeclient/baseDeleteByIds/{ids}', '/module/business/noticeclient/baseDeleteByIds/*', 'module:business:noticeclient:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413616573722629, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414285837840386, '0,1692414190664888321,1692414285837840386', 'openaiKeysAdminController', 'apikeys（后台）', 'baseQueryPageByParam', '/module/config/admin/openaikeys/baseQueryPageByParam', '/module/config/admin/openaikeys/baseQueryPageByParam', 'module:config:admin:openaikeys:baseQueryPageByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413616573722630, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414232754728962, '0,1692414190664888321,1692414232754728962', 'noticeClientController', '通知公告', 'baseQueryPageByParam', '/module/business/noticeclient/baseQueryPageByParam', '/module/business/noticeclient/baseQueryPageByParam', 'module:business:noticeclient:baseQueryPageByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413616573722631, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414285837840386, '0,1692414190664888321,1692414285837840386', 'openaiKeysAdminController', 'apikeys（后台）', 'baseQueryById', '/module/config/admin/openaikeys/baseQueryById/{id}', '/module/config/admin/openaikeys/baseQueryById/*', 'module:config:admin:openaikeys:baseQueryById:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413616590499842, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414232754728962, '0,1692414190664888321,1692414232754728962', 'noticeClientController', '通知公告', 'baseQueryByParam', '/module/business/noticeclient/baseQueryByParam', '/module/business/noticeclient/baseQueryByParam', 'module:business:noticeclient:baseQueryByParam', 'POST', 1, 3, '1');
+INSERT INTO `sys_permission` VALUES (1692413616590499843, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414232754728962, '0,1692414190664888321,1692414232754728962', 'noticeClientController', '通知公告', 'baseAdd', '/module/business/noticeclient/baseAdd', '/module/business/noticeclient/baseAdd', 'module:business:noticeclient:baseAdd', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413616590499844, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414285837840386, '0,1692414190664888321,1692414285837840386', 'openaiKeysAdminController', 'apikeys（后台）', 'baseAdd', '/module/config/admin/openaikeys/baseAdd', '/module/config/admin/openaikeys/baseAdd', 'module:config:admin:openaikeys:baseAdd', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413616590499845, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414285837840386, '0,1692414190664888321,1692414285837840386', 'openaiKeysAdminController', 'apikeys（后台）', 'baseQueryByParam', '/module/config/admin/openaikeys/baseQueryByParam', '/module/config/admin/openaikeys/baseQueryByParam', 'module:config:admin:openaikeys:baseQueryByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413616590499846, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692413675570802689, '0,1692413675570802689', 'interfaceStatistics', '统计web访问量', 'incr', '/common/interface/info', '/common/interface/info', 'common:interface:info', 'GET', 1, 3, '1');
+INSERT INTO `sys_permission` VALUES (1692413616590499848, '2023-08-18 13:50:24', NULL, '2023-08-18 13:50:24', '1000000000', 0, 0, 1692414285837840386, '0,1692414190664888321,1692414285837840386', 'openaiKeysAdminController', 'apikeys（后台）', 'baseDeleteByIds', '/module/config/admin/openaikeys/baseDeleteByIds/{ids}', '/module/config/admin/openaikeys/baseDeleteByIds/*', 'module:config:admin:openaikeys:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1692413675570802689, '2023-08-18 13:50:38', '1000000000', '2023-08-18 13:50:38', '1000000000', 0, 0, 0, '0', '统计相关', '统计相关', '统计相关', '0', NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `sys_permission` VALUES (1692414190664888321, '2023-08-18 13:52:41', '1000000000', '2023-08-18 13:52:41', '1000000000', 0, 0, 0, '0', '业务模块', '业务模块', '业务模块', '0', NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `sys_permission` VALUES (1692414232754728962, '2023-08-18 13:52:51', '1000000000', '2023-08-18 13:52:51', '1000000000', 0, 0, 1692414190664888321, '0,1692414190664888321', '通知公告', '通知公告', '通知公告', '0', NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `sys_permission` VALUES (1692414285837840386, '2023-08-18 13:53:03', '1000000000', '2023-08-18 13:53:03', '1000000000', 0, 0, 1692414190664888321, '0,1692414190664888321', 'apikeys管理', 'apikeys管理', 'apikeys管理', '0', NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `sys_permission` VALUES (1698628754909769729, '2023-09-04 17:27:08', NULL, '2023-09-04 17:27:08', '1000000000', 0, 0, 1692413675570802689, '0,1692413675570802689', 'statisticsController', '', 'getSettingInfo', '/module/statistics/getSettingInfo', '/module/statistics/getSettingInfo', 'module:statistics:getSettingInfo', 'GET', 1, 3, '1');
+INSERT INTO `sys_permission` VALUES (1701137324339441665, '2023-09-11 15:35:18', NULL, '2023-09-11 15:35:18', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'drawTaskController', '绘画控制器', 'userTaskList', '/module/draw/task/userTaskList/{drawType}', '/module/draw/task/userTaskList/*', 'module:draw:task:userTaskList:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1701137324372996098, '2023-09-11 15:35:18', NULL, '2023-09-11 15:35:18', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'drawTaskController', '绘画控制器', 'getTaskList', '/module/draw/task/getTaskDetail/{drawType}', '/module/draw/task/getTaskDetail/*', 'module:draw:task:getTaskDetail:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1701137324372996099, '2023-09-11 15:35:18', NULL, '2023-09-11 15:35:18', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'drawTaskController', '绘画控制器', 'createTaskOpenai', '/module/draw/task/createTask/{apiKey}', '/module/draw/task/createTask/*', 'module:draw:task:createTask:*', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1701762581962240001, '2023-09-13 08:59:51', NULL, '2023-09-13 08:59:51', '1000000000', 0, 0, 1674582818715389954, '0,1674580535470510082,1674582818715389954', 'resourceConfigController', '系统参数配置', 'getConfigMain', '/module/system/baseresourceconfig/configMain', '/module/system/baseresourceconfig/configMain', 'module:system:baseresourceconfig:configMain', 'GET', 1, 3, '1');
+INSERT INTO `sys_permission` VALUES (1701762581995794433, '2023-09-13 08:59:51', NULL, '2023-09-13 08:59:51', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'sessionInfoDrawController', '绘图会话', 'getSessionDetail', '/module/session/sessioninfodraw/getSessionDetail/{id}', '/module/session/sessioninfodraw/getSessionDetail/*', 'module:session:sessioninfodraw:getSessionDetail:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1703653248938356738, '2023-09-18 14:12:41', NULL, '2023-09-18 14:12:41', '1000000000', 0, 0, 1674581584893759489, '0,1674579089589063681,1674581584893759489', 'chatController', '聊天会话控制器', 'stopStreamResponse', '/module/chat/stopStreamResponse/{contentId}', '/module/chat/stopStreamResponse/*', 'module:chat:stopStreamResponse:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1703653248955133954, '2023-09-18 14:12:41', NULL, '2023-09-18 14:12:41', '1000000000', 0, 0, 1703653411778015233, '0,1674579089589063681,1703653411778015233', 'sessionRecordDrawController', '绘图会话记录', 'baseEdit', '/module/session/sessionrecorddraw/baseEdit', '/module/session/sessionrecorddraw/baseEdit', 'module:session:sessionrecorddraw:baseEdit', 'PUT', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1703653248955133955, '2023-09-18 14:12:41', NULL, '2023-09-18 14:12:41', '1000000000', 0, 0, 1703653411778015233, '0,1674579089589063681,1703653411778015233', 'sessionRecordDrawController', '绘图会话记录', 'baseAdd', '/module/session/sessionrecorddraw/baseAdd', '/module/session/sessionrecorddraw/baseAdd', 'module:session:sessionrecorddraw:baseAdd', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1703653248955133956, '2023-09-18 14:12:41', NULL, '2023-09-18 14:12:41', '1000000000', 0, 0, 1703653411778015233, '0,1674579089589063681,1703653411778015233', 'sessionRecordDrawController', '绘图会话记录', 'baseQueryByParam', '/module/session/sessionrecorddraw/baseQueryByParam', '/module/session/sessionrecorddraw/baseQueryByParam', 'module:session:sessionrecorddraw:baseQueryByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1703653248955133957, '2023-09-18 14:12:41', NULL, '2023-09-18 14:12:41', '1000000000', 0, 0, 1703653411778015233, '0,1674579089589063681,1703653411778015233', 'sessionRecordDrawController', '绘图会话记录', 'baseQueryById', '/module/session/sessionrecorddraw/baseQueryById/{id}', '/module/session/sessionrecorddraw/baseQueryById/*', 'module:session:sessionrecorddraw:baseQueryById:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1703653248955133958, '2023-09-18 14:12:41', NULL, '2023-09-18 14:12:41', '1000000000', 0, 0, 1703653411778015233, '0,1674579089589063681,1703653411778015233', 'sessionRecordDrawController', '绘图会话记录', 'baseDeleteByIds', '/module/session/sessionrecorddraw/baseDeleteByIds/{ids}', '/module/session/sessionrecorddraw/baseDeleteByIds/*', 'module:session:sessionrecorddraw:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1703653248955133959, '2023-09-18 14:12:41', NULL, '2023-09-18 14:12:41', '1000000000', 0, 0, 1703653411778015233, '0,1674579089589063681,1703653411778015233', 'sessionRecordDrawController', '绘图会话记录', 'baseQueryPageByParam', '/module/session/sessionrecorddraw/baseQueryPageByParam', '/module/session/sessionrecorddraw/baseQueryPageByParam', 'module:session:sessionrecorddraw:baseQueryPageByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1703653248963522562, '2023-09-18 14:12:41', NULL, '2023-09-18 14:12:41', '1000000000', 0, 0, 1674581645400788994, '0,1674579089589063681,1674581645400788994', 'sessionInfoController', '会话表', 'baseQueryPageByParam', '/module/session/sessioninfo/baseQueryPageByParam', '/module/session/sessioninfo/baseQueryPageByParam', 'module:session:sessioninfo:baseQueryPageByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1703653411778015233, '2023-09-18 14:13:20', '1000000000', '2023-09-18 14:13:20', '1000000000', 0, 0, 1674579089589063681, '0,1674579089589063681', '绘图会话记录', '绘图会话记录', '绘图会话记录', '0', NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `sys_permission` VALUES (1703702326275551234, '2023-09-18 17:27:42', NULL, '2023-09-18 17:27:42', '1000000000', 0, 0, 1674579708391510017, '0,1674578906511888386,1674579708391510017', 'commonController', '通用控制器', 'uploadHeadImage', '/common/uploadHeadImage', '/common/uploadHeadImage', 'common:uploadHeadImage', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1703955969524445186, '2023-09-19 10:15:35', NULL, '2023-09-19 10:15:35', '1000000000', 0, 0, 1683755420184776705, '0,1674579089589063681,1683755420184776705', 'drawTaskController', '绘画控制器', 'baseQueryPageByParam', '/module/draw/task/baseQueryPageByParam', '/module/draw/task/baseQueryPageByParam', 'module:draw:task:baseQueryPageByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047507116033, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498762187157506, '0,1692414190664888321,1710498762187157506', 'sysMinioSecretController', '菜单权限', 'baseEdit', '/module/system/sysminiosecret/baseEdit', '/module/system/sysminiosecret/baseEdit', 'module:system:sysminiosecret:baseEdit', 'PUT', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047553253377, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjAccountController', 'mj账户配置', 'baseDeleteByIds', '/module/cmj/cmjaccount/baseDeleteByIds/{ids}', '/module/cmj/cmjaccount/baseDeleteByIds/*', 'module:cmj:cmjaccount:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047553253378, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498762187157506, '0,1692414190664888321,1710498762187157506', 'sysMinioSecretController', '菜单权限', 'baseDeleteByIds', '/module/system/sysminiosecret/baseDeleteByIds/{ids}', '/module/system/sysminiosecret/baseDeleteByIds/*', 'module:system:sysminiosecret:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047553253379, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjChannelController', 'mj频道配置', 'baseDeleteByIds', '/module/cmj/cmjchannelconfig/baseDeleteByIds/{ids}', '/module/cmj/cmjchannelconfig/baseDeleteByIds/*', 'module:cmj:cmjchannelconfig:baseDeleteByIds:*', 'DELETE', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047561641986, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjChannelController', 'mj频道配置', 'baseQueryById', '/module/cmj/cmjchannelconfig/baseQueryById/{id}', '/module/cmj/cmjchannelconfig/baseQueryById/*', 'module:cmj:cmjchannelconfig:baseQueryById:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047561641987, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjAccountController', 'mj账户配置', 'baseEdit', '/module/cmj/cmjaccount/baseEdit', '/module/cmj/cmjaccount/baseEdit', 'module:cmj:cmjaccount:baseEdit', 'PUT', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047561641988, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjAccountController', 'mj账户配置', 'baseQueryPageByParam', '/module/cmj/cmjaccount/baseQueryPageByParam', '/module/cmj/cmjaccount/baseQueryPageByParam', 'module:cmj:cmjaccount:baseQueryPageByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047561641989, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498762187157506, '0,1692414190664888321,1710498762187157506', 'sysMinioSecretController', '菜单权限', 'baseQueryByParam', '/module/system/sysminiosecret/baseQueryByParam', '/module/system/sysminiosecret/baseQueryByParam', 'module:system:sysminiosecret:baseQueryByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047574224898, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjAccountController', 'mj账户配置', 'baseQueryById', '/module/cmj/cmjaccount/baseQueryById/{id}', '/module/cmj/cmjaccount/baseQueryById/*', 'module:cmj:cmjaccount:baseQueryById:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047574224899, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjChannelController', 'mj频道配置', 'baseQueryByParam', '/module/cmj/cmjchannelconfig/baseQueryByParam', '/module/cmj/cmjchannelconfig/baseQueryByParam', 'module:cmj:cmjchannelconfig:baseQueryByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047595196418, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjAccountController', 'mj账户配置', 'againConnect', '/module/cmj/cmjaccount/againConnect/{id}', '/module/cmj/cmjaccount/againConnect/*', 'module:cmj:cmjaccount:againConnect:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047595196419, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjChannelController', 'mj频道配置', 'baseAdd', '/module/cmj/cmjchannelconfig/baseAdd', '/module/cmj/cmjchannelconfig/baseAdd', 'module:cmj:cmjchannelconfig:baseAdd', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047595196420, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498762187157506, '0,1692414190664888321,1710498762187157506', 'sysMinioSecretController', '菜单权限', 'baseQueryById', '/module/system/sysminiosecret/baseQueryById/{id}', '/module/system/sysminiosecret/baseQueryById/*', 'module:system:sysminiosecret:baseQueryById:*', 'GET', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047611973633, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjAccountController', 'mj账户配置', 'baseAdd', '/module/cmj/cmjaccount/baseAdd', '/module/cmj/cmjaccount/baseAdd', 'module:cmj:cmjaccount:baseAdd', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047611973634, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjChannelController', 'mj频道配置', 'baseQueryPageByParam', '/module/cmj/cmjchannelconfig/baseQueryPageByParam', '/module/cmj/cmjchannelconfig/baseQueryPageByParam', 'module:cmj:cmjchannelconfig:baseQueryPageByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047611973635, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498762187157506, '0,1692414190664888321,1710498762187157506', 'sysMinioSecretController', '菜单权限', 'baseQueryPageByParam', '/module/system/sysminiosecret/baseQueryPageByParam', '/module/system/sysminiosecret/baseQueryPageByParam', 'module:system:sysminiosecret:baseQueryPageByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047624556545, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjChannelController', 'mj频道配置', 'baseEdit', '/module/cmj/cmjchannelconfig/baseEdit', '/module/cmj/cmjchannelconfig/baseEdit', 'module:cmj:cmjchannelconfig:baseEdit', 'PUT', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047624556546, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498762187157506, '0,1692414190664888321,1710498762187157506', 'sysMinioSecretController', '菜单权限', 'baseAdd', '/module/system/sysminiosecret/baseAdd', '/module/system/sysminiosecret/baseAdd', 'module:system:sysminiosecret:baseAdd', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498047624556547, '2023-10-07 11:31:28', NULL, '2023-10-07 11:31:28', '1000000000', 0, 0, 1710498485581197313, '0,1692414190664888321,1710498485581197313', 'cmjAccountController', 'mj账户配置', 'baseQueryByParam', '/module/cmj/cmjaccount/baseQueryByParam', '/module/cmj/cmjaccount/baseQueryByParam', 'module:cmj:cmjaccount:baseQueryByParam', 'POST', 1, 1, '1');
+INSERT INTO `sys_permission` VALUES (1710498485581197313, '2023-10-07 11:33:13', '1000000000', '2023-10-07 11:33:13', '1000000000', 0, 0, 1692414190664888321, '0,1692414190664888321', 'mj配置', 'mj配置', 'mj配置', '0', NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `sys_permission` VALUES (1710498762187157506, '2023-10-07 11:34:19', '1000000000', '2023-10-07 11:34:19', '1000000000', 0, 0, 1692414190664888321, '0,1692414190664888321', 'minio配置', 'minio配置', 'minio配置', '0', NULL, NULL, NULL, 0, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -625,7 +673,7 @@ CREATE TABLE `sys_role`  (
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色状态（0正常 1停用）',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `role_key`(`role_key` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
@@ -649,7 +697,7 @@ CREATE TABLE `sys_role_menu`  (
   `role_id` bigint NOT NULL COMMENT '角色ID',
   `menu_id` bigint NOT NULL COMMENT '菜单ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和菜单关联表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和菜单关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -662,87 +710,203 @@ DROP TABLE IF EXISTS `sys_role_permission`;
 CREATE TABLE `sys_role_permission`  (
   `id` bigint NOT NULL COMMENT '主键',
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `create_oper` varchar(26) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `create_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
   `update_time` timestamp NULL DEFAULT NULL COMMENT '操作时间',
-  `update_oper` varchar(26) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作人',
+  `update_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
   `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
   `version` int NULL DEFAULT 0 COMMENT '版本号',
   `permission_id` bigint NOT NULL COMMENT '权限ID',
   `role_id` bigint NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和权限关联表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色和权限关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role_permission
 -- ----------------------------
-INSERT INTO `sys_role_permission` VALUES (1703685127676215298, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578853248421890, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215299, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674580956448608258, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215300, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578906511888386, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215301, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674579089589063681, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215302, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674581645400788994, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215303, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674583564886265858, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215304, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674580535470510082, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215305, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674582790324146177, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215306, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674582818715389954, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215307, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674582856791281665, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215308, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1703680586339696641, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215309, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1703680656887889922, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215310, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728761479193, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215311, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728761479197, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215312, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578729612922884, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215313, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578729612922914, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215314, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1675793439851036676, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215315, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1676790618824695810, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215316, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1677188224147001346, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215317, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122808623110, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215318, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674579708391510017, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215319, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728828588058, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215320, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674622533179109377, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215321, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674622533200080898, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215322, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1675013065540587522, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215323, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674581584893759489, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215324, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1676790618824695811, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215325, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122808623112, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215326, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122808623114, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215327, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1703678801793368076, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215328, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728761479172, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215329, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728761479209, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215330, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728828588070, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215331, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728828588082, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215332, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578729612922892, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215333, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578729612922904, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215334, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578729612922905, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215335, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122808623105, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215336, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122808623117, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215337, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1688829555168522244, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215338, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674583544443228161, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215339, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728761479194, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215340, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728828588074, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215341, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728761479208, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215342, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728828588037, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215343, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578728828588046, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215344, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755420184776705, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215345, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122808623108, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215346, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122808623116, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215347, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1688829555168522242, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215348, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1703678801793368067, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215349, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1703678801793368068, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215350, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1703678801793368074, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215351, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1703678801793368075, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215352, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578729612922891, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215353, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1674578729663254536, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215354, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1703678801793368072, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215355, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122745708546, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215356, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122808623106, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215357, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122808623115, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215358, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1684019553161465857, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215359, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1683755122808623107, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215360, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1684018183868010497, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215361, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1692413494814584834, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215362, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1692413342154502146, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215363, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1703678801793368079, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215364, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1692413342154502148, 53814717356965893);
-INSERT INTO `sys_role_permission` VALUES (1703685127676215365, '2023-09-18 16:19:22', NULL, '2023-09-18 16:19:22', '1000000000', 0, 0, 1692413342154502150, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1701915810800939009, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578853248421890, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810800939010, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674579182287376385, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810800939011, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674580927755374593, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810817716226, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674580956448608258, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810817716227, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578906511888386, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810817716228, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674579841480970241, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810817716229, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674579089589063681, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810817716230, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674581645400788994, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810817716231, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674583564886265858, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810817716232, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674579114499035137, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810817716233, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674581814276050945, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810817716234, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674581849239769090, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810817716235, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674581892462071809, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810830299137, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674579384591241218, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810830299138, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674582439277678594, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810830299139, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674582466536460289, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810851270658, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674582491907805185, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810851270659, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674582505417658369, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810851270660, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674580535470510082, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810851270661, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674582790324146177, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810851270662, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674582818715389954, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810851270663, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674582856791281665, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810851270664, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1676790579284992001, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810851270665, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692414190664888321, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810851270666, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692414232754728962, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810851270667, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692414285837840386, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810868047873, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588077, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810868047874, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729612922894, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810868047875, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729663254538, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810868047876, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728694370307, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810868047877, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588047, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810868047878, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588076, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810868047879, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729612922903, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810868047880, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729612922914, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810876436482, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1676790618824695810, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810876436483, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1688829555168522245, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810876436484, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479187, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810876436485, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588039, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810876436486, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588052, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810876436487, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588055, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810876436488, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729663254531, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810876436489, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729663254532, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379522, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674579708391510017, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379523, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588058, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379524, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674622533179109377, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379525, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674622533200080898, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379526, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1675013065540587522, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379527, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479183, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379528, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588085, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379529, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729612922910, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379530, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479209, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379531, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729612922892, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810918379532, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1683755122808623117, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810935156737, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1688829555168522244, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810935156738, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674583544443228161, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810935156739, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479194, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810947739650, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588074, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810947739651, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479184, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810947739652, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479208, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810947739653, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588046, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810947739654, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728694370311, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810947739655, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479171, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810947739656, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728694370310, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810947739657, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588036, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810985488385, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588040, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810985488386, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479188, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810985488387, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729529036807, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810985488388, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729612922908, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810985488389, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479181, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810985488390, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588063, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810985488391, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479173, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071297, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479174, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071298, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479189, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071299, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588034, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071300, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588080, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071301, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729529036803, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071302, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729612922915, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071303, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728694370305, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071304, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479175, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071305, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479200, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071306, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588043, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915810998071307, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588045, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811014848513, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729612922883, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811014848514, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729663254535, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811014848515, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479176, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811019042818, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588042, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811019042819, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729461927938, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811019042820, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729663254533, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811019042821, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729663254541, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811019042822, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479177, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811019042823, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479201, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811019042824, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728761479204, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811027431426, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588071, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811027431427, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729529036809, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811027431428, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729612922891, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811048402946, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729612922896, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811048402947, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729663254534, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811048402948, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578729663254536, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811048402949, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1674578728828588057, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811048402950, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1701762581962240001, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811165843457, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1683755122808623115, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811165843458, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1675793439851036674, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811165843459, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1675793439851036677, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811165843460, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1675793439851036680, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811174232066, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1684019553161465857, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811174232067, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1683755122808623107, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811174232068, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1684018183868010497, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811174232069, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692413675570802689, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811174232070, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692413616590499846, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811174232071, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1698628754909769729, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811182620673, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692413616569528321, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811191009282, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692413616573722625, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811191009283, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692413616573722630, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811191009284, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692413616590499842, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811191009285, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692413616573722629, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811191009286, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692413616573722631, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1701915811195203585, '2023-09-13 19:08:44', NULL, '2023-09-13 19:08:44', '1000000000', 0, 0, 1692413616590499845, 1701914767149051905);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969665, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578853248421890, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969666, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674580956448608258, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969667, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578906511888386, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969668, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674579708391510017, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969669, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674579089589063681, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969670, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674583564886265858, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969671, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1683755420184776705, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969672, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674580535470510082, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969673, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674582790324146177, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969674, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674582818715389954, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969675, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1692413675570802689, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786633969676, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1692414190664888321, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135490, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1692414232754728962, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135491, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728761479193, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135492, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728761479197, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135493, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578729612922884, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135494, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578729612922914, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135495, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1675793439851036676, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135496, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1676790618824695810, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135497, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1677188224147001346, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135498, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1683755122808623110, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135499, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728828588058, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135500, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674622533200080898, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135501, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1675013065540587522, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135502, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1703702326275551234, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135503, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674581584893759489, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135504, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1676790618824695811, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135505, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1683755122808623112, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135506, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1683755122808623114, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786659135507, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1703653248938356738, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786684301314, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674581645400788994, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786684301315, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728761479172, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786684301316, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728761479209, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786684301317, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728828588070, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786684301318, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728828588082, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689922, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578729612922892, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689923, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578729612922904, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689924, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578729612922905, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689925, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1683755122808623105, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689926, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1683755122808623117, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689927, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1688829555168522244, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689928, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1703653248963522562, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689929, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674583544443228161, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689930, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728761479194, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689931, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728828588074, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786692689932, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728761479208, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272833, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728828588037, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272834, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578728828588046, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272835, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1688829555168522242, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272836, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1701137324339441665, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272837, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1701137324372996098, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272838, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1701137324372996099, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272839, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1701762581995794433, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272840, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578729612922891, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272841, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674578729663254536, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272842, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1701762581962240001, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272843, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1674582856791281665, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786705272844, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1683755122745708546, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786717855745, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1683755122808623106, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786717855746, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1683755122808623115, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786717855747, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1684019553161465857, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786717855748, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1683755122808623107, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786717855749, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1684018183868010497, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786717855750, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1692413616590499846, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786717855751, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1692413616569528321, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786717855752, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1692413616573722625, 53814717356965893);
+INSERT INTO `sys_role_permission` VALUES (1703702786717855753, '2023-09-18 17:29:32', NULL, '2023-09-18 17:29:32', '1000000000', 0, 0, 1692413616590499842, 53814717356965893);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -769,7 +933,7 @@ CREATE TABLE `sys_user`  (
   `login_ip` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '最后登录IP',
   `login_date` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user
@@ -793,7 +957,7 @@ CREATE TABLE `sys_user_role`  (
   `user_id` bigint NOT NULL COMMENT '用户ID',
   `role_id` bigint NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户和角色关联表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户和角色关联表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user_role
@@ -826,10 +990,56 @@ CREATE TABLE `sys_user_token`  (
   `last_time` timestamp NOT NULL COMMENT '最新更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '登录人token信息' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '登录人token信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user_token
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for tb_cmj_account
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_cmj_account`;
+CREATE TABLE `tb_cmj_account`  (
+  `id` bigint NOT NULL COMMENT '主键',
+  `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `create_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '操作时间',
+  `update_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
+  `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
+  `version` int NULL DEFAULT 0 COMMENT '版本号',
+  `user_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '账户名',
+  `user_token` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'token',
+  `user_agent` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'ua',
+  `data_object` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'dataObject',
+  `account_status` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '帐号状态',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'mj账户配置' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_cmj_account
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for tb_cmj_channel_config
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_cmj_channel_config`;
+CREATE TABLE `tb_cmj_channel_config`  (
+  `id` bigint NOT NULL COMMENT '主键',
+  `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `create_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '操作时间',
+  `update_oper` varchar(26) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
+  `del_flag` int NULL DEFAULT 0 COMMENT '删除标识 0 未删除 1 已删除',
+  `version` int NULL DEFAULT 0 COMMENT '版本号',
+  `cmj_account_id` bigint NOT NULL COMMENT '关联账户',
+  `guild_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '服务器id',
+  `channel_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '频道id',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'mj频道配置' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_cmj_channel_config
 -- ----------------------------
 
 -- ----------------------------
@@ -860,7 +1070,7 @@ CREATE TABLE `tb_domain`  (
   `if_desk_show` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '是否桌面显示',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `unique_key`(`unique_key` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '领域会话' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '领域会话' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_domain
@@ -892,7 +1102,7 @@ CREATE TABLE `tb_notice_client`  (
   `sort` int NULL DEFAULT NULL COMMENT '排序',
   `if_show` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '是否开启',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '通告信息' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '通告信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_notice_client
@@ -919,7 +1129,7 @@ CREATE TABLE `tb_openai_keys`  (
   `user_id` bigint NULL DEFAULT NULL COMMENT '用户id',
   `enable_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '可用状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'apikeys' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'apikeys' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_openai_keys
@@ -948,7 +1158,7 @@ CREATE TABLE `tb_session_info`  (
   `session_num` int NULL DEFAULT NULL COMMENT '用户会话号',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会话表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会话表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_session_info
@@ -968,13 +1178,17 @@ CREATE TABLE `tb_session_info_draw`  (
   `version` int NULL DEFAULT 0 COMMENT '版本号',
   `prompt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'prompt',
   `user_id` bigint NULL DEFAULT NULL COMMENT '用户id',
-  `draw_unique_key` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '绘画接口类型唯一表示（DrawType）',
+  `task_id` bigint NULL DEFAULT NULL COMMENT '任务id',
+  `draw_unique_key` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '绘画接口类型唯一表示（DrawType）',
+  `draw_api_key` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '绘图接口标识',
   `session_num` int NULL DEFAULT NULL COMMENT '用户会话号',
   `show_img` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '展示图',
   `sd_response_info` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'sd info响应参数json',
+  `original_img_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '原图地址url',
+  `base_img` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '底图',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '绘图会话' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '绘图会话' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_session_info_draw
@@ -1007,7 +1221,7 @@ CREATE TABLE `tb_session_record`  (
   INDEX `session_id`(`session_id` ASC) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE,
   INDEX `tb_session_record_domain_unique_key_IDX`(`domain_unique_key` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会话详情' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会话详情' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_session_record
@@ -1028,14 +1242,22 @@ CREATE TABLE `tb_session_record_draw`  (
   `session_info_draw_id` bigint NULL DEFAULT NULL COMMENT '绘图会话id',
   `user_id` bigint NOT NULL COMMENT '用户id',
   `draw_unique_key` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '绘图接口类型唯一标识（DrawType）',
+  `draw_api_key` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '绘图接口标识',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
   `draw_base64_img` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '图片base64内容',
   `draw_img_url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图片路径',
   `prompt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '输入prompt',
   `if_common` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '是否公开',
+  `assistant_img1` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '副图1',
+  `assistant_img2` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '副图2',
+  `original_img_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '原图地址url',
+  `mj_extend_param` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'mj扩展参数',
+  `mj_image_index` int NULL DEFAULT NULL COMMENT 'mj u v下标',
+  `task_id` bigint NULL DEFAULT NULL COMMENT '任务id',
+  `base_img` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '底图',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '图像会话详情' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '图像会话详情' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_session_record_draw
@@ -1061,9 +1283,9 @@ CREATE TABLE `tb_task_draw`  (
   `task_end_time` datetime NULL DEFAULT NULL COMMENT '任务结束时间',
   `request_param` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '任务请求参数',
   `show_img` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '展示图',
-  `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
+  `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '绘图任务列表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '绘图任务列表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_task_draw
@@ -1095,11 +1317,12 @@ CREATE TABLE `tb_user_info`  (
   `desk_img_url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '桌面背景',
   `ip_location` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'ip归属地',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tb_user_info
 -- ----------------------------
 INSERT INTO `tb_user_info` VALUES (1665958959871291394, '2023-06-06 13:49:02', NULL, '2023-07-27 17:57:39', '1665958959871291394', 0, 0, 'test', '$2a$10$f3z0krpEzkHbO6AUAADCnuMC9GwO3JbotZ7SrFzOAnW2BX1dJ2Pmq', 'test', '0', '/image/2023/07/27/185216cdebcd4d1eac8c0483dc8f8ecd.jpeg?e=1690487857&token=y47kvl-NkTt0IHtqKZ2fNJilbsyhW9L16WKdp5JC:kFkjTavTPy9EpwQ9u80m2lQlWpY=', '0', '0', NULL, NULL, NULL, NULL, '/image/2023/07/27/fb5bb74b4d35443c931ea2f333ebaf6b.jpeg?e=1690488122&token=y47kvl-NkTt0IHtqKZ2fNJilbsyhW9L16WKdp5JC:vHXMGHdwOWegqFEr12FFHyGGHrs=', NULL);
+INSERT INTO `tb_user_info` VALUES (1708404175232114690, '2023-10-01 16:51:10', NULL, '2023-10-01 16:51:10', NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, '0', '1', '127.0.0.1', NULL, NULL, NULL, NULL, '内网IP');
 
 SET FOREIGN_KEY_CHECKS = 1;

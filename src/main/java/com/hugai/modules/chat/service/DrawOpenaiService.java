@@ -1,7 +1,7 @@
 package com.hugai.modules.chat.service;
 
-import com.hugai.core.drawTask.entity.SessionDrawCreatedOpenaiCacheData;
-import com.hugai.core.drawTask.entity.SessionDrawEditOpenaiCacheData;
+import com.hugai.core.openai.entity.request.OpenaiTxt2ImgRequest;
+import com.hugai.core.openai.entity.request.OpenaiImg2ImgRequest;
 import com.theokanning.openai.image.ImageResult;
 
 /**
@@ -15,12 +15,12 @@ public interface DrawOpenaiService {
      *
      * @param param
      */
-    ImageResult sendDrawCreatedOpenAi(SessionDrawCreatedOpenaiCacheData param);
+    ImageResult sendDrawCreatedOpenAi(OpenaiTxt2ImgRequest param);
 
     /**
      * ai绘图 图像编辑
      *
      * @param param
      */
-    ImageResult sendDrawEditOpenAi(SessionDrawEditOpenaiCacheData param);
+    ImageResult sendDrawEditOpenAi(OpenaiImg2ImgRequest param);
 }
