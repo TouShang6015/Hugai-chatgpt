@@ -44,12 +44,11 @@ public class CmjAccountController extends BaseController<ICmjAccountService, Cmj
         DiscordAccountCacheObj discordAccountCacheObj = DiscordSocketAccountPool.get(model.getUserName());
         if (Objects.nonNull(discordAccountCacheObj)){
             discordAccountCacheObj.getWebSocket().cancel();
-        }else{
-            Set<DiscordAccount> discordAccountList = DiscordSocketClient.getDiscordAccountList();
-            DiscordAccount discordAccount = discordAccountList.stream().filter(item -> item.getUserName().equals(model.getUserName())).findFirst().orElse(null);
-            Assert.notNull(discordAccount,() -> new BusinessException("未找到账户"));
-            DiscordSocketClient.connection(discordAccount);
         }
+        Set<DiscordAccount> discordAccountList = DiscordSocketClient.getDiscordAccountList();
+        DiscordAccount discordAccount = discordAccountList.stream().filter(item -> item.getUserName().equals(model.getUserName())).findFirst().orElse(null);
+        Assert.notNull(discordAccount,() -> new BusinessException("未找到账户"));
+        DiscordSocketClient.connection(discordAccount);
         return Result.success();
     }
 

@@ -40,7 +40,7 @@ public class SocketMessageHandlerEvent {
             return;
         }
         ThreadUtil.sleep(50);
-        log.info("[Discord - execute] response messageType: {}, d: {}", messageType.name(), data.toString());
+//        log.info("[Discord - execute] response messageType: {}, d: {}", messageType.name(), data.toString());
 
         Map<String, MessageStrategyAbstract> messageHandlerMap = SpringUtil.getBeansOfType(MessageStrategyAbstract.class);
         messageHandlerMap.forEach((k, strategyService) -> {

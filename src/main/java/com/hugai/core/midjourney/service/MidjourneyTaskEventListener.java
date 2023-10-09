@@ -18,6 +18,13 @@ public interface MidjourneyTaskEventListener {
     void taskRun(TaskObj taskQueueBean);
 
     /**
+     * 更新任务
+     * @param taskId
+     * @param finalPrompt
+     */
+    void updateTask(String taskId,String finalPrompt);
+
+    /**
      * 任务结束
      *
      * @param taskQueueBean

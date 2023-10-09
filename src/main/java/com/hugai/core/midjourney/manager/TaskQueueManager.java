@@ -17,8 +17,6 @@ public class TaskQueueManager {
 
     private static final ConcurrentLinkedQueue<TaskObj> TASK_QUEUE;
 
-    private static final String suffix = "--v 5.2";
-
     static {
         TASK_QUEUE = new ConcurrentLinkedQueue<>();
     }
@@ -50,13 +48,7 @@ public class TaskQueueManager {
             Predicate<String> verifyPrompt = argPrompt -> StrUtil.isNotEmpty(argPrompt) && !argPrompt.equals(bean.getPrompt());
             if (verifyPrompt.test(prompt)) {
                 if (verifyPrompt.test(prompt.trim())) {
-                    if (verifyPrompt.test(prompt.replace(suffix, ""))) {
-                        if (verifyPrompt.test(
-                                prompt.replace(suffix, "").trim()
-                        )) {
-                            return false;
-                        }
-                    }
+                    return false;
                 }
             }
             if (StrUtil.isNotEmpty(guildId) && !guildId.equals(bean.getGuildId())) {

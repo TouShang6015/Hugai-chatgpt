@@ -8,6 +8,7 @@ import com.hugai.common.enums.flow.DrawType;
 import com.hugai.common.enums.flow.TaskStatus;
 import com.hugai.core.drawTask.manager.queue.DrawTaskMjQueueManager;
 import com.hugai.core.midjourney.common.entity.TaskObj;
+import com.hugai.core.midjourney.common.entity.request.MjBaseRequest;
 import com.hugai.core.midjourney.manager.TaskQueueManager;
 import com.hugai.core.midjourney.service.MidjourneyTaskEventListener;
 import com.hugai.framework.file.constants.FileHeaderImageEnum;
@@ -75,6 +76,32 @@ public class MidjourneyTaskEventImpl implements MidjourneyTaskEventListener {
             });
             this.endTask(taskObj);
         }
+    }
+
+
+    /**
+     * 更新任务
+     *
+     * @param taskId
+     * @param finalPrompt
+     */
+    @Override
+    public void updateTask(String taskId, String finalPrompt) {
+        if (StrUtil.isEmpty(taskId) || StrUtil.isEmpty(finalPrompt)) {
+            return;
+        }
+        OR.run(taskDrawService.getById(taskId), Objects::nonNull, taskModel -> {
+            String requestParam = taskModel.getRequestParam();
+            MjBaseRequest requestParamObj = JSON.parseObject(requestParam, MjBaseRequest.class);
+            if (Objects.nonNull(requestParamObj)) {
+                requestParamObj.setPrompt(finalPrompt);
+            }
+            // 更新任务状态
+            OR.run(TaskQueueManager.get(taskId), Objects::nonNull, taskObj -> taskObj.setPrompt(finalPrompt));
+            taskDrawService.lambdaUpdate().set(TaskDrawModel::getRequestParam, JSON.toJSONString(requestParamObj)).eq(TaskDrawModel::getId, taskId).update();
+        });
+
+        log.debug("[Discord Task update] 任务已更新 - TaskId: {}, prompt: {}", taskId, finalPrompt);
     }
 
     @Override
