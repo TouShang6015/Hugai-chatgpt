@@ -82,23 +82,27 @@ public class SecurityService {
         routeVisitRuleGroupMap.forEach((key, value) -> {
             if (Objects.nonNull(key)) {
                 switch (key) {
-                    case 1 -> {
+                    case 1: {
                         GlobalRouteConfig.setAuthRoute(convert.apply(value));
                         GlobalRouteConfig.setAuthRoutePath(OptionalUtil.ofNullList(GlobalRouteConfig.getAuthRoute()).stream().map(RouteInfo::getRoutePath).collect(Collectors.toList()));
+                        break;
                     }
-                    case 2 -> {
+                    case 2: {
                         GlobalRouteConfig.setAnonymousRoute(convert.apply(value));
                         GlobalRouteConfig.setAnonymousRoutePath(OptionalUtil.ofNullList(GlobalRouteConfig.getAnonymousRoute()).stream().map(RouteInfo::getRoutePath).collect(Collectors.toList()));
+                        break;
                     }
-                    case 3 -> {
+                    case 3: {
                         GlobalRouteConfig.setPassRoute(convert.apply(value));
                         GlobalRouteConfig.setPassRoutePath(OptionalUtil.ofNullList(GlobalRouteConfig.getPassRoute()).stream().map(RouteInfo::getRoutePath).collect(Collectors.toList()));
+                        break;
                     }
-                    case 4 -> {
+                    case 4: {
                         GlobalRouteConfig.setIgnoreRoute(convert.apply(value));
                         GlobalRouteConfig.setIgnoreRoutePath(OptionalUtil.ofNullList(GlobalRouteConfig.getIgnoreRoute()).stream().map(RouteInfo::getRoutePath).collect(Collectors.toList()));
+                        break;
                     }
-                    default -> {
+                    default: {
                     }
                 }
             }

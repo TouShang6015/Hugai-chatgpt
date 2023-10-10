@@ -1,6 +1,7 @@
 package com.hugai.core.drawTask.strategy.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IoUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONReader;
 import com.hugai.common.enums.flow.DrawType;
@@ -71,7 +72,7 @@ public class ApiStrategySdImg2Img extends DrawSDAbstractStrategy<Img2ImgRequest>
         // 设置垫图
         String fileAbsolutePath = attachmentModel.getFileAbsolutePath();
         try (FileInputStream inputStream = new FileInputStream(fileAbsolutePath);) {
-            baseImg = Base64Utils.encodeToString(inputStream.readAllBytes());
+            baseImg = Base64Utils.encodeToString(IoUtil.readBytes(inputStream));
         } catch (IOException e) {
             e.printStackTrace();
             throw new BusinessException(String.format("图片本地读取失败：attachmentId：%s", attachmentId));

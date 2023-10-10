@@ -32,14 +32,15 @@ public abstract class AbstractPluginsImpl extends AbstractFileHandle {
         File directory = new File(resourceSavePath + prefix + "/" + super.getDatePath());
         if (!directory.exists()) {
             if (!directory.mkdirs()) {
-                throw new BusinessException("创建目录失败" );
+                throw new BusinessException("创建目录失败");
             }
         }
         // 写入文件
         File file = new File(filePath);
-        String fileSuffix = fileName.split("\\." )[1];
+        String fileSuffix = fileName.split("\\.")[1];
         switch (Objects.requireNonNull(fileSuffix)) {
-            case "md", "txt" -> {
+            case "md":
+            case "txt":
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file));
                 while (reader.ready()) {
@@ -48,8 +49,8 @@ public abstract class AbstractPluginsImpl extends AbstractFileHandle {
                 writer.flush();
                 writer.close();
                 reader.close();
-            }
-            default -> {
+                break;
+            default: {
                 BufferedInputStream bis = new BufferedInputStream(inputStream);
                 BufferedOutputStream bos = new BufferedOutputStream(Files.newOutputStream(file.toPath()));
                 byte[] bytes = new byte[1024];

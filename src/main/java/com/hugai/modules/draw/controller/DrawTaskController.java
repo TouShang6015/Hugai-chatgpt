@@ -49,20 +49,23 @@ public class DrawTaskController {
         int runningCount = 0;
         int sum = 0;
         switch (drawTypeEnum) {
-            case OPENAI -> {
+            case OPENAI : {
                 DrawTaskDataManager queueManager = SpringUtils.getBean(DrawTaskOpenaiQueueManager.class);
                 runningCount = queueManager.getRunningCount();
                 sum = queueManager.getWaitTime();
+                break;
             }
-            case SD -> {
+            case SD : {
                 DrawTaskDataManager queueManager = SpringUtils.getBean(DrawTaskSdQueueManager.class);
                 runningCount = queueManager.getRunningCount();
                 sum = queueManager.getWaitTime();
+                break;
             }
-            case MJ -> {
+            case MJ : {
                 DrawTaskDataManager queueManager = SpringUtils.getBean(DrawTaskMjQueueManager.class);
                 runningCount = queueManager.getRunningCount();
                 sum = queueManager.getWaitTime();
+                break;
             }
         }
 

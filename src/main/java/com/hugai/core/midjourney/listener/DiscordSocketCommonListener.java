@@ -49,26 +49,40 @@ public class DiscordSocketCommonListener extends WebSocketListener {
     protected void handleMessage(DataObject data) {
         int opCode = data.getInt("op");
         switch (opCode) {
-            case WebSocketCode.HEARTBEAT -> {
+            case WebSocketCode.HEARTBEAT: {
                 log.info("[Discord] - Account：{} | Receive heartbeat.", this.discordAccount.getUserName());
                 handleHeartbeat();
+                break;
             }
-            case WebSocketCode.HEARTBEAT_ACK -> {
+            case WebSocketCode.HEARTBEAT_ACK: {
                 this.heartbeatAck = true;
                 clearHeartbeatTimeout();
+                break;
             }
-            case WebSocketCode.HELLO -> {
+            case WebSocketCode.HELLO: {
                 handleHello(data);
                 doResumeOrIdentify();
+                break;
             }
-            case WebSocketCode.RESUME -> {
+            case WebSocketCode.RESUME: {
                 log.info("[Discord] - Account：{} | Receive resumed.", this.discordAccount.getUserName());
                 connectSuccess();
+                break;
             }
-            case WebSocketCode.RECONNECT -> reconnect("receive server reconnect");
-            case WebSocketCode.INVALIDATE_SESSION -> close(1009, "receive session invalid");
-            case WebSocketCode.DISPATCH -> handleDispatch(data);
-            default -> log.info("[Discord] - account:{} Receive unknown code: {}.", this.discordAccount.getUserName(), data);
+            case WebSocketCode.RECONNECT: {
+                reconnect("receive server reconnect");
+                break;
+            }
+            case WebSocketCode.INVALIDATE_SESSION: {
+                close(1009, "receive session invalid");
+                break;
+            }
+            case WebSocketCode.DISPATCH: {
+                handleDispatch(data);
+                break;
+            }
+            default:
+                log.info("[Discord] - account:{} Receive unknown code: {}.", this.discordAccount.getUserName(), data);
         }
     }
 
