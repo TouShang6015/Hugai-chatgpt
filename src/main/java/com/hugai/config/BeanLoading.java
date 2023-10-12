@@ -3,6 +3,7 @@ package com.hugai.config;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hugai.core.midjourney.common.utils.DefaultApiParamJSON;
+import com.hugai.core.midjourney.manager.MJSenWordHolder;
 import com.hugai.core.security.filter.AccessDecisionManagerImpl;
 import com.hugai.core.security.filter.PermissionSecurityFilter;
 import com.hugai.core.security.filter.SecurityMetadataSource;
@@ -61,6 +62,10 @@ public class BeanLoading {
     @Bean
     public SenWordHolder senWordHolder() {
         return new SenWordHolder();
+    }
+    @Bean
+    public MJSenWordHolder mjSenWordHolder() {
+        return new MJSenWordHolder();
     }
 
     /**

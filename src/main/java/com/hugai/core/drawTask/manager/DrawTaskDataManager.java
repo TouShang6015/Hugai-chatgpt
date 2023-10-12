@@ -156,6 +156,7 @@ public abstract class DrawTaskDataManager {
      * @param id
      */
     public void overQueue(String id) {
+        OR.run(this.stateMap.get(id),Objects::nonNull, CountDownLatch::countDown);
         this.stateMap.remove(id);
     }
 }
