@@ -1,7 +1,9 @@
 package com.hugai.modules.draw.controller;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.common.enums.flow.DrawType;
 import com.hugai.core.drawTask.manager.DrawTaskDataManager;
@@ -15,7 +17,9 @@ import com.hugai.modules.draw.service.TaskDrawService;
 import com.org.bebas.core.flowenum.utils.FlowEnumUtils;
 import com.org.bebas.core.model.build.QueryFastLambda;
 import com.org.bebas.core.spring.SpringUtils;
+import com.org.bebas.enums.result.ResultEnum;
 import com.org.bebas.exception.BusinessException;
+import com.org.bebas.utils.StringUtils;
 import com.org.bebas.utils.page.PageUtil;
 import com.org.bebas.utils.result.Result;
 import io.swagger.annotations.Api;
@@ -25,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -97,6 +102,23 @@ public class DrawTaskController {
     public Result baseQueryPageByParam(@RequestBody TaskDrawDTO param) {
         IPage<TaskDrawModel> pageDto = taskDrawService.listPageByParam(PageUtil.pageBean(param), param);
         return Result.success(pageDto);
+    }
+
+    @DeleteMapping("/baseDeleteByIds/{ids}")
+    @ApiOperation(value = "删除任务")
+    public Result baseDeleteByIds(@PathVariable("ids") String ids) {
+        if (StrUtil.isEmpty(ids)) {
+            return Result.fail("删除条件id不能为空");
+        }
+        String[] idsArr = ids.split(StringPool.COMMA);
+        if (idsArr.length > 1000) {
+            return Result.fail("不能批量删除超过1000个数据");
+        }
+        List<Long> idList = StringUtils.splitToList(ids, Long::valueOf);
+        if (taskDrawService.removeByIds(idList)) {
+            return Result.success(ResultEnum.SUCCESS_DELETE);
+        }
+        return Result.success(ResultEnum.FAIL_DELETE);
     }
 
 }
