@@ -80,13 +80,14 @@ public class ApiStrategyOpenaiImg2img extends DrawAbstractStrategy<OpenaiImg2Img
                 apiResponse = openAiService.createImageEdit(apiParam, imagePath, finalMaskPath);
                 log.info("openai 图生图响应：{}", JSON.toJSONString(apiResponse));
             } catch (OpenAiHttpException e) {
-                e.printStackTrace();
                 int statusCode = e.statusCode;
                 String code = e.code;
                 if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
                     SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getDecryptToken());
                 }
-                return;
+                throw e;
+            }catch (Exception e){
+                throw e;
             }
             DrawOpenaiResponseService responseService = SpringUtils.getBean(DrawOpenaiResponseService.class);
             responseService.handleImg2Img(String.valueOf(taskId), apiParam, apiResponse);

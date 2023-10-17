@@ -59,6 +59,7 @@ public abstract class DrawTaskDataManager {
                 } catch (Exception e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
+                    this.runBeforeException(id, e);
                 }
             });
         } catch (Exception e) {
@@ -83,6 +84,7 @@ public abstract class DrawTaskDataManager {
                     log.debug("[绘图任务管理 - 任务结束] - 任务id：{}", id);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    this.runBeforeException(id, e);
                 } finally {
                     this.overQueue(id);
                 }

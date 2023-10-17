@@ -62,16 +62,14 @@ public class ApiStrategyOpenaiTxtImg extends DrawAbstractStrategy<OpenaiTxt2ImgR
                 apiResponse = openAiService.createImage(apiParam);
                 log.info("openai 文生图响应：{}", JSON.toJSONString(apiResponse));
             } catch (OpenAiHttpException e) {
-                e.printStackTrace();
                 int statusCode = e.statusCode;
                 String code = e.code;
                 if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
                     SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getDecryptToken());
                 }
-                return;
+                throw e;
             } catch (Exception e) {
-                e.printStackTrace();
-                return;
+                throw e;
             }
             DrawOpenaiResponseService responseService = SpringUtils.getBean(DrawOpenaiResponseService.class);
             responseService.handleTxt2img(String.valueOf(taskId), apiParam, apiResponse);

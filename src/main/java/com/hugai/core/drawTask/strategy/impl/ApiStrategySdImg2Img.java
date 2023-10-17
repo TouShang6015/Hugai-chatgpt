@@ -92,9 +92,8 @@ public class ApiStrategySdImg2Img extends DrawSDAbstractStrategy<Img2ImgRequest>
             try {
                 response = service.img2img(apiRequestParam);
             } catch (Exception e) {
-                e.printStackTrace();
                 log.error("[绘图 - sd] 响应失败： {}", e.getMessage());
-                return;
+                throw e;
             }
             SpringUtils.getBean(DrawSdResponseService.class).handleImg2Img(String.valueOf(taskId), apiRequestParam, response);
         });
