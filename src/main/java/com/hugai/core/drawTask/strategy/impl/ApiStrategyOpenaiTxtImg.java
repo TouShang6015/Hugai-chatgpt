@@ -2,11 +2,11 @@ package com.hugai.core.drawTask.strategy.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.hugai.common.enums.flow.DrawType;
-import com.hugai.core.openai.entity.request.OpenaiTxt2ImgRequest;
 import com.hugai.core.drawTask.manager.DrawTaskDataManager;
 import com.hugai.core.drawTask.manager.queue.DrawTaskOpenaiQueueManager;
 import com.hugai.core.drawTask.manager.service.DrawOpenaiResponseService;
 import com.hugai.core.drawTask.strategy.DrawAbstractStrategy;
+import com.hugai.core.openai.entity.request.OpenaiTxt2ImgRequest;
 import com.hugai.core.openai.factory.AiServiceFactory;
 import com.hugai.core.openai.service.OpenAiService;
 import com.hugai.modules.chat.convert.DrawOpenaiConvert;
@@ -68,10 +68,7 @@ public class ApiStrategyOpenaiTxtImg extends DrawAbstractStrategy<OpenaiTxt2ImgR
                 if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
                     SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getDecryptToken());
                 }
-                return;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
+                throw e;
             }
             DrawOpenaiResponseService responseService = SpringUtils.getBean(DrawOpenaiResponseService.class);
             responseService.handleTxt2img(String.valueOf(taskId), apiParam, apiResponse);

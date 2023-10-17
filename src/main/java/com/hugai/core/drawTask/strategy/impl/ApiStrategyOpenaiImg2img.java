@@ -4,11 +4,11 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONWriter;
 import com.hugai.common.enums.flow.DrawType;
-import com.hugai.core.openai.entity.request.OpenaiImg2ImgRequest;
 import com.hugai.core.drawTask.manager.DrawTaskDataManager;
 import com.hugai.core.drawTask.manager.queue.DrawTaskOpenaiQueueManager;
 import com.hugai.core.drawTask.manager.service.DrawOpenaiResponseService;
 import com.hugai.core.drawTask.strategy.DrawAbstractStrategy;
+import com.hugai.core.openai.entity.request.OpenaiImg2ImgRequest;
 import com.hugai.core.openai.factory.AiServiceFactory;
 import com.hugai.core.openai.service.OpenAiService;
 import com.hugai.modules.config.service.IOpenaiKeysService;
@@ -86,7 +86,7 @@ public class ApiStrategyOpenaiImg2img extends DrawAbstractStrategy<OpenaiImg2Img
                 if (HttpStatus.UNAUTHORIZED == statusCode || "insufficient_quota".equals(code)) {
                     SpringUtils.getBean(IOpenaiKeysService.class).removeByOpenaiKey(openAiService.getDecryptToken());
                 }
-                return;
+                throw e;
             }
             DrawOpenaiResponseService responseService = SpringUtils.getBean(DrawOpenaiResponseService.class);
             responseService.handleImg2Img(String.valueOf(taskId), apiParam, apiResponse);

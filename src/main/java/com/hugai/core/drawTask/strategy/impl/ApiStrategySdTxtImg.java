@@ -68,7 +68,7 @@ public class ApiStrategySdTxtImg extends DrawSDAbstractStrategy<TxtImgRequest> {
             } catch (Exception e) {
                 e.printStackTrace();
                 log.error("[绘图 - sd] 响应失败： {}", e.getMessage());
-                return;
+                throw e;
             }
             SpringUtils.getBean(DrawSdResponseService.class).handleTxt2Img(String.valueOf(taskId), apiRequestParam, response);
         });
