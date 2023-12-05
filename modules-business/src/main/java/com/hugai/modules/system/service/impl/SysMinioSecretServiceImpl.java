@@ -67,8 +67,10 @@ public class SysMinioSecretServiceImpl extends ServiceImpl<SysMinioSecretMapper,
         List<SysMinioSecretModel> cacheList = redisUtil.getCacheList(key);
         if (CollUtil.isEmpty(cacheList)) {
             List<SysMinioSecretModel> allList = super.list();
-            redisUtil.setCacheList(key, allList);
-            list = allList;
+            if (CollUtil.isNotEmpty(allList)){
+                redisUtil.setCacheList(key, allList);
+                list = allList;
+            }
         } else {
             list = cacheList;
         }
