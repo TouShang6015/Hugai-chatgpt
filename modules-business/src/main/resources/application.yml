@@ -1,0 +1,89 @@
+spring:
+  profiles:
+    active: local
+  # 国际化配置
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    static-path-pattern: /**
+  #文件上传配置
+  servlet:
+    multipart:
+      enabled: true # 是否支持多部分上传。
+      maxFileSize: 60MB
+      maxRequestSize: 20MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  main:
+    allow-circular-references: true
+
+mybatis-plus:
+  configuration:
+    # map 映射value为null的情况
+    call-setters-on-nulls: true
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    cache-enabled: false
+  global-config:
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: ASSIGN_ID
+      #数据库大写下划线转换
+      capital-mode: true
+      #逻辑删除配置
+      logic-delete-field: delFlag
+      logic-delete-value: 1 # 逻辑已删除值
+      logic-not-delete-value: 0 #逻辑未删除值
+  mapper-locations: classpath*:com/hugai/modules/**/mapper/**/*.xml
+  type-aliases-package: com.hugai.modules.**.entity.**.model
+
+# 验证码
+aj:
+  captcha:
+    cache-type: redis
+    cache-number: 1000
+    timing-clear: 180
+    type: blockPuzzle
+    water-mark: Hug Ai
+    slip-offset: 5
+    aes-status: true
+    interference-options: 2
+    water-font: Dejavu
+
+# bebas 配置
+bebas:
+  project:
+    futureUtil:
+      # 多线程超时时间 毫秒
+      timeoutValue: 5000
+
+# 接口文档
+knife4j:
+  enable: true
+  openapi:
+    title: HugAi接口文档
+    description: 接口文档
+    url: https://docs.xiaominfo.com
+    version: 1.0
+    group:
+      system:
+        group-name: 系统模块
+        api-rule: package
+        api-rule-resources:
+          - com.hugai.modules.system
+      quartz:
+        group-name: 定时任务
+        api-rule: package
+        api-rule-resources:
+          - com.hugai.modules.quartz
+      client:
+        group-name: 客户端
+        api-rule: package
+        api-rule-resources:
+          - com.hugai.modules.config
+          - com.hugai.modules.session
+          - com.hugai.modules.user

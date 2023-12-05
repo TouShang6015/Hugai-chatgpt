@@ -16,25 +16,25 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GP
     
 - **在线体验地址**：[http://chat.equinox19.xyz/home](http://chat.equinox19.xyz/home)
 - **帮助文档**：[http://chat.doc.equinox19.xyz/](http://chat.doc.equinox19.xyz/)
-
-
-- 我的博客：[https://www.equinox19.xyz/](https://www.equinox19.xyz/)
+- 我的博客：[https://codesand.fun/](https://codesand.fun/)
 
 > 特别提醒：部署项目请查看帮助文档
 
 ## 特点
 
-✅	ChatGpt聊天对话，支持中断停止响应，支持GPT3.5、4.0、3.5-16K等模型
+✅	ChatGpt聊天对话，支持中断停止响应，支持GPT3.5、4.0、3.5-16K等模型选择
+
+✅	对话配置中心，平台管理、模型管理、api配置管理、镜像地址管理
+
+✅	可配置镜像地址，ApiKey池
 
 ✅	支持主流Midjourney、Stable Diffusion、dall-e AI绘图功能，文生图、图生图、放大、重绘，AI优化Prompt
 
-✅	扮演多种角色，如小红书文案、广告创意、小说家、Prompt优化师等
+✅	扮演多种角色，小红书文案、广告创意、小说家、Prompt优化师等
 
 ✅	支持sse与websocket两种方式，流式响应 打字机输出，后台动态设置，无需重启
 
 ✅	云端存储对话记录，对话维护，上下文token计算
-
-✅	ApiKey 多种策略，轮询、随机、自定义，RSA加密保证安全，异常处理机制，自动停用ApiKey
 
 ✅	支持多用户登陆：管理员、用户、游客，动态路由鉴权，不侵入代码
 
@@ -84,33 +84,42 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GP
 
 ## 待办 TODO
 
-闲暇时间会来维护这个开源项目，前后端都是自己开发，如有疑问欢迎加入最下方讨论群。有定制或其他需求可添加下方工作微信。
+闲暇时间会来维护这个开源项目，前后端都是自己开发，如有疑问欢迎加入最下方讨论群
 
-|    |      功能       |                                描述                                 |
-|----|:-------------:|:-----------------------------------------------------------------:|
-| ✅  |    管理端模块功能    |               管理端目前只有站点配置、领域会话维护，后续会添加用户模块、首页统计等功能                |
-| ❌  |   ~~pdf阅读~~   |           ~~向量库，阅读pdf、word等，正在研究~~（比较花时间，milvus需要服务器成本）           |
-| ✅  |     sd画图      |                   正在研究，目前使用的是openai的画图sdk，不怎么好用                   |
-| ❌  |    ~~黑化~~     |               ~~prompt中文大合集中有讨论猫娘的，懂我意思吧~~（会被封...）                |
-| ✅  | sd画图结合chatGpt |               prompt交给chatGpt优化，配置化，用户可自选专业模式或简单模式                |
-| ✅  |     mj画图      |                          midjourney画图接入                           |
-|    |   gpt对话交互优化   |                       优化gpt问答对话样式，添加删除对话等功能                       |
-|    |      画廊       |                     个人、公开画廊，分享精选图片，提供绘图参数画同款                      |
-|    |   api key管理   | 目前使用的是免费额度，用完了就轮询，毕竟有限，不能一直开放。有些用户有自己的apiKey可以自己添加，需要做一些加密处理保证安全性 |
-|    |     社区功能      |            gpt社区、画廊社区，值得推荐的对话与ai绘图可自由发布到社区，以及评论功能，点赞等             |
-|    |    .......    |                                                                   |
+|      |       功能        |                             描述                             |
+| ---- | :---------------: | :----------------------------------------------------------: |
+| ✅    |  管理端模块功能   | 管理端目前只有站点配置、领域会话维护，后续会添加用户模块、首页统计等功能 |
+| ❌    |    ~~pdf阅读~~    | ~~向量库，阅读pdf、word等，正在研究~~（比较花时间，milvus需要服务器成本） |
+| ✅    |      sd画图       |      正在研究，目前使用的是openai的画图sdk，不怎么好用       |
+| ❌    |     ~~黑化~~      | ~~prompt中文大合集中有讨论猫娘的，懂我意思吧~~（会被封...）  |
+| ✅    | sd画图结合chatGpt | prompt交给chatGpt优化，配置化，用户可自选专业模式或简单模式  |
+| ✅    |      mj画图       |                      midjourney画图接入                      |
+| ✅    |  gpt对话交互优化  |           优化gpt问答对话样式，添加删除对话等功能            |
+|      |       画廊        |       个人、公开画廊，分享精选图片，提供绘图参数画同款       |
+| ❌    |  ~~api key管理~~  | ~~目前使用的是免费额度，用完了就轮询，毕竟有限，不能一直开放。有些用户有自己的apiKey可以自己添加，需要做一些加密处理保证安全性~~ |
+|      |     社区功能      | gpt社区、画廊社区，值得推荐的对话与ai绘图可自由发布到社区，以及评论功能，点赞等 |
+|      |     其他模型      |           文心一言、讯飞星火、通义千问等其他大模型           |
+|      |      .......      |                                                              |
 
 
 
 ## 项目截图
 
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1693874917258.jpg)
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1693875024839.jpg)
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1694415099833.jpg)
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1693875273399.jpg)
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1691030140010.jpg)
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1691030163684.jpg)
-![](http://chat.static.equinox19.xyz/hugai-doc/effect/1691030196637.jpg)
+> 用户端
+
+![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205100114.png)
+![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205100213.png)
+![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205100250.png)
+![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205100752.png)
+![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205100810.png)
+
+> 后台管理端
+
+![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095735.png)
+![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095758.png)
+![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095828.png)
+![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095843.png)
+![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095908.png)
 
 ### 讨论群/联系方式
 
