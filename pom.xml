@@ -6,7 +6,13 @@
 
     <groupId>com.hugai</groupId>
     <artifactId>hugai-chatgpt</artifactId>
+    <packaging>pom</packaging>
     <version>1.0.0</version>
+    <modules>
+        <module>chat-sdks</module>
+        <module>modules-business</module>
+        <module>module-common</module>
+    </modules>
 
     <repositories>
         <repository>
@@ -16,6 +22,14 @@
         <repository>
             <id>common-service</id>
             <url>https://toushang6015.github.io/bebas-common-service/maven-repo/</url>
+        </repository>
+        <repository>
+            <id>v8jisu-api</id>
+            <url>https://toushang6015.github.io/v8jisu-payment-api/maven-repo/</url>
+        </repository>
+        <repository>
+            <id>defaultRep</id>
+            <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
     </repositories>
 
@@ -29,13 +43,14 @@
 
         <spring-boot.version>2.7.10</spring-boot.version>
         <bebas.version>1.0.3</bebas.version>
-        <openai.version>0.15.0</openai.version>
+        <openai.version>0.18.2</openai.version>
         <jtokkit.version>0.5.0</jtokkit.version>
         <redisson.version>3.18.0</redisson.version>
         <qiniu.version>7.13.1</qiniu.version>
         <anji.version>1.3.0</anji.version>
         <ttl.version>2.14.2</ttl.version>
         <jda.version>5.0.0-beta.9</jda.version>
+        <v8jisu.version>1.0</v8jisu.version>
 
         <druid.version>1.2.8</druid.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
@@ -102,23 +117,6 @@
             <version>${mysql.version}</version>
         </dependency>
 
-        <!-- openai -->
-        <dependency>
-            <groupId>com.theokanning.openai-gpt3-java</groupId>
-            <artifactId>api</artifactId>
-            <version>${openai.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.theokanning.openai-gpt3-java</groupId>
-            <artifactId>client</artifactId>
-            <version>${openai.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.theokanning.openai-gpt3-java</groupId>
-            <artifactId>service</artifactId>
-            <version>${openai.version}</version>
-        </dependency>
-
         <!-- okhttp -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -167,6 +165,13 @@
             </exclusions>
         </dependency>
 
+        <!-- 彩虹易支付 -->
+        <dependency>
+            <groupId>org.hootin</groupId>
+            <artifactId>v8jisu-payment-api</artifactId>
+            <version>${v8jisu.version}</version>
+        </dependency>
+
         <!-- captcha验证码 -->
         <dependency>
             <groupId>com.anji-plus</groupId>
@@ -174,51 +179,11 @@
             <version>${anji.version}</version>
         </dependency>
 
-        <!-- 定时任务 -->
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.mchange</groupId>
-                    <artifactId>c3p0</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bebas</groupId>
-            <artifactId>org-bebas-common</artifactId>
-            <version>${bebas.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bebas</groupId>
-            <artifactId>org-bebas-service</artifactId>
-            <version>${bebas.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.yitter</groupId>
-                    <artifactId>yitter-idgenerator</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
     </dependencies>
 
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -258,11 +223,7 @@
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.yml</include>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.txt</include>
-                    <include>**/*.json</include>
+                    <include>**/*.*</include>
                     <include>META-INF/**</include>
                 </includes>
             </resource>
