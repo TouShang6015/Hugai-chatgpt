@@ -60,6 +60,8 @@ public abstract class DrawTaskDataManager {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
                     this.runBeforeException(id, e);
+                } finally {
+                    this.overQueue(id);
                 }
             });
         } catch (Exception e) {

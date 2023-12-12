@@ -6,8 +6,6 @@ import com.hugai.core.security.filter.AccessDecisionManagerImpl;
 import com.hugai.core.security.filter.PermissionSecurityFilter;
 import com.hugai.core.security.filter.SecurityMetadataSource;
 import com.hugai.framework.sensitiveWord.SenWordHolder;
-import org.hootin.v8jisu.client.V8ApiService;
-import org.hootin.v8jisu.client.V8PayClient;
 import org.redisson.spring.starter.RedissonAutoConfigurationCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
@@ -121,16 +119,6 @@ public class BeanLoading {
                 configuration.useSingleServer().setPassword(null);
             }
         };
-    }
-
-    /**
-     * 彩虹易支付服务bean
-     *
-     * @return
-     */
-    @Bean
-    public V8ApiService v8ApiService() {
-        return V8PayClient.createService();
     }
 
 }
