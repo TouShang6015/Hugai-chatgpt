@@ -21,9 +21,17 @@ public interface MidjourneyTaskEventListener {
      * 更新任务
      *
      * @param taskId
+     * @param id
+     */
+    void updateTask(String taskId, String id, String applicationId, String guildId, String channelId);
+
+    /**
+     * 开始任务
+     *
+     * @param id
      * @param finalPrompt
      */
-    void updateTask(String taskId, String finalPrompt, String applicationId, String guildId, String channelId);
+    void startTask(String id, String finalPrompt);
 
     /**
      * 任务结束

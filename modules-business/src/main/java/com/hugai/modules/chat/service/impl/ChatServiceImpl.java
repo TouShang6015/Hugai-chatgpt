@@ -1,7 +1,6 @@
 package com.hugai.modules.chat.service.impl;
 
 import cn.hutool.core.lang.Assert;
-import com.hugai.chatsdk.entity.ChatSdkStorageResponse;
 import com.hugai.chatsdk.entity.account.ChatSdkAccount;
 import com.hugai.chatsdk.entity.session.RecordData;
 import com.hugai.chatsdk.service.ChatBusinessService;
@@ -74,16 +73,7 @@ public class ChatServiceImpl implements ChatService {
             log.error("[ChatBusinessService] 获取对话模型失败");
             throw new BusinessException("系统未找到对应对话模型，请检查配置。");
         });
-        ChatSdkStorageResponse response = service.ChatCompletionStream(recordList, chatSdkAccount);
-
-        // 帐号异常停用key
-        if (response.getAccountError()) {
-            String apiToken = response.getAccount().getApiToken();
-            chatKeysService.removeByApiToken(apiToken);
-            return;
-        }
-
-        sessionRecordService.responseInsertHandle(recordList, param, response);
+        service.chatCompletionStream(recordList, chatSdkAccount);
     }
 
 

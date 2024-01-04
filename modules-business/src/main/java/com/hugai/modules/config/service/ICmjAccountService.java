@@ -16,4 +16,13 @@ public interface ICmjAccountService extends IService<CmjAccountModel> {
 
     List<CmjAccountDetailVO> getAccountAll();
 
+    /**
+     * 重新连接已断开的websocket连接
+     */
+    void resetStopMjSocket();
+
+    /**
+     * 刷新缓存
+     */
+    void flushCache();
 }

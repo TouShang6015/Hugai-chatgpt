@@ -60,5 +60,14 @@ public class ChatModelModel extends BaseModel {
 	 * 是否增强模型
 	 */
 	private String ifPlusModel;
+	/**
+	 * 请求地址
+	 */
+	private String requestUrl;
+	/**
+	 * 可用状态
+	 */
+	@ApiModelProperty(value = "可用状态", dataType = "String")
+	private String enableStatus;
 
 }

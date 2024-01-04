@@ -20,9 +20,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class TaskObj implements Serializable {
 
+    private String id;
+
     private String nonce;
 
     private String prompt;
+
+    private String applicationId;
 
     private String guildId;
 

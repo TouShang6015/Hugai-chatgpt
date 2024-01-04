@@ -2,9 +2,12 @@ package com.hugai.modules.user.service.impl;
 
 import cn.hutool.core.lang.Assert;
 import com.hugai.common.modules.entity.user.model.UserInfoModel;
-import com.hugai.core.mail.entity.SmsBaseParam;
-import com.hugai.core.mail.enums.SmsTypeEnum;
-import com.hugai.core.mail.service.SmsSendService;
+import com.hugai.common.support.sms.SmsServiceContext;
+import com.hugai.common.support.sms.entity.SmsBaseParam;
+import com.hugai.common.support.sms.enums.SmsStrategy;
+import com.hugai.common.support.sms.enums.SmsTypeEnum;
+import com.hugai.common.support.sms.service.SmsSendService;
+import com.hugai.common.webApi.baseResource.BaseResourceWebApi;
 import com.hugai.modules.user.mapper.UserInfoMapper;
 import com.hugai.modules.user.service.UserInfoService;
 import com.org.bebas.exception.BusinessException;
@@ -23,7 +26,9 @@ import java.util.Date;
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoModel> implements UserInfoService {
 
     @Resource
-    private SmsSendService smsSendService;
+    private SmsServiceContext smsServiceContext;
+    @Resource
+    private BaseResourceWebApi resourceWebApi;
 
     @Override
     public UserInfoModel selectUserByUserName(String username) {
@@ -49,7 +54,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoMod
     public void registerSendMail(String email) {
         Assert.notEmpty(email);
         Assert.isFalse(super.lambdaQuery().eq(UserInfoModel::getEmail, email).count() > 0, () -> new BusinessException("该邮箱已被注册，请更换其他邮箱号码"));
-        SmsBaseParam smsParam = smsSendService.getEntity(SmsTypeEnum.REGISTER, email);
+
+        SmsTypeEnum smsType = SmsTypeEnum.REGISTER;
+
+        SmsSendService smsSendService = smsServiceContext.getService(SmsStrategy.mail.name(), () -> new BusinessException("没有找到短信策略"));
+        SmsBaseParam smsParam = smsSendService.getEntity(smsType, email);
+
         if (smsParam != null) {
             if (!smsParam.getStatus()) {
                 if (new Date().getTime() < DateUtils.addSeconds(smsParam.getCreateTime(), 60).getTime()) {
@@ -57,7 +67,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoMod
                 }
             }
         }
-        smsSendService.sendSmsCode(SmsTypeEnum.REGISTER, email, "欢迎加入HugAi，这是您的验证码%s请妥善保管，有效期为15分钟。");
+
+        smsSendService.sendSmsCode(smsType, email, null);
     }
 
 }

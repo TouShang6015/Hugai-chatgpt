@@ -1,13 +1,13 @@
 package com.hugai.core.midjourney.valid;
 
 import cn.hutool.core.collection.CollUtil;
-import com.hugai.core.midjourney.client.DiscordSocketClient;
-import com.hugai.core.midjourney.common.entity.DiscordAccount;
+import com.hugai.core.midjourney.pool.DiscordAccountCacheObj;
+import com.hugai.core.midjourney.pool.DiscordSocketAccountPool;
 import com.hugai.core.midjourney.valid.annotation.NotSocketConnect;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author WuHao
@@ -17,8 +17,8 @@ public class NotSocketContentValidator implements ConstraintValidator<NotSocketC
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        Set<DiscordAccount> discordAccountList = DiscordSocketClient.getDiscordAccountList();
-        if (CollUtil.isEmpty(discordAccountList) || discordAccountList.size() == 0){
+        ConcurrentHashMap<String, DiscordAccountCacheObj> cache = DiscordSocketAccountPool.CACHE;
+        if (CollUtil.isEmpty(cache) || cache.size() == 0) {
             return false;
         }
         return true;

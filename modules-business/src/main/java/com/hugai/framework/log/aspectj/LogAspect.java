@@ -3,15 +3,14 @@ package com.hugai.framework.log.aspectj;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.hugai.common.constants.Constants;
-import com.hugai.common.enums.ChannelEnum;
-import com.hugai.framework.log.annotation.Log;
-import com.hugai.framework.asyncMessage.MessageService;
 import com.hugai.common.entity.security.LoginUserContextBean;
-import com.hugai.core.security.context.SecurityContextUtil;
+import com.hugai.common.enums.ChannelEnum;
 import com.hugai.common.modules.entity.system.model.SysOperLogModel;
+import com.hugai.core.security.context.SecurityContextUtil;
+import com.hugai.framework.asyncMessage.MessageService;
+import com.hugai.framework.log.annotation.Log;
 import com.org.bebas.utils.ServletUtils;
 import com.org.bebas.utils.StringUtils;
-import com.org.bebas.utils.ip.AddressUtils;
 import com.org.bebas.utils.ip.IpUtils;
 import io.swagger.annotations.Api;
 import org.aspectj.lang.JoinPoint;
@@ -95,7 +94,7 @@ public class LogAspect {
             // 处理设置注解上的参数
             getControllerMethodDescription(joinPoint, controllerLog, operLog, jsonResult);
             // 设置操作地点
-            operLog.setOperLocation(AddressUtils.getRealAddressByIP(operLog.getOperIp()));
+//            operLog.setOperLocation(AddressUtils.getRealAddressByIP(operLog.getOperIp()));
             // 保存数据库
             messageService.send(ChannelEnum.log_handle, JSON.toJSONString(operLog));
         } catch (Exception exp) {

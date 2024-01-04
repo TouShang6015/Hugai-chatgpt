@@ -25,6 +25,10 @@ public class DiscordAccount {
      */
     private String userAgent;
     /**
+     * 是否开启代理
+     */
+    private String ifProxy;
+    /**
      * dataObject
      */
     private DataObject autoData;

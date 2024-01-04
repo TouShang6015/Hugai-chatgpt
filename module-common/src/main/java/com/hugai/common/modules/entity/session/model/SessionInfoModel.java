@@ -40,4 +40,7 @@ public class SessionInfoModel extends BaseModel {
     @ApiModelProperty(value = "总消耗token")
     private Integer allConsumerToken;
 
+    @ApiModelProperty(value = "最近一次使用的模型ID")
+    private Long chatModelId;
+
 }

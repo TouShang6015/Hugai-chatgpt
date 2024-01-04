@@ -27,9 +27,10 @@ public class ImagineSuccessHandler extends MessageStrategyAbstract {
     public void handle(MessageType messageType, DataObject message) {
         String content = getMessageContent(message);
         ContentParseData parseData = ConvertUtils.parseContent(content, CONTENT_REGEX);
+        log.info("[MJ Image Success ] content: {} | response : {}", content, message.toString());
         if (MessageType.CREATE.equals(messageType) && parseData != null && hasImage(message)) {
             findAndFinishImageTask(parseData.getPrompt(), message);
-            log.debug("任务完成：imagine - {}, message: {}", parseData.getPrompt(), message.toString());
+            log.info("任务完成：imagine - {}, message: {}", parseData.getPrompt(), message.toString());
         }
     }
 

@@ -4,13 +4,15 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hugai.common.constants.ApiPrefixConstant;
+import com.hugai.common.enums.flow.AccountStatus;
+import com.hugai.common.modules.entity.config.convert.CmjAccountConvert;
+import com.hugai.common.modules.entity.config.dto.CmjAccountDTO;
+import com.hugai.common.modules.entity.config.model.CmjAccountModel;
+import com.hugai.common.modules.entity.config.vo.CmjAccountDetailVO;
 import com.hugai.core.midjourney.client.DiscordSocketClient;
 import com.hugai.core.midjourney.common.entity.DiscordAccount;
 import com.hugai.core.midjourney.pool.DiscordAccountCacheObj;
 import com.hugai.core.midjourney.pool.DiscordSocketAccountPool;
-import com.hugai.common.modules.entity.config.convert.CmjAccountConvert;
-import com.hugai.common.modules.entity.config.dto.CmjAccountDTO;
-import com.hugai.common.modules.entity.config.model.CmjAccountModel;
 import com.hugai.modules.config.service.ICmjAccountService;
 import com.org.bebas.core.function.OR;
 import com.org.bebas.exception.BusinessException;
@@ -21,8 +23,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * mj账户配置 控制器
@@ -37,18 +40,49 @@ public class CmjAccountController extends BaseController<ICmjAccountService, Cmj
 
     @ApiOperation(value = "Discord账户重新连接")
     @GetMapping("/againConnect/{id}")
-    public Result againConnect(@PathVariable Long id){
-        CmjAccountModel model = service.getById(id);
-        Assert.notNull(model,() -> new BusinessException("未找到账户"));
+    public Result againConnect(@PathVariable Long id) {
+        List<CmjAccountDetailVO> accountAll = service.getAccountAll();
 
-        DiscordAccountCacheObj discordAccountCacheObj = DiscordSocketAccountPool.get(model.getUserName());
-        if (Objects.nonNull(discordAccountCacheObj)){
+        CmjAccountDetailVO accountDetailVO = accountAll.stream().filter(item -> id.equals(item.getId())).findFirst().orElse(null);
+        Assert.notNull(accountDetailVO, () -> new BusinessException("未找到该账户"));
+
+        Assert.isFalse(!AccountStatus.NORMAL.getKey().equals(accountDetailVO.getAccountStatus()), () -> new BusinessException("账户已停用"));
+
+        DiscordAccountCacheObj discordAccountCacheObj = DiscordSocketAccountPool.get(accountDetailVO.getUserName());
+        if (Objects.nonNull(discordAccountCacheObj)) {
             discordAccountCacheObj.getWebSocket().cancel();
         }
-        Set<DiscordAccount> discordAccountList = DiscordSocketClient.getDiscordAccountList();
-        DiscordAccount discordAccount = discordAccountList.stream().filter(item -> item.getUserName().equals(model.getUserName())).findFirst().orElse(null);
-        Assert.notNull(discordAccount,() -> new BusinessException("未找到账户"));
+        DiscordSocketClient.getDiscordAccountMap().remove(accountDetailVO.getUserName());
+
+        DiscordAccount discordAccount = DiscordSocketClient.buildAccount(accountDetailVO);
         DiscordSocketClient.connection(discordAccount);
+        return Result.success();
+    }
+
+    @ApiOperation(value = "Discord账户断开连接")
+    @GetMapping("/closeConnect/{id}")
+    public Result closeConnect(@PathVariable Long id) {
+        CmjAccountModel model = service.getById(id);
+        Assert.notNull(model, () -> new BusinessException("未找到账户"));
+
+        List<CmjAccountDetailVO> accountAll = service.getAccountAll();
+
+        CmjAccountDetailVO accountDetailVO = accountAll.stream().filter(item -> id.equals(item.getId())).findFirst().orElse(null);
+        Assert.notNull(accountDetailVO, () -> new BusinessException("未找到该账户"));
+
+        DiscordAccountCacheObj discordAccountCacheObj = DiscordSocketAccountPool.get(model.getUserName());
+        if (Objects.nonNull(discordAccountCacheObj)) {
+            discordAccountCacheObj.getWebSocket().cancel();
+        }
+        Map<String, DiscordAccount> discordAccountMap = DiscordSocketClient.getDiscordAccountMap();
+        discordAccountMap.remove(accountDetailVO.getUserName());
+        return Result.success();
+    }
+
+    @ApiOperation(value = "刷新缓存")
+    @GetMapping("/flushCache")
+    public Result flushCache() {
+        service.flushCache();
         return Result.success();
     }
 

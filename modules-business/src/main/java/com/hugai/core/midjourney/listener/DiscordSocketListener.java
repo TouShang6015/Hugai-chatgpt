@@ -1,8 +1,7 @@
 package com.hugai.core.midjourney.listener;
 
-import com.hugai.core.midjourney.listener.core.TryConnectManager;
-import com.hugai.core.midjourney.pool.DiscordSocketAccountPool;
 import com.hugai.core.midjourney.common.entity.DiscordAccount;
+import com.hugai.core.midjourney.pool.DiscordSocketAccountPool;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.utils.data.DataObject;
 import net.dv8tion.jda.internal.utils.compress.Decompressor;
@@ -37,7 +36,6 @@ public class DiscordSocketListener extends DiscordSocketCommonListener {
         this.socket = webSocket;
         log.info("[Discord] - 账号：{} 已连接", this.discordAccount.getUserName());
         DiscordSocketAccountPool.add(this.discordAccount.getUserName(), this.discordAccount, this.socket);
-        TryConnectManager.removeState(this.discordAccount.getUserName());
     }
 
     @Override
@@ -68,7 +66,6 @@ public class DiscordSocketListener extends DiscordSocketCommonListener {
         log.info("[Discord socket failure] - 账号：{} 异常：{}", this.discordAccount.getUserName(), t.getMessage());
         this.cancel();
         DiscordSocketAccountPool.remove(this.discordAccount.getUserName());
-        TryConnectManager.tryConnect(this.discordAccount.getUserName());
     }
 
     @Override
@@ -76,7 +73,6 @@ public class DiscordSocketListener extends DiscordSocketCommonListener {
         log.info("[Discord socket Closed] - 账号：{} 关闭连接   code:{} reason: {}", this.discordAccount.getUserName(), code, reason);
         this.cancel();
         DiscordSocketAccountPool.remove(this.discordAccount.getUserName());
-        TryConnectManager.tryConnect(this.discordAccount.getUserName());
     }
 
     @Override
@@ -84,7 +80,6 @@ public class DiscordSocketListener extends DiscordSocketCommonListener {
         log.info("[Discord socket Closing] - 账号：{} 关闭连接   code:{} reason: {}", this.discordAccount.getUserName(), code, reason);
         this.cancel();
         DiscordSocketAccountPool.remove(this.discordAccount.getUserName());
-        TryConnectManager.tryConnect(this.discordAccount.getUserName());
     }
 
 }

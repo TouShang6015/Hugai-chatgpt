@@ -29,6 +29,10 @@ public class LoginUserContextBean extends BaseSecurityUser implements UserDetail
      * 0 系统用户 1 普通用户
      */
     private String userType;
+    /**
+     * 是否游客
+     */
+    private String ifTourist;
 
     /**
      * 用户唯一标识

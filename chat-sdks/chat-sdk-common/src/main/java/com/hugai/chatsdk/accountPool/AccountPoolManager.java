@@ -70,4 +70,8 @@ public class AccountPoolManager implements AccountCacheManager {
         accountPool.remove(baseUrl);
     }
 
+    @Override
+    public void cacheAll() {
+        accountPool.clear();
+    }
 }

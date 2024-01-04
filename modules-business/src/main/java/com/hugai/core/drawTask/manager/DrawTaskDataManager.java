@@ -43,7 +43,7 @@ public abstract class DrawTaskDataManager {
      */
     public void start(String id, SingleFunction runnable) {
         Assert.notEmpty(id, () -> new BusinessException("[Draw Task] 任务开始失败，唯一id不能为空"));
-        log.debug("[绘图任务管理 - start] - 任务ID：{}", id);
+        log.info("[绘图任务管理 - start] - 任务ID：{}", id);
         try {
             this.executor.execute(() -> {
                 try {
@@ -55,7 +55,7 @@ public abstract class DrawTaskDataManager {
                         this.overQueue(id);
                         this.timeOutCallBack(id);
                     }
-                    log.debug("[绘图任务管理 - 任务结束] - 任务id：{}", id);
+                    log.info("[绘图任务管理 - 任务结束] - 任务id：{}", id);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
@@ -78,12 +78,12 @@ public abstract class DrawTaskDataManager {
      */
     public void startSync(String id, SingleFunction runnable) {
         Assert.notEmpty(id, () -> new BusinessException("[Draw Task] 任务开始失败，唯一id不能为空"));
-        log.debug("[绘图任务管理 - startSync] - 任务ID：{}", id);
+        log.info("[绘图任务管理 - startSync] - 任务ID：{}", id);
         try {
             this.executor.execute(() -> {
                 try {
                     runnable.run();
-                    log.debug("[绘图任务管理 - 任务结束] - 任务id：{}", id);
+                    log.info("[绘图任务管理 - 任务结束] - 任务id：{}", id);
                 } catch (Exception e) {
                     e.printStackTrace();
                     this.runBeforeException(id, e);
@@ -105,7 +105,7 @@ public abstract class DrawTaskDataManager {
     public void awake(String id, SingleFunction callback) {
         OR.run(this.stateMap.get(id), Objects::nonNull, latch -> {
             try {
-                log.debug("[绘图任务管理 - 回调] - 任务ID：{}", id);
+                log.info("[绘图任务管理 - 回调] - 任务ID：{}", id);
                 callback.run();
             } catch (Exception e) {
                 e.printStackTrace();

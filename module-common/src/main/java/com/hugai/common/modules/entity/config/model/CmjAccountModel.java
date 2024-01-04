@@ -58,4 +58,6 @@ public class CmjAccountModel extends BaseModel {
 
     private String accountStatus;
 
+    private String ifProxy;
+
 }

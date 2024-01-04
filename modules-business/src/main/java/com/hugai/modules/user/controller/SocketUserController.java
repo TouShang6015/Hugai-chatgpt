@@ -43,7 +43,7 @@ public class SocketUserController {
     @ApiOperation(value = "手动清除socket连接")
     public Result closeSocket(@PathVariable("sessionId") String sessionId) {
         OR.run(UserSocketPool.get(String.valueOf(SecurityContextUtil.getUserId()), sessionId), Objects::nonNull, SocketPointUser::closeSession);
-        log.debug("手动清除socket连接 - sessionId: {}", sessionId);
+        log.info("手动清除socket连接 - sessionId: {}", sessionId);
         return Result.success();
     }
 
@@ -68,5 +68,4 @@ public class SocketUserController {
         }
         return Result.success();
     }
-
 }

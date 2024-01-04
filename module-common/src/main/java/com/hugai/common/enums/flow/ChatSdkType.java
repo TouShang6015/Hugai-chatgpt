@@ -13,6 +13,8 @@ import lombok.Getter;
 public enum ChatSdkType implements FlowBaseEnum {
 
     openai("openai", "openai模型"),
+
+    spark("spark", "讯飞星火平台"),
     ;
 
     private final String key;

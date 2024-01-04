@@ -29,7 +29,7 @@ public class BlendSuccessHandler extends MessageStrategyAbstract {
         }
         Optional<DataObject> interaction = message.optObject("interaction");
         if (interaction.isPresent() && "blend".equals(interaction.get().getString("name"))) {
-            log.debug("messageHandler blend start : nonce:{}", getMessageNonce(message));
+            log.info("messageHandler blend start : nonce:{}", getMessageNonce(message));
             if (hasImage(message)) {
                 findAndFinishImageTask(parseData.getPrompt(), message);
             }
