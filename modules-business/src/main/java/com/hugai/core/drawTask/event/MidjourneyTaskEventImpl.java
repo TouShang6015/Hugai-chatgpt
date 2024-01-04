@@ -67,7 +67,7 @@ public class MidjourneyTaskEventImpl implements MidjourneyTaskEventListener {
     public void taskRun(TaskObj taskObj) {
         if (Objects.isNull(taskObj))
             return;
-        log.debug("[Task Run] 接收参数:{}", JSON.toJSONString(taskObj));
+        log.info("[Task Run] 接收参数:{}", JSON.toJSONString(taskObj));
 
         try {
             this.functionImagine(taskObj);
@@ -82,31 +82,52 @@ public class MidjourneyTaskEventImpl implements MidjourneyTaskEventListener {
      * 更新任务
      *
      * @param taskId
-     * @param finalPrompt
+     * @param id
      */
     @Override
-    public void updateTask(String taskId, String finalPrompt, String applicationId, String guildId, String channelId) {
-        if (StrUtil.isEmpty(taskId) || StrUtil.isEmpty(finalPrompt)) {
+    public void updateTask(String taskId, String id, String applicationId, String guildId, String channelId) {
+        if (StrUtil.isEmpty(taskId) || StrUtil.isEmpty(id) || StrUtil.isEmpty(applicationId) || StrUtil.isEmpty(channelId)) {
             return;
         }
+
+        // 更新任务状态
+        OR.run(TaskQueueManager.get(taskId), Objects::nonNull, taskObj -> {
+            OR.run(id, StrUtil::isNotEmpty, taskObj::setId);
+            OR.run(applicationId, StrUtil::isNotEmpty, taskObj::setApplicationId);
+            OR.run(guildId, StrUtil::isNotEmpty, taskObj::setGuildId);
+            OR.run(channelId, StrUtil::isNotEmpty, taskObj::setChannelId);
+            log.info("[Discord Task update] 任务更新 - TaskId: {} , id: {}", taskId, id);
+        });
+
+    }
+
+    @Override
+    public void startTask(String id, String finalPrompt) {
+        if (StrUtil.isEmpty(id) || StrUtil.isEmpty(finalPrompt)) {
+            return;
+        }
+
+        TaskObj taskObj = TaskQueueManager.getById(id);
+        if (Objects.isNull(taskObj))
+            return;
+        String taskId = taskObj.getNonce();
+        // 更新任务状态
+        taskObj.setPrompt(finalPrompt);
+
         OR.run(taskDrawService.getById(taskId), Objects::nonNull, taskModel -> {
             String requestParam = taskModel.getRequestParam();
             MjBaseRequest requestParamObj = JSON.parseObject(requestParam, MjBaseRequest.class);
-            if (Objects.nonNull(requestParamObj)) {
-                requestParamObj.setPrompt(finalPrompt);
-            }
-            // 更新任务状态
-            OR.run(TaskQueueManager.get(taskId), Objects::nonNull, taskObj -> taskObj.setPrompt(finalPrompt));
+            requestParamObj.setPrompt(finalPrompt);
             taskDrawService.lambdaUpdate()
                     .set(TaskDrawModel::getTaskStatus, TaskStatus.RUNNING.getKey())
                     .set(TaskDrawModel::getRequestParam, JSON.toJSONString(requestParamObj))
-                    .set(TaskDrawModel::getMjApplicationId, applicationId)
-                    .set(TaskDrawModel::getMjGuildId, guildId)
-                    .set(TaskDrawModel::getMjChannelId, channelId)
+                    .set(TaskDrawModel::getMjApplicationId, taskObj.getApplicationId())
+                    .set(TaskDrawModel::getMjGuildId, taskObj.getGuildId())
+                    .set(TaskDrawModel::getMjChannelId, taskObj.getChannelId())
                     .eq(TaskDrawModel::getId, taskId).update();
         });
 
-        log.debug("[Discord Task update] 任务已更新 - TaskId: {}, prompt: {}", taskId, finalPrompt);
+        log.info("[Discord Task update] 任务开始 - TaskId: {} , id: {}", taskId, id);
     }
 
     @Override

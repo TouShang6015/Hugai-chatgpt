@@ -108,6 +108,7 @@ public class SessionRecordServiceImpl extends ServiceImpl<SessionRecordMapper, S
         // 更新session的总token使用量
         SessionInfoModel sessionInfoModel = sessionInfoService.getById(sessionId);
         sessionInfoModel.setAllConsumerToken(sessionInfoModel.getAllConsumerToken() + tokenConsumerAmount);
+        sessionInfoModel.setChatModelId(contextParam.getChatModelId());
         // 赋值会话名称
         OR.run(sessionInfoModel.getSessionName(), StrUtil::isEmpty, () -> {
             String sessionShowName = StrUtil.sub(userRecord.getContent(), 0, 90);

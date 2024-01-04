@@ -42,6 +42,7 @@ public class SocketMessageHandlerEvent {
         ThreadUtil.sleep(50);
 //        log.info("[Discord - execute] response messageType: {}, d: {}", messageType.name(), data.toString());
 
+        log.debug("[MJ Socket] 响应：{} ", this.data.toString());
         Map<String, MessageStrategyAbstract> messageHandlerMap = SpringUtil.getBeansOfType(MessageStrategyAbstract.class);
         messageHandlerMap.forEach((k, strategyService) -> {
             strategyService.handle(messageType, data);
@@ -54,7 +55,7 @@ public class SocketMessageHandlerEvent {
             return true;
         }
         String authorName = data.optObject("author").map(a -> a.getString("username")).orElse("System");
-        log.debug("{} - {} - {}: {}", this.discordAccount.getUserName(), messageType.name(), authorName, data.opt("content").orElse(""));
+        log.info("{} - {} - {}: {}", this.discordAccount.getUserName(), messageType.name(), authorName, data.opt("content").orElse(""));
         return false;
     }
 

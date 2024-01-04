@@ -27,6 +27,8 @@ public class ChatSdkStorageResponse {
      */
     private List<RecordData> responseRecordData;
 
+    private Long customerToken;
+
 
     /**
      * 账号是否可用

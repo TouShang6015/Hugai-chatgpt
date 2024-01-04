@@ -37,6 +37,12 @@ public class TaskQueueManager {
         return get(obj -> taskId.equals(obj.getNonce()));
     }
 
+    public static TaskObj getById(String id) {
+        if (StrUtil.isEmpty(id))
+            return null;
+        return get(obj -> id.equals(obj.getId()));
+    }
+
     public static TaskObj get(String prompt, String guildId, String channelId, String targetHandler) {
         return get(bean -> {
             if (StrUtil.isEmpty(targetHandler)) {

@@ -27,6 +27,8 @@ public class RecordData {
     @ApiModelProperty(value = "内容", dataType = "String")
     private String content;
 
+    private Long customerToken;
+
     private StringBuilder contentSB = new StringBuilder();
 
 }

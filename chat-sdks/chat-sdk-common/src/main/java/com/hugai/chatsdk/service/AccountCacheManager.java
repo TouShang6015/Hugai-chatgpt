@@ -13,4 +13,6 @@ public interface AccountCacheManager {
      */
     void cacheRemove(String key);
 
+    void cacheAll();
+
 }

@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class ChatLockHandle {
 
     // 默认超时时间 秒
-    private final static long DEFAULT_TIME_OUT = 60 * 10;
+    private final static long DEFAULT_TIME_OUT = 60 * 2;
 
     private ChatLockHandle() {
     }

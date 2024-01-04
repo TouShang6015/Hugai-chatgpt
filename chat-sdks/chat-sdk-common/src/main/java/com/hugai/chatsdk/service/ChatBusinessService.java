@@ -28,7 +28,7 @@ public interface ChatBusinessService<R> {
      * @param chatSdkAccount
      * @return
      */
-    ChatSdkStorageResponse ChatCompletionStream(List<RecordData> recordList, ChatSdkAccount chatSdkAccount);
+    ChatSdkStorageResponse chatCompletionStream(List<RecordData> recordList, ChatSdkAccount chatSdkAccount);
 
     /**
      * 非流式对话
@@ -37,7 +37,7 @@ public interface ChatBusinessService<R> {
      * @param chatSdkAccount
      * @return
      */
-    ChatSdkStorageResponse ChatCompletion(List<RecordData> recordList, ChatSdkAccount chatSdkAccount);
+    ChatSdkStorageResponse chatCompletion(List<RecordData> recordList, ChatSdkAccount chatSdkAccount);
 
     /**
      * 转换为api请求参数

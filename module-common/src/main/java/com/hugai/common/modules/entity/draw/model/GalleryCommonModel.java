@@ -1,5 +1,6 @@
 package com.hugai.common.modules.entity.draw.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.org.bebas.core.model.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,5 +39,16 @@ public class GalleryCommonModel extends BaseModel {
 
     @ApiModelProperty(value = "提示词")
     private String prompt;
+
+    @TableField(exist = false)
+    private int delFlag;
+
+    public int getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(int delFlag) {
+        this.delFlag = delFlag;
+    }
 
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.hugai.core.midjourney.common.entity.DiscordAccount;
 import com.org.bebas.core.function.OR;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.WebSocket;
 import reactor.util.function.Tuple2;
 
@@ -17,6 +18,7 @@ import java.util.Random;
  * @author WuHao
  * @since 2023/9/26 13:31
  */
+@Slf4j
 @Data
 public class DiscordAccountCacheObj {
 
@@ -47,7 +49,9 @@ public class DiscordAccountCacheObj {
         int size = channelConfigList.size();
         Random random = new Random();
         random.setSeed(size);
-        return channelConfigList.get(random.nextInt(size));
+        Tuple2<String, String> tuples = channelConfigList.get(random.nextInt(size));
+        log.debug("[MJ 随机获取服务器与频道] size: {},  guildId: {} , channelId: {}", channelConfigList.size(), tuples.getT1(), tuples.getT2());
+        return tuples;
     }
 
 }

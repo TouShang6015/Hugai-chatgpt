@@ -2,6 +2,7 @@ package com.hugai.modules.config.controller;
 
 import cn.hutool.core.map.MapUtil;
 import com.hugai.common.constants.ApiPrefixConstant;
+import com.hugai.common.constants.Constants;
 import com.hugai.common.modules.entity.config.model.ChatModelModel;
 import com.hugai.modules.config.service.IChatModelService;
 import com.org.bebas.utils.OptionalUtil;
@@ -33,13 +34,15 @@ public class ChatModelController extends BaseController<IChatModelService, ChatM
     @GetMapping("/getLabelOption")
     public Result getLabelOption() {
         List<ChatModelModel> allList = service.getAllList();
-        List<Map<String, Object>> labelOptions = OptionalUtil.ofNullList(allList).stream().map(item -> {
-            HashMap<String, Object> map = MapUtil.newHashMap();
-            map.put("value", item.getId());
-            map.put("label", item.getModelDescription());
-            map.put("ifChatPlus", item.getIfPlusModel());
-            return map;
-        }).collect(Collectors.toList());
+        List<Map<String, Object>> labelOptions = OptionalUtil.ofNullList(allList).stream()
+                .filter(item -> Constants.EnableStatus.USABLE.equals(item.getEnableStatus()))
+                .map(item -> {
+                    HashMap<String, Object> map = MapUtil.newHashMap();
+                    map.put("value", item.getId());
+                    map.put("label", item.getModelDescription());
+                    map.put("ifChatPlus", item.getIfPlusModel());
+                    return map;
+                }).collect(Collectors.toList());
         return Result.success(labelOptions);
     }
 

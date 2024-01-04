@@ -37,7 +37,7 @@ public class UserDetailsUserServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserInfoModel user = null;
         user = userInfoService.selectUserByUserName(username);
-        if (Objects.isNull(user)){
+        if (Objects.isNull(user)) {
             user = userInfoService.selectUserByeEmail(username);
         }
         if (StringUtils.isNull(user)) {
@@ -62,6 +62,7 @@ public class UserDetailsUserServiceImpl implements UserDetailsService {
                 , sysPermissionService.getPermissionByRoleKey(RoleDefaultKeyEnum.tourist.getKey())
         );
         loginUserContextBean.setUserType(UserTypeEnum.USER.getKey());
+        loginUserContextBean.setIfTourist(Constants.BOOLEAN.TRUE);
         return loginUserContextBean;
     }
 }

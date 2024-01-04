@@ -1,5 +1,8 @@
 package com.hugai.core.midjourney.client;
 
+import com.hugai.common.constants.Constants;
+import com.hugai.common.modules.entity.config.model.CmjChannelConfigModel;
+import com.hugai.common.modules.entity.config.vo.CmjAccountDetailVO;
 import com.hugai.common.webApi.baseResource.BaseResourceWebApi;
 import com.hugai.core.midjourney.common.constants.DiscordConstant;
 import com.hugai.core.midjourney.common.constants.SocketClientParamConstants;
@@ -10,13 +13,14 @@ import com.org.bebas.core.spring.SpringUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
+import reactor.util.function.Tuples;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author WuHao
@@ -27,7 +31,7 @@ public class DiscordSocketClient {
     /**
      * 全局帐号存储
      */
-    private static Set<DiscordAccount> discordAccountList = new HashSet<>();
+    private static Map<String, DiscordAccount> discordAccountMap = new ConcurrentHashMap<>();
 
     /**
      * 简历Discord ws连接，根据配置帐号
@@ -41,12 +45,18 @@ public class DiscordSocketClient {
         }
         Request request = getRequest(discordAccount);
         ResourceMainVO resourceMain = SpringUtils.getBean(BaseResourceWebApi.class).getResourceMain();
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(2, TimeUnit.MINUTES)
-                .proxy(
-                        new Proxy(Proxy.Type.HTTP, new InetSocketAddress(resourceMain.getProxyHost(), resourceMain.getProxyPort()))
-                ).build();
-        return client.newWebSocket(request, new DiscordSocketListener(discordAccount));
+
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder().connectTimeout(2, TimeUnit.MINUTES);
+        if (Constants.BOOLEAN.TRUE.equals(discordAccount.getIfProxy())){
+            clientBuilder.proxy(
+                    new Proxy(Proxy.Type.HTTP, new InetSocketAddress(resourceMain.getProxyHost(), resourceMain.getProxyPort()))
+            );
+        }
+        OkHttpClient client = clientBuilder.build();
+        WebSocket webSocket = client.newWebSocket(request, new DiscordSocketListener(discordAccount));
+
+        DiscordSocketClient.getDiscordAccountMap().put(discordAccount.getUserName(), discordAccount);
+        return webSocket;
     }
 
     private static Request getRequest(DiscordAccount discordAccount) {
@@ -56,7 +66,19 @@ public class DiscordSocketClient {
         return requestBuilder.build();
     }
 
-    public static Set<DiscordAccount> getDiscordAccountList() {
-        return discordAccountList;
+    public static DiscordAccount buildAccount(CmjAccountDetailVO param) {
+        DiscordAccount discordAccount = new DiscordAccount(param.getUserName(), param.getUserToken(), param.getUserAgent());
+        List<CmjChannelConfigModel> channelConfigList = param.getChannelConfigList();
+        discordAccount.setChannelConfigList(
+                channelConfigList.stream().map(channelConfig -> Tuples.of(channelConfig.getGuildId(), channelConfig.getChannelId())).collect(Collectors.toList())
+        );
+        discordAccount.setChannelIds(param.getChannelIds());
+        discordAccount.setAutoData(SocketClientParamConstants.getDefaultAutoData(discordAccount));
+        discordAccount.setIfProxy(param.getIfProxy());
+        return discordAccount;
+    }
+
+    public static Map<String, DiscordAccount> getDiscordAccountMap() {
+        return discordAccountMap;
     }
 }

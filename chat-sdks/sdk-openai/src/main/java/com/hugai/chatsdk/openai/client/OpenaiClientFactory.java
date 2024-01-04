@@ -53,4 +53,9 @@ public class OpenaiClientFactory implements AccountCacheManager {
     public void cacheRemove(String baseUrl) {
         serviceCacheMap.remove(baseUrl);
     }
+
+    @Override
+    public void cacheAll() {
+        serviceCacheMap.clear();
+    }
 }

@@ -4,12 +4,14 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.hugai.common.enums.OpenConfigUnique;
+import com.hugai.common.modules.entity.system.model.SysOpenConfigModel;
+import com.hugai.common.webApi.openCnofig.OpenConfigCacheFlush;
+import com.hugai.common.webApi.openCnofig.OpenConfigWebApi;
 import com.hugai.framework.file.constants.FileStrategyEnum;
 import com.hugai.framework.file.constants.FileTypeRootEnum;
 import com.hugai.framework.file.entity.FileResponse;
 import com.hugai.framework.file.plugins.AbstractPluginsImpl;
-import com.hugai.common.modules.entity.system.model.SysMinioSecretModel;
-import com.hugai.modules.system.service.SysMinioSecretService;
 import com.org.bebas.exception.BusinessException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
@@ -32,9 +34,9 @@ import java.util.Objects;
  */
 @Slf4j
 @Service
-public class QiniuPluginsImpl extends AbstractPluginsImpl {
+public class QiniuPluginsImpl extends AbstractPluginsImpl implements OpenConfigCacheFlush {
 
-    protected SysMinioSecretModel minioSecretConfig;
+    protected SysOpenConfigModel openConfigModel;
 
     private Configuration configuration;
 
@@ -42,16 +44,12 @@ public class QiniuPluginsImpl extends AbstractPluginsImpl {
 
     private UploadManager uploadManager;
 
+    private final OpenConfigWebApi openConfigWebApi;
+
     @Autowired
-    public QiniuPluginsImpl(SysMinioSecretService sysMinioSecretService) {
-        this.minioSecretConfig = sysMinioSecretService.getStrategySecretConfig(FileStrategyEnum.qiniu.name());
-        if (Objects.nonNull(this.minioSecretConfig)) {
-            this.auth = Auth.create(this.minioSecretConfig.getAccessKey(), this.minioSecretConfig.getSecretKey());
-            this.configuration = new Configuration(Region.autoRegion());
-            this.uploadManager = new UploadManager(this.configuration);
-        }else{
-            log.warn("[七牛云]文件存储策略配置参数未找到！");
-        }
+    public QiniuPluginsImpl(OpenConfigWebApi openConfigWebApi) {
+        this.openConfigWebApi = openConfigWebApi;
+        this.flushCache(FileStrategyEnum.qiniu.name());
     }
 
     /**
@@ -88,11 +86,11 @@ public class QiniuPluginsImpl extends AbstractPluginsImpl {
             }
             log.info("[七牛云]文件上传响应：{}",JSON.toJSONString(response));
 
-            String finalFilePath = this.minioSecretConfig.getDataHandleDomain() + "/" + responseFilePath;
+            String finalFilePath = this.openConfigModel.getDataHandleDomain() + "/" + responseFilePath;
 
             String tokenFilePath = auth.privateDownloadUrl(finalFilePath,36000);
 
-            String s = StrUtil.subAfter(tokenFilePath, this.minioSecretConfig.getDataHandleDomain(), true);
+            String s = StrUtil.subAfter(tokenFilePath, this.openConfigModel.getDataHandleDomain(), true);
             FileResponse fileResponse = FileResponse.builder()
                     .fileName(md5 + suffix)
                     .filePath(s)
@@ -107,7 +105,7 @@ public class QiniuPluginsImpl extends AbstractPluginsImpl {
     }
 
     private String getToken() {
-        return auth.uploadToken(this.minioSecretConfig.getBucketName());
+        return auth.uploadToken(this.openConfigModel.getBucketName());
     }
 
     /**
@@ -119,4 +117,22 @@ public class QiniuPluginsImpl extends AbstractPluginsImpl {
     protected String getResourceSavePath() {
         return "";
     }
+
+
+    @Override
+    public void flushCache(String uniqueKey) {
+        if (!uniqueKey.equals(FileStrategyEnum.qiniu.name())) {
+            return;
+        }
+        this.openConfigModel = this.openConfigWebApi.queryOpenConfigByUniqueKey(OpenConfigUnique.qiniu.getUniqueKey());
+        if (Objects.nonNull(this.openConfigModel)) {
+            this.auth = Auth.create(this.openConfigModel.getAccessKey(), this.openConfigModel.getSecretKey());
+            this.configuration = new Configuration(Region.autoRegion());
+            this.uploadManager = new UploadManager(this.configuration);
+            log.info("[七牛云]配置更新：{}", JSON.toJSONString(openConfigModel));
+        } else {
+            log.warn("[七牛云]文件存储策略配置参数未找到！");
+        }
+    }
+
 }

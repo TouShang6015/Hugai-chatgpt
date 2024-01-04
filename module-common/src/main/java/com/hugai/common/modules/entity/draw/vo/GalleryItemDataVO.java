@@ -45,5 +45,14 @@ public class GalleryItemDataVO {
      * 图片地址
      */
     private String imgUrl;
+    /**
+     * 是否公开
+     */
+    private String ifCommon;
+    /**
+     * 公开主键ID
+     */
+    private Long galleryCommonId;
+
 
 }

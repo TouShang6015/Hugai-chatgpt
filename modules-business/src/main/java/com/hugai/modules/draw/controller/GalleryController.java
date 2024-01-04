@@ -1,18 +1,21 @@
 package com.hugai.modules.draw.controller;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hugai.common.constants.ApiPrefixConstant;
-import com.hugai.core.security.context.SecurityContextUtil;
+import com.hugai.common.constants.Constants;
+import com.hugai.common.modules.entity.draw.model.GalleryCommonModel;
 import com.hugai.common.modules.entity.draw.vo.GalleryItemDataVO;
 import com.hugai.common.modules.entity.session.model.SessionRecordDrawModel;
+import com.hugai.common.modules.entity.user.model.UserInfoModel;
+import com.hugai.core.security.context.SecurityContextUtil;
+import com.hugai.modules.draw.service.GalleryCommonService;
 import com.hugai.modules.session.service.SessionInfoDrawService;
 import com.hugai.modules.session.service.SessionRecordDrawService;
-import com.hugai.common.modules.entity.user.model.UserInfoModel;
 import com.hugai.modules.user.service.UserInfoService;
+import com.org.bebas.core.function.OR;
 import com.org.bebas.utils.OptionalUtil;
 import com.org.bebas.utils.page.PageUtil;
 import com.org.bebas.utils.result.Result;
@@ -24,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author WuHao
@@ -41,20 +43,29 @@ public class GalleryController {
 
     private final SessionInfoDrawService sessionInfoDrawService;
 
+    private final GalleryCommonService galleryCommonService;
+
     private final UserInfoService userInfoService;
+
+    @ApiOperation(value = "设置图片公开")
+    @PostMapping("/setDrawCommon")
+    public Result setDrawCommon(@RequestBody GalleryCommonModel param) {
+        GalleryCommonModel galleryCommonModel = galleryCommonService.setDrawCommon(param);
+        return Result.success(galleryCommonModel);
+    }
+
+    @ApiOperation(value = "取消图片公开")
+    @PostMapping("/cancelDrawCommon")
+    public Result cancelDrawCommon(@RequestBody GalleryCommonModel param) {
+        galleryCommonService.removeDrawCommon(param);
+        return Result.success();
+    }
 
     @PostMapping("/commonGallery")
     @ApiOperation(value = "公开画廊")
     public Result commonGallery(@RequestBody SessionRecordDrawModel param) {
-        LambdaQueryWrapper<SessionRecordDrawModel> wrapper = Wrappers.lambdaQuery();
-        wrapper
-                .eq(SessionRecordDrawModel::getId,1)
-                .orderByDesc(SessionRecordDrawModel::getCreateTime)
-        ;
-        IPage<SessionRecordDrawModel> page = sessionRecordDrawService.page(PageUtil.pageBean(param), wrapper);
-        IPage<SessionRecordDrawModel> resultData = PageUtil.convert(page, modelList ->
-                modelList.stream().filter(item -> StrUtil.isNotEmpty(item.getDrawImgUrl())).collect(Collectors.toList())
-        );
+        IPage<SessionRecordDrawModel> page = galleryCommonService.queryCommonSessionRecord(param);
+        IPage<GalleryItemDataVO> resultData = PageUtil.convert(page, this::handlerRecordConvertGalleyShowData);
         return Result.success(resultData);
     }
 
@@ -78,6 +89,23 @@ public class GalleryController {
         IPage<SessionRecordDrawModel> page = sessionRecordDrawService.page(PageUtil.pageBean(param), wrapper);
 
         IPage<GalleryItemDataVO> resultData = PageUtil.convert(page, this::handlerRecordConvertGalleyShowData);
+
+        OR.run(page.getRecords(), CollUtil::isNotEmpty, records -> {
+            List<Long> sessionRecordDrawIds = records.stream().map(SessionRecordDrawModel::getId).distinct().toList();
+            List<GalleryCommonModel> galleryCommonModels = OptionalUtil.ofNullList(
+                    galleryCommonService.lambdaQuery().select(GalleryCommonModel::getId, GalleryCommonModel::getSessionRecordDrawId).in(GalleryCommonModel::getSessionRecordDrawId, sessionRecordDrawIds).list()
+            );
+
+            resultData.getRecords().forEach(item -> {
+                GalleryCommonModel galleryCommonModel = galleryCommonModels.stream().filter(e -> e.getSessionRecordDrawId().equals(item.getId())).findFirst().orElse(null);
+                item.setIfCommon(Constants.BOOLEAN.FALSE);
+                if (Objects.nonNull(galleryCommonModel)) {
+                    item.setIfCommon(Constants.BOOLEAN.TRUE);
+                    item.setGalleryCommonId(galleryCommonModel.getId());
+                }
+            });
+
+        });
         return Result.success(resultData);
     }
 

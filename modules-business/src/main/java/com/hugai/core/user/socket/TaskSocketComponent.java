@@ -48,7 +48,7 @@ public class TaskSocketComponent {
                 }
             });
         }
-        log.debug("[User Socket任务 - 清理无用的socket连接] 时间：{},清理完成：{}个", DateUtils.nowDateFormat(), counter.get());
+        log.info("[User Socket任务 - 清理无用的socket连接] 时间：{},清理完成：{}个", DateUtils.nowDateFormat(), counter.get());
     }
 
     /**

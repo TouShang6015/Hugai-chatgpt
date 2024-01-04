@@ -11,6 +11,7 @@ import com.org.bebas.mapper.utils.ModelUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,10 +30,21 @@ public class ChatModelServiceImpl extends ServiceImpl<ChatModelMapper, ChatModel
     private RedisUtil redisUtil;
 
     @Override
+    public ChatModelModel getById(Serializable id) {
+        String redisKey = MAIN_KEY + "id:" + id;
+        ChatModelModel cacheObject = redisUtil.getCacheObject(redisKey);
+        if (Objects.isNull(cacheObject)) {
+            cacheObject = super.lambdaQuery().eq(ChatModelModel::getId, id).one();
+            redisUtil.setCacheObject(redisKey, cacheObject);
+        }
+        return cacheObject;
+    }
+
+    @Override
     public ChatModelModel getByUniqueKey(String key) {
         if (StrUtil.isEmpty(key))
             return null;
-        String redisKey = MAIN_KEY + "uniqueKey:";
+        String redisKey = MAIN_KEY + "uniqueKey:" + key;
         ChatModelModel cacheObject = redisUtil.getCacheObject(redisKey);
         if (Objects.isNull(cacheObject)) {
             cacheObject = super.lambdaQuery().eq(ChatModelModel::getUniqueKey, key).one();

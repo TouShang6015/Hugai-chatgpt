@@ -1,12 +1,11 @@
 package com.hugai.core.security.service;
 
 import com.hugai.common.constants.SecurityConstant;
-import com.hugai.config.properties.TokenConfig;
 import com.hugai.common.entity.security.LoginUserContextBean;
+import com.hugai.config.properties.TokenConfig;
 import com.hugai.modules.system.service.ISysUserTokenService;
 import com.org.bebas.utils.ServletUtils;
 import com.org.bebas.utils.StringUtils;
-import com.org.bebas.utils.ip.AddressUtils;
 import com.org.bebas.utils.ip.IpUtils;
 import com.org.bebas.utils.uuid.IdUtils;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -139,7 +138,7 @@ public class TokenService {
         UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
         String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
         loginUser.setIpaddr(ip);
-        loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
+//        loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
         loginUser.setBrowser(userAgent.getBrowser().getName());
         loginUser.setOs(userAgent.getOperatingSystem().getName());
     }

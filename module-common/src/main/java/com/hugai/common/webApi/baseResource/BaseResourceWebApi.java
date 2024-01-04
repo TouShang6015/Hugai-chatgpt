@@ -30,5 +30,7 @@ public interface BaseResourceWebApi {
      */
     ResourceDrawVO getResourceDraw();
 
+    ResourceSmsConfigVO getResourceSmsConfig();
+
 
 }

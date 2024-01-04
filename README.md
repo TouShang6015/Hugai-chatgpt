@@ -4,7 +4,7 @@
 
 HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GPT对话，AI绘图Midjourney、Stable Diffusion、openai，前后端源码完全开源。
 
-> 声明：基于 Apache-2.0 协议，免费且作为开源学习使用，未经本人同意不可用于商业项目。
+> 声明：基于 Apache-2.0 协议，免费且作为开源学习使用，开源不易，二开或商用请注明原作者。
 
 - HugAi后端源码地址：
     - [https://gitee.com/toushang6015/hugai-chatgpt](https://gitee.com/toushang6015/hugai-chatgpt)
@@ -39,6 +39,8 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GP
 ✅	支持多用户登陆：管理员、用户、游客，动态路由鉴权，不侵入代码
 
 ✅	支持本地、服务器、minio云端文件存储，多种文件上传策略动态切换
+
+> 已接入大模型：OpenAi、讯飞星火
 
 ## 技术栈
 

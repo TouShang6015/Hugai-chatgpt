@@ -3,17 +3,16 @@ package com.hugai.modules.user.service.auth.impl;
 import cn.hutool.core.lang.Assert;
 import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.service.CaptchaService;
+import com.hugai.common.entity.security.LoginUserContextBean;
 import com.hugai.common.enums.LoginTypeEnum;
+import com.hugai.common.modules.entity.system.model.SysUserTokenModel;
+import com.hugai.common.modules.entity.system.vo.auth.LoginBody;
 import com.hugai.common.utils.RsaUtils;
 import com.hugai.common.webApi.baseResource.BaseResourceWebApi;
 import com.hugai.config.properties.RsaConfig;
-import com.hugai.common.entity.security.LoginUserContextBean;
 import com.hugai.core.security.manager.UserAuthenticationToken;
 import com.hugai.core.security.manager.UserTouristAuthenticationToken;
 import com.hugai.core.security.service.TokenService;
-import com.hugai.common.modules.entity.system.model.SysUserTokenModel;
-import com.hugai.common.modules.entity.system.vo.auth.LoginBody;
-import com.hugai.common.entity.baseResource.ResourceMainVO;
 import com.hugai.modules.system.service.ISysLogininforService;
 import com.hugai.modules.system.service.ISysUserTokenService;
 import com.hugai.modules.user.service.UserInfoService;
@@ -78,12 +77,11 @@ public class UserLoginServiceImpl implements UserLoginService {
      */
     @Override
     public LoginUserContextBean doLogin(LoginBody loginBody) {
-        ResourceMainVO resourceMainVO = baseResourceWebApi.getResourceMain();
-        if (resourceMainVO.getAuthCodeOpen()) {
-            Assert.notNull(loginBody.getCaptcha(),() -> new BusinessException("验证码不能为空"));
-            ResponseModel verification = captchaService.verification(loginBody.getCaptcha());
-            Assert.isFalse(!verification.isSuccess(),() -> new BusinessException("校验码有误"));
-        }
+
+        Assert.notNull(loginBody.getCaptcha(),() -> new BusinessException("验证码不能为空"));
+        ResponseModel verification = captchaService.verification(loginBody.getCaptcha());
+        Assert.isFalse(!verification.isSuccess(),() -> new BusinessException("校验码有误"));
+
         String password = null;
         try {
             // 解密前端加密后的密码

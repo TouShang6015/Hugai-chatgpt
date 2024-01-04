@@ -74,10 +74,10 @@ public class DiscordSocketCommonListener extends WebSocketListener {
 
     private void doResumeOrIdentify() {
         if (CharSequenceUtil.isBlank(this.sessionId)) {
-            log.debug("[Discord] - Account：{} | Send identify msg.", this.discordAccount.getUserName());
+            log.info("[Discord] - Account：{} | Send identify msg.", this.discordAccount.getUserName());
             send(WebSocketCode.IDENTIFY, this.discordAccount.getAutoData());
         } else {
-            log.debug("[Discord] - Account:{} | Send resume msg.", this.discordAccount.getUserName());
+            log.info("[Discord] - Account:{} | Send resume msg.", this.discordAccount.getUserName());
             send(WebSocketCode.RESUME, DataObject.empty()
                     .put("token", this.discordAccount.getUserToken())
                     .put("session_id", this.sessionId)
@@ -101,14 +101,14 @@ public class DiscordSocketCommonListener extends WebSocketListener {
             this.sessionId = content.getString("session_id");
             this.resumeGatewayUrl = content.getString("resume_gateway_url");
             DiscordSocketAccountPool.update(this.discordAccount.getUserName(), this.sessionId);
-            log.debug("[Discord] sessionId Update，Account：{},sessionId : {}", this.discordAccount.getUserName(), this.sessionId);
+            log.info("[Discord] sessionId Update，Account：{},sessionId : {}", this.discordAccount.getUserName(), this.sessionId);
             connectSuccess();
             return;
         }
         try {
             SocketMessageHandlerEvent.init(discordAccount, raw).execute();
         } catch (Exception e) {
-            log.error("[Discord] - Account：{} | Handle message error", this.discordAccount.getUserName(), e);
+            log.error("[Discord] - Account：{} | Handle message error | raw: {}", this.discordAccount.getUserName(), raw.toString());
         }
     }
 

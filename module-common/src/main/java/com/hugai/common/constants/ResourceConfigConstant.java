@@ -16,4 +16,6 @@ public interface ResourceConfigConstant {
 
     String DRAW = "draw";
 
+    String SMS_CONFIG = "smsConfig";
+
 }

@@ -68,6 +68,10 @@ public interface IBaseResourceConfigService extends IService<BaseResourceConfigM
         return queryValueByConfigKey(ResourceConfigConstant.DRAW, ResourceDrawVO.class, true);
     }
 
+    default ResourceSmsConfigVO getResourceSmsConfig() {
+        return queryValueByConfigKey(ResourceConfigConstant.SMS_CONFIG, ResourceSmsConfigVO.class, true);
+    }
+
     /**
      * 根据configKey编辑configValue
      *

@@ -56,12 +56,13 @@ public abstract class MessageStrategyAbstract {
         String guildId = message.getString("guild_id");
         String channelId = message.getString("channel_id");
         String messageId = message.getString("id");
-        log.debug("Finish Task - [{}] - imgurl: {} | finalPrompt:{}", this.getType().name(), imageUrl, finalPrompt);
+        log.info("Finish Task - [{}] - imgurl: {} | finalPrompt:{}", this.getType().name(), imageUrl, finalPrompt);
 
         TaskObj taskQueueBean = TaskQueueManager.get(finalPrompt, guildId, channelId, this.getType().name());
         if (Objects.nonNull(taskQueueBean)) {
             taskQueueBean.setStrategyType(this.getType().name());
             taskQueueBean.setPrompt(finalPrompt);
+            taskQueueBean.setId(messageId);
             MessageResponseData responseData = taskQueueBean.getResponseData();
             responseData.setImgUrl(imageUrl);
             responseData.setMessageId(messageId);

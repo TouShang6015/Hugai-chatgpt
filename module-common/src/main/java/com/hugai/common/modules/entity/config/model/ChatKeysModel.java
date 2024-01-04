@@ -35,6 +35,12 @@ public class ChatKeysModel extends BaseModel {
 	@ApiModelProperty(value = "app_id", dataType = "String")
 	private String appId;
 	/**
+	 * apiSecret
+	 */
+	@JsonSerialize(using = SensitiveStringSerializer.class)
+	@ApiModelProperty(value = "apiSecret", dataType = "String")
+	private String apiSecret;
+	/**
 	 * apiToken
 	 */
 	@JsonSerialize(using = SensitiveStringSerializer.class)

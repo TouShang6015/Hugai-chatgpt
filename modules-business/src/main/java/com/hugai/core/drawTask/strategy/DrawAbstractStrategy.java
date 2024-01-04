@@ -128,7 +128,7 @@ public abstract class DrawAbstractStrategy<MappingCls> implements DrawApiService
 
                     ChatBusinessService chatBusinessService = chatBusinessServiceContext.getService(chatSdkAccount.getSdkUniqueKey(), () -> new BusinessException("系统未找到对应对话模型"));
 
-                    ChatSdkStorageResponse response = chatBusinessService.ChatCompletion(CollUtil.newArrayList(RecordData.builder().role(ChatRole.user.name()).content(drawPromptOptimizeContent + prompt.get()).build()), chatSdkAccount);
+                    ChatSdkStorageResponse response = chatBusinessService.chatCompletion(CollUtil.newArrayList(RecordData.builder().role(ChatRole.user.name()).content(drawPromptOptimizeContent + prompt.get()).build()), chatSdkAccount);
 
                     String content = response.getResponseRecordData().stream().findFirst().orElseGet(RecordData::new).getContent();
                     prompt.set(content);

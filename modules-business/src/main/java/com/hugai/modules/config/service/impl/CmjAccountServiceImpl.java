@@ -8,9 +8,12 @@ import com.hugai.common.modules.entity.config.convert.CmjAccountConvert;
 import com.hugai.common.modules.entity.config.model.CmjAccountModel;
 import com.hugai.common.modules.entity.config.model.CmjChannelConfigModel;
 import com.hugai.common.modules.entity.config.vo.CmjAccountDetailVO;
+import com.hugai.core.midjourney.client.DiscordSocketClient;
+import com.hugai.core.midjourney.common.entity.DiscordAccount;
 import com.hugai.modules.config.mapper.CmjAccountMapper;
 import com.hugai.modules.config.mapper.CmjChannelConfigMapper;
 import com.hugai.modules.config.service.ICmjAccountService;
+import com.org.bebas.core.function.OR;
 import com.org.bebas.exception.BusinessException;
 import com.org.bebas.mapper.cache.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -30,18 +34,40 @@ import java.util.stream.Collectors;
 @Service
 public class CmjAccountServiceImpl extends ServiceImpl<CmjAccountMapper, CmjAccountModel> implements ICmjAccountService {
 
+    public static List<CmjAccountDetailVO> accountDetailList;
+
     @Resource
     private CmjChannelConfigMapper channelConfigMapper;
 
     @Override
     public List<CmjAccountDetailVO> getAccountAll() {
+        return accountDetailList;
+    }
+
+    @Override
+    public void resetStopMjSocket() {
+        Map<String, DiscordAccount> discordAccountMap = DiscordSocketClient.getDiscordAccountMap();
+
+        OR.run(this.getAccountAll(),CollUtil::isNotEmpty,accountAll -> {
+            for (CmjAccountDetailVO accountDetailVO : accountAll) {
+                if (!discordAccountMap.containsKey(accountDetailVO.getUserName()) && accountDetailVO.getAccountStatus().equals(AccountStatus.NORMAL.getKey())) {
+
+                    DiscordAccount discordAccount = DiscordSocketClient.buildAccount(accountDetailVO);
+                    DiscordSocketClient.connection(discordAccount);
+
+                }
+            }
+        });
+    }
+
+    @Override
+    public void flushCache() {
         List<CmjAccountModel> accountModelList = this.list();
         if (CollUtil.isEmpty(accountModelList)) {
-            return null;
+            return;
         }
-        List<CmjAccountModel> filterNormalAccountList = accountModelList.stream().filter(item -> AccountStatus.NORMAL.getKey().equals(item.getAccountStatus())).toList();
         List<CmjChannelConfigModel> channelConfigModelList = channelConfigMapper.selectList(null);
-        return filterNormalAccountList.stream().map(accountModel -> {
+        accountDetailList = accountModelList.stream().map(accountModel -> {
             CmjAccountDetailVO vo = CmjAccountConvert.INSTANCE.convertDetailVo(accountModel);
             List<CmjChannelConfigModel> channelConfigList = channelConfigModelList.stream().filter(channelConfig -> accountModel.getId().equals(channelConfig.getCmjAccountId())).collect(Collectors.toList());
             vo.setChannelConfigList(channelConfigList);

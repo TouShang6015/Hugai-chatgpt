@@ -10,11 +10,13 @@ import com.hugai.common.modules.entity.user.convert.UserInfoConvert;
 import com.hugai.common.modules.entity.user.model.UserInfoModel;
 import com.hugai.common.modules.entity.user.valid.GroupRegisterByEmail;
 import com.hugai.common.modules.entity.user.vo.ClientRegisterBody;
+import com.hugai.common.support.sms.SmsServiceContext;
+import com.hugai.common.support.sms.enums.SmsCodeEnum;
+import com.hugai.common.support.sms.enums.SmsStrategy;
+import com.hugai.common.support.sms.enums.SmsTypeEnum;
+import com.hugai.common.support.sms.service.SmsSendService;
 import com.hugai.common.utils.NameRandomUtil;
 import com.hugai.common.webApi.baseResource.BaseResourceWebApi;
-import com.hugai.core.mail.enums.SmsCodeEnum;
-import com.hugai.core.mail.enums.SmsTypeEnum;
-import com.hugai.core.mail.service.SmsSendService;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.modules.user.service.UserInfoService;
 import com.hugai.modules.user.service.auth.UserRegisterService;
@@ -44,7 +46,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
 
     private final BaseResourceWebApi baseResourceWebApi;
 
-    private final SmsSendService smsSendService;
+    private final SmsServiceContext smsServiceContext;
 
     /**
      * 游客注册
@@ -90,6 +92,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         }
 
         // 验证码校验
+        SmsSendService smsSendService = smsServiceContext.getService(SmsStrategy.mail.name());
         SmsCodeEnum smsCodeResult = smsSendService.verifyCode(SmsTypeEnum.REGISTER, param.getEmail(), param.getCode());
         if (!smsCodeResult.success()) {
             throw new BusinessException(smsCodeResult.getMessage());

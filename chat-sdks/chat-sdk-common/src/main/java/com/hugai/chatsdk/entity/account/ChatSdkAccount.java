@@ -11,6 +11,7 @@ import java.util.Map;
 @Data
 public class ChatSdkAccount {
 
+    private Long userId;
     /**
      * 平台唯一标识
      */
@@ -31,6 +32,10 @@ public class ChatSdkAccount {
      * appid
      */
     private String appId;
+    /**
+     * apiSecret
+     */
+    private String apiSecret;
 
     /**
      * 单次token值
@@ -46,5 +51,7 @@ public class ChatSdkAccount {
      * 扩展参数
      */
     private Map<String, Object> extendParam;
+
+    private String chatRequestParamJson;
 
 }

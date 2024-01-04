@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DiscordSocketAccountPool {
 
-    private static final ConcurrentHashMap<String, DiscordAccountCacheObj> CACHE = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<String, DiscordAccountCacheObj> CACHE = new ConcurrentHashMap<>();
 
     public static DiscordAccountCacheObj get(String userName) {
         return CACHE.get(userName);
