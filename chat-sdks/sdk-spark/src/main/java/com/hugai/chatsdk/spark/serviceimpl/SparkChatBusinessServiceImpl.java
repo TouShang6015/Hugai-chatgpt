@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author WuHao
@@ -119,7 +120,7 @@ public class SparkChatBusinessServiceImpl implements ChatBusinessService<ChatReq
                     chatMessage.setRole(item.getRole());
                     chatMessage.setContent(item.getContent());
                     return chatMessage;
-                }).toList()
+                }).collect(Collectors.toList())
         );
         payload.setMessage(message);
 
