@@ -1,6 +1,6 @@
 package com.hugai.core.chat.account.service;
 
-import com.hugai.chatsdk.entity.account.ChatSdkAccount;
+import com.hugai.chatsdk.common.entity.account.ChatSdkAccount;
 import com.hugai.common.enums.flow.ChatSdkType;
 import com.hugai.common.modules.entity.config.model.ChatModelModel;
 import com.hugai.common.modules.entity.config.model.ChatSdkModel;

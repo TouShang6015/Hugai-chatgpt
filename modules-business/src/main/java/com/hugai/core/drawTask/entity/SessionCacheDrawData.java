@@ -1,6 +1,6 @@
 package com.hugai.core.drawTask.entity;
 
-import com.hugai.chatsdk.context.ChatBusinessServiceContext;
+import com.hugai.chatsdk.common.context.ChatBusinessServiceContext;
 import com.hugai.core.chat.account.SdkAccountBuildContext;
 import lombok.Data;
 

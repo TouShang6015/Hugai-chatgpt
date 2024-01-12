@@ -1,6 +1,6 @@
 package com.hugai.core.drawTask.context;
 
-import com.hugai.chatsdk.context.ChatBusinessServiceContext;
+import com.hugai.chatsdk.common.context.ChatBusinessServiceContext;
 import com.hugai.common.modules.entity.draw.model.TaskDrawModel;
 import com.hugai.core.chat.account.SdkAccountBuildContext;
 import com.hugai.core.drawTask.entity.CacheService;

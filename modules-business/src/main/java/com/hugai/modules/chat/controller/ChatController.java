@@ -2,8 +2,8 @@ package com.hugai.modules.chat.controller;
 
 import com.hugai.common.constants.ApiPrefixConstant;
 import com.hugai.common.constants.LockGroupConstant;
-import com.hugai.chatsdk.handler.MessageSendHandler;
-import com.hugai.chatsdk.handler.pool.SessionMessageSendPool;
+import com.hugai.chatsdk.common.handler.MessageSendHandler;
+import com.hugai.chatsdk.common.handler.pool.SessionMessageSendPool;
 import com.hugai.core.security.context.SecurityContextUtil;
 import com.hugai.core.security.context.UserThreadLocal;
 import com.hugai.core.chat.entity.ChatRequestParam;

@@ -1,9 +1,9 @@
 package com.hugai.modules.chat.service.impl;
 
 import cn.hutool.core.lang.Assert;
-import com.hugai.chatsdk.entity.account.ChatSdkAccount;
-import com.hugai.chatsdk.entity.session.RecordData;
-import com.hugai.chatsdk.service.ChatBusinessService;
+import com.hugai.chatsdk.common.entity.account.ChatSdkAccount;
+import com.hugai.chatsdk.common.entity.session.RecordData;
+import com.hugai.chatsdk.common.service.ChatBusinessService;
 import com.hugai.common.modules.entity.config.model.ChatModelModel;
 import com.hugai.common.modules.entity.config.model.ChatSdkModel;
 import com.hugai.common.support.strategy.StrategyServiceContext;

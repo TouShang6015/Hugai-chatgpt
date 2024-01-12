@@ -1,8 +1,8 @@
 package com.hugai.modules.session.service;
 
 import cn.hutool.core.collection.CollUtil;
-import com.hugai.chatsdk.entity.ChatSdkStorageResponse;
-import com.hugai.chatsdk.entity.session.RecordData;
+import com.hugai.chatsdk.common.entity.ChatSdkStorageResponse;
+import com.hugai.chatsdk.common.entity.session.RecordData;
 import com.hugai.common.modules.entity.session.model.SessionRecordModel;
 import com.hugai.core.chat.entity.ChatRequestParam;
 import com.org.bebas.exception.BusinessException;

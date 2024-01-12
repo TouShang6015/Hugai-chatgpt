@@ -2,7 +2,7 @@ package com.hugai.core.chat.sessionType.strategy;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.hugai.chatsdk.utils.TokenCalculateUtil;
+import com.hugai.chatsdk.common.utils.TokenCalculateUtil;
 import com.hugai.common.constants.Constants;
 import com.hugai.common.enums.ChatRole;
 import com.hugai.common.enums.SessionType;

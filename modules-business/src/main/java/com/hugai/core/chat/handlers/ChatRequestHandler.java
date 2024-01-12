@@ -1,9 +1,9 @@
 package com.hugai.core.chat.handlers;
 
 import cn.hutool.core.collection.CollUtil;
-import com.hugai.chatsdk.entity.convert.RecordConvert;
-import com.hugai.chatsdk.entity.session.RecordData;
-import com.hugai.chatsdk.utils.TokenCalculateUtil;
+import com.hugai.chatsdk.common.entity.convert.RecordConvert;
+import com.hugai.chatsdk.common.entity.session.RecordData;
+import com.hugai.chatsdk.common.utils.TokenCalculateUtil;
 import com.hugai.common.constants.Constants;
 import com.hugai.common.enums.ChatRole;
 import com.hugai.common.modules.entity.config.model.ChatModelModel;

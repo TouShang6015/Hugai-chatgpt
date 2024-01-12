@@ -1,7 +1,7 @@
 package com.hugai.listener;
 
 import com.alibaba.fastjson2.JSON;
-import com.hugai.chatsdk.context.ChatBusinessServiceContext;
+import com.hugai.chatsdk.common.context.ChatBusinessServiceContext;
 import com.hugai.common.constants.MQConstants;
 import com.hugai.common.modules.entity.draw.model.TaskDrawModel;
 import com.hugai.core.chat.account.SdkAccountBuildContext;
