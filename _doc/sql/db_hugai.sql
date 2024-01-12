@@ -1021,6 +1021,7 @@ CREATE TABLE `tb_chat_keys`  (
 -- Records of tb_chat_keys
 -- ----------------------------
 INSERT INTO `tb_chat_keys` VALUES (1731485028650647554, '2023-12-04 09:26:14', '1000000000', '2024-01-04 14:04:54', '1000000000', 0, 0, 1, NULL, NULL, 'sk-xxxxxxxxxxxxxx', '1', NULL, '0', 5, NULL);
+INSERT INTO `tb_chat_keys` VALUES (1745377298059681793, '2024-01-11 17:29:10', '1000000000', '2024-01-11 17:29:10', '1000000000', 0, 0, 1745376785238908929, 'appid', 'client_secret', 'client_id', 'xxxx', NULL, '0', 5, NULL);
 
 -- ----------------------------
 -- Table structure for tb_chat_model
@@ -1055,6 +1056,9 @@ INSERT INTO `tb_chat_model` VALUES (1730486574000439297, '2023-12-01 15:18:44', 
 INSERT INTO `tb_chat_model` VALUES (1739829741225037825, '2023-12-27 10:05:09', '1000000000', '2023-12-27 16:03:16', '1000000000', 0, 0, 1739820877465280513, 'spark15', '讯飞星火v1.5', 1024, 4028, 'spark15', 1, '1', 'https://spark-api.xf-yun.com/v1.1/chat', '0');
 INSERT INTO `tb_chat_model` VALUES (1739909284128403457, '2023-12-27 15:21:13', '1000000000', '2023-12-27 16:03:15', '1000000000', 0, 0, 1739820877465280513, 'spark20', '讯飞星火v2.0', 2048, 8192, 'spark20', 2, '1', 'https://spark-api.xf-yun.com/v2.1/chat', '0');
 INSERT INTO `tb_chat_model` VALUES (1739909480631545858, '2023-12-27 15:22:00', '1000000000', '2023-12-28 09:34:52', '1000000000', 0, 0, 1739820877465280513, 'spark30', '讯飞星火v3.0', 2048, 8192, 'spark30', 3, '1', 'https://spark-api.xf-yun.com/v3.1/chat', '0');
+INSERT INTO `tb_chat_model` VALUES (1745636161061154818, '2024-01-12 10:37:47', '1000000000', '2024-01-12 10:40:35', '1000000000', 0, 0, 1745376785238908929, 'ErnieBot-turbo', '(百度) 文心一言3.5 Turbo', 1024, 4096, 'ErnieBot-turbo', 1, '1', 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant', '0');
+INSERT INTO `tb_chat_model` VALUES (1745698917705613314, '2024-01-12 14:47:10', '1000000000', '2024-01-12 14:47:10', '1000000000', 0, 0, 1745376785238908929, 'ERNIE-Bot-4.0', '(百度) 文心一言 4.0', 1024, 4096, 'ERNIE-Bot-4.0', 1, '1', 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions_pro', '0');
+
 
 -- ----------------------------
 -- Table structure for tb_chat_sdk
@@ -1081,6 +1085,7 @@ CREATE TABLE `tb_chat_sdk`  (
 -- ----------------------------
 INSERT INTO `tb_chat_sdk` VALUES (1, NULL, NULL, NULL, NULL, 0, 0, 'openai', 'OpenAi', '0', 'random', '0');
 INSERT INTO `tb_chat_sdk` VALUES (1739820877465280513, '2024-01-04 14:05:12', '1000000000', '2024-01-04 14:05:12', '1000000000', 0, 0, 'spark', '讯飞星火', '0', 'random', '1');
+INSERT INTO `tb_chat_sdk` VALUES (1745376785238908929, '2024-01-11 17:27:07', '1000000000', '2024-01-11 17:27:07', '1000000000', 0, 0, 'baidu', '百度千帆', '0', 'random', '1');
 
 -- ----------------------------
 -- Table structure for tb_chat_sdk_host

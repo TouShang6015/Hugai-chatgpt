@@ -15,6 +15,7 @@
         <module>sdk-openai</module>
         <module>chat-sdk-common</module>
         <module>sdk-spark</module>
+        <module>sdk-baidu</module>
     </modules>
 
     <properties>

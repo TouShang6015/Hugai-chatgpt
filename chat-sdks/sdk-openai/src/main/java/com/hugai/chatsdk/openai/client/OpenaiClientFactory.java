@@ -1,10 +1,10 @@
 package com.hugai.chatsdk.openai.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hugai.chatsdk.accountPool.AccountPoolManager;
-import com.hugai.chatsdk.entity.account.ChatSdkAccount;
-import com.hugai.chatsdk.entity.account.ClientParam;
-import com.hugai.chatsdk.service.AccountCacheManager;
+import com.hugai.chatsdk.common.accountPool.AccountPoolManager;
+import com.hugai.chatsdk.common.entity.account.ChatSdkAccount;
+import com.hugai.chatsdk.common.entity.account.ClientParam;
+import com.hugai.chatsdk.common.service.AccountCacheManager;
 import com.theokanning.openai.client.OpenAiApi;
 import com.theokanning.openai.service.OpenAiService;
 import okhttp3.OkHttpClient;

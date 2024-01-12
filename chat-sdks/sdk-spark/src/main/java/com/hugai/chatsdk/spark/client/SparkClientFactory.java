@@ -1,8 +1,8 @@
 package com.hugai.chatsdk.spark.client;
 
-import com.hugai.chatsdk.entity.account.ChatSdkAccount;
-import com.hugai.chatsdk.entity.account.ClientParam;
-import com.hugai.chatsdk.service.AccountCacheManager;
+import com.hugai.chatsdk.common.entity.account.ChatSdkAccount;
+import com.hugai.chatsdk.common.entity.account.ClientParam;
+import com.hugai.chatsdk.common.service.AccountCacheManager;
 import com.hugai.chatsdk.spark.utils.SparkUtil;
 import com.org.bebas.exception.BusinessException;
 import okhttp3.OkHttpClient;

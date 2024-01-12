@@ -3,7 +3,7 @@ package com.hugai.core.drawTask.strategy.impl;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONWriter;
-import com.hugai.chatsdk.entity.account.ChatSdkAccount;
+import com.hugai.chatsdk.common.entity.account.ChatSdkAccount;
 import com.hugai.chatsdk.openai.client.OpenaiClientFactory;
 import com.hugai.common.enums.flow.ChatSdkType;
 import com.hugai.core.drawTask.entity.CacheService;
