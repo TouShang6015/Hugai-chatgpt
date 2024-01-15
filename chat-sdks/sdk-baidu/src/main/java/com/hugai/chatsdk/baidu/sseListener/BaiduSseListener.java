@@ -6,6 +6,7 @@ import com.hugai.chatsdk.common.entity.ChatSdkStorageResponse;
 import com.hugai.chatsdk.common.entity.session.RecordData;
 import com.hugai.chatsdk.common.handler.MessageSendHandler;
 import com.hugai.common.enums.ChatRole;
+import com.org.bebas.core.function.OR;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
@@ -14,6 +15,7 @@ import okhttp3.sse.EventSourceListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -75,8 +77,8 @@ public class BaiduSseListener extends EventSourceListener {
     }
 
     public void close() {
-        this.eventSource.cancel();
-        this.messageSendHandler.close();
+        OR.run(this.eventSource, Objects::nonNull, EventSource::cancel);
+        OR.run(this.messageSendHandler, Objects::nonNull, MessageSendHandler::close);
     }
 
 }
