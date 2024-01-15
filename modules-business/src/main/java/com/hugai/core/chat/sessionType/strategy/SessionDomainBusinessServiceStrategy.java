@@ -34,7 +34,7 @@ public class SessionDomainBusinessServiceStrategy extends SessionBusinessCommon 
         OR.run(domainModel.getAboveContent(), StrUtil::isNotEmpty, aboveContent -> {
             SessionRecordModel model = new SessionRecordModel();
             model.setDomainUniqueKey(domainModel.getUniqueKey());
-            model.setRole(ChatRole.assistant.name());
+            model.setRole(ChatRole.user.name());
             model.setContent(aboveContent);
             model.setIfShow(Constants.BOOLEAN.FALSE);
             model.setIfContext(Constants.BOOLEAN.TRUE);

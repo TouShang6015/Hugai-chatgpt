@@ -13,6 +13,7 @@ import com.hugai.chatsdk.common.entity.session.RecordData;
 import com.hugai.chatsdk.common.handler.MessageSendHandler;
 import com.hugai.chatsdk.common.service.ChatBusinessService;
 import com.hugai.chatsdk.common.service.ChatResponseSyncDataService;
+import com.hugai.common.enums.ChatRole;
 import com.hugai.common.enums.flow.ChatSdkType;
 import com.org.bebas.core.function.OR;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import reactor.util.function.Tuple2;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -96,7 +98,19 @@ public class BaiduChatBusinessServiceImpl implements ChatBusinessService<ChatReq
     public ChatRequest convertRequest(List<RecordData> recordList, ChatSdkAccount account, Consumer<ChatRequest> requestConsumer) {
         ChatRequest request = new ChatRequest();
 
-        List<Message> chatMessageList = recordList.stream().map(item -> {
+        List<RecordData> finalRecordDataList = new ArrayList<>();
+        for (int i = 0; i < recordList.size(); i++) {
+            RecordData recordData = recordList.get(i);
+            if (finalRecordDataList.size() % 2 == 0 && ChatRole.assistant.name().equals(recordData.getRole())){
+                finalRecordDataList.add(RecordData.builder().role(ChatRole.user.name()).content(" ").build());
+            }
+            if (finalRecordDataList.size() % 2 == 1 && ChatRole.user.name().equals(recordData.getRole())){
+                finalRecordDataList.add(RecordData.builder().role(ChatRole.assistant.name()).content(" ").build());
+            }
+            finalRecordDataList.add(recordData);
+        }
+
+        List<Message> chatMessageList = finalRecordDataList.stream().map(item -> {
             Message message = new Message();
             message.setRole(item.getRole());
             message.setContent(item.getContent());
