@@ -50,14 +50,12 @@ public class BaiduSseListener extends EventSourceListener {
 
     @Override
     public void onEvent(@NotNull EventSource eventSource, @Nullable String id, @Nullable String type, @NotNull String data) {
-        log.info("[百度千帆SSE响应]：{}", data);
+        log.debug("[百度千帆SSE响应]：{}", data);
         ChatResponse chatResponse = JSON.parseObject(data, ChatResponse.class);
-        if (!chatResponse.getIs_end()) {
-            this.recordData.setRole(ChatRole.assistant.name());
-            String resContent = chatResponse.getResult();
-            this.recordData.getContentSB().append(resContent);
-            this.messageSendHandler.queueAdd(resContent);
-        }
+        this.recordData.setRole(ChatRole.assistant.name());
+        String resContent = chatResponse.getResult();
+        this.recordData.getContentSB().append(resContent);
+        this.messageSendHandler.queueAdd(resContent);
         if (chatResponse.getIs_end()) {
             this.recordData.setContent(this.recordData.getContentSB().toString());
             this.latch.countDown();

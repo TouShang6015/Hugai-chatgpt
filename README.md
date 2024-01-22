@@ -1,4 +1,22 @@
-![](http://chat.static.equinox19.xyz/hugai-doc/HugAiLogo1-icon.png)
+<div align="center">
+    <a href="http://chat.equinox19.xyz/"><img src="http://chat.static.equinox19.xyz/hugai-doc/HugAiLogo1-icon.png"/></a>
+</div>
+
+<div align="center">
+    <a href="https://github.com/TouShang6015/Hugai-chatgpt/stargazers">
+        <img src="https://img.shields.io/github/stars/TouShang6015/Hugai-chatgpt.svg" />
+    </a>
+    <a href="http://chat.equinox19.xyz/" target="_blank">
+        <img alt="GitHub forks" src="https://img.shields.io/github/forks/TouShang6015/Hugai-chatgpt?color=eb6ea5">
+    </a>
+    <a href="http://chat.equinox19.xyz/" target="_blank">
+        <img src="https://img.shields.io/badge/HugAi-ChatGpt-blue.svg">
+    </a>
+    <a href="http://chat.equinox19.xyz/" target="_blank">
+        <img src="https://img.shields.io/github/license/TouShang6015/Hugai-chatgpt" />
+    </a>
+</div>
+
 
 ## 介绍
 
@@ -121,10 +139,12 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GP
 ![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095758.png)
 ![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095828.png)
 ![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095843.png)
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095908.png)
 
 ### 讨论群/联系方式
 
 部署前优先查看 [帮助文档](http://chat.doc.equinox19.xyz/) ，如有疑问或宝贵的意见，欢迎加入讨论群一起交流🤤
 
 - [HugAi交流群](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=aMuWiFSF07SRRGAjWoncq37lPo_LhWKL&authKey=A0PnuyDPFwVlgADcH5BDyKbWGhRJ7JnjjcSnSI7bg2RDjxXXkrowqeQEk2Z9x%2B3%2F&noverify=0&group_code=747193904)：747193904
+
+
+[![Star History Chart](https://api.star-history.com/svg?repos=TouShang6015/Hugai-chatgpt&type=Date)](https://star-history.com/?utm_source=bestxtools.com#TouShang6015/Hugai-chatgpt&Date)

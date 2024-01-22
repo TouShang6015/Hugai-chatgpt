@@ -45,7 +45,7 @@ public class UserTouristAuthenticationProvider implements CustomAuthenticationPr
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return true;
+        return UserTouristAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
 }
