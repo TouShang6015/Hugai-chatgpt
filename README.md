@@ -1,19 +1,37 @@
-![](http://chat.static.equinox19.xyz/hugai-doc/HugAiLogo1-icon.png)
+<div align="center">
+    <a href="http://chat.equinox19.xyz/"><img src="http://chat.static.equinox19.xyz/hugai-doc/HugAiLogo1-icon.png"/></a>
+</div>
+
+<div align="center">
+    <a href="https://github.com/TouShang6015/Hugai-chatgpt/stargazers">
+        <img src="https://img.shields.io/github/stars/TouShang6015/Hugai-chatgpt.svg" />
+    </a>
+    <a href="http://chat.equinox19.xyz/" target="_blank">
+        <img alt="GitHub forks" src="https://img.shields.io/github/forks/TouShang6015/Hugai-chatgpt?color=eb6ea5">
+    </a>
+    <a href="http://chat.equinox19.xyz/" target="_blank">
+        <img src="https://img.shields.io/badge/HugAi-ChatGpt-blue.svg">
+    </a>
+    <a href="http://chat.equinox19.xyz/" target="_blank">
+        <img src="https://img.shields.io/github/license/TouShang6015/Hugai-chatgpt" />
+    </a>
+</div>
+
 
 ## 介绍
 
 HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GPT对话，AI绘图Midjourney、Stable Diffusion、openai，前后端源码完全开源。
 
-> 声明：基于 Apache-2.0 协议，免费且作为开源学习使用，未经本人同意不可用于商业项目。
+> 声明：基于 Apache-2.0 协议，免费且作为开源学习使用，开源不易，二开或商用请注明原作者。
 
 - HugAi后端源码地址：
-    - [https://gitee.com/toushang6015/hugai-chatgpt](https://gitee.com/toushang6015/hugai-chatgpt)
-    - [https://github.com/TouShang6015/hugai-chatgpt](https://github.com/TouShang6015/hugai-chatgpt)
+  - [https://gitee.com/toushang6015/hugai-chatgpt](https://gitee.com/toushang6015/hugai-chatgpt)
+  - [https://github.com/TouShang6015/hugai-chatgpt](https://github.com/TouShang6015/hugai-chatgpt)
 
 - HugAi前台源码地址：
-    - [https://gitee.com/toushang6015/hugai-chatgpt-ui](https://gitee.com/toushang6015/hugai-chatgpt-ui)
-    - [https://github.com/TouShang6015/hugai-chatgpt-ui](https://github.com/TouShang6015/hugai-chatgpt-ui)
-    
+  - [https://gitee.com/toushang6015/hugai-chatgpt-ui](https://gitee.com/toushang6015/hugai-chatgpt-ui)
+  - [https://github.com/TouShang6015/hugai-chatgpt-ui](https://github.com/TouShang6015/hugai-chatgpt-ui)
+
 - **在线体验地址**：[http://chat.equinox19.xyz/home](http://chat.equinox19.xyz/home)
 - **帮助文档**：[http://chat.doc.equinox19.xyz/](http://chat.doc.equinox19.xyz/)
 - 我的博客：[https://codesand.fun/](https://codesand.fun/)
@@ -39,6 +57,8 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GP
 ✅	支持多用户登陆：管理员、用户、游客，动态路由鉴权，不侵入代码
 
 ✅	支持本地、服务器、minio云端文件存储，多种文件上传策略动态切换
+
+> 已接入大模型：OpenAi、讯飞星火、文心一言
 
 ## 技术栈
 
@@ -119,10 +139,12 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GP
 ![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095758.png)
 ![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095828.png)
 ![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095843.png)
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095908.png)
 
 ### 讨论群/联系方式
 
 部署前优先查看 [帮助文档](http://chat.doc.equinox19.xyz/) ，如有疑问或宝贵的意见，欢迎加入讨论群一起交流🤤
 
 - [HugAi交流群](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=aMuWiFSF07SRRGAjWoncq37lPo_LhWKL&authKey=A0PnuyDPFwVlgADcH5BDyKbWGhRJ7JnjjcSnSI7bg2RDjxXXkrowqeQEk2Z9x%2B3%2F&noverify=0&group_code=747193904)：747193904
+
+
+[![Star History Chart](https://api.star-history.com/svg?repos=TouShang6015/Hugai-chatgpt&type=Date)](https://star-history.com/?utm_source=bestxtools.com#TouShang6015/Hugai-chatgpt&Date)
