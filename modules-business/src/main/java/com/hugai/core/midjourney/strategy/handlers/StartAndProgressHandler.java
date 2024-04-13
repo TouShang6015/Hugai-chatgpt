@@ -51,6 +51,8 @@ public class StartAndProgressHandler extends MessageStrategyAbstract {
             log.info("[Discord Progress] - 任务进度 | status: {} , id: {} , prompt：{}", contentParseData.getStatus(), id, contentParseData.getPrompt());
             if ("0%".equals(contentParseData.getStatus())) {
                 midjourneyTaskEventListener.startTask(id, contentParseData.getPrompt());
+            }else if (contentParseData.getStatus().contains("%")){
+                midjourneyTaskEventListener.updateTaskProgress(id, contentParseData.getStatus(), contentParseData.getPrompt());
             }
         }
     }

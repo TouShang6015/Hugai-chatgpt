@@ -10,6 +10,8 @@ import com.hugai.common.modules.entity.config.model.CmjChannelConfigModel;
 import com.hugai.common.modules.entity.config.vo.CmjAccountDetailVO;
 import com.hugai.core.midjourney.client.DiscordSocketClient;
 import com.hugai.core.midjourney.common.entity.DiscordAccount;
+import com.hugai.core.midjourney.pool.DiscordAccountCacheObj;
+import com.hugai.core.midjourney.pool.DiscordSocketAccountPool;
 import com.hugai.modules.config.mapper.CmjAccountMapper;
 import com.hugai.modules.config.mapper.CmjChannelConfigMapper;
 import com.hugai.modules.config.service.ICmjAccountService;
@@ -46,11 +48,12 @@ public class CmjAccountServiceImpl extends ServiceImpl<CmjAccountMapper, CmjAcco
 
     @Override
     public void resetStopMjSocket() {
-        Map<String, DiscordAccount> discordAccountMap = DiscordSocketClient.getDiscordAccountMap();
-
-        OR.run(this.getAccountAll(),CollUtil::isNotEmpty,accountAll -> {
+        OR.run(this.getAccountAll(), CollUtil::isNotEmpty, accountAll -> {
             for (CmjAccountDetailVO accountDetailVO : accountAll) {
-                if (!discordAccountMap.containsKey(accountDetailVO.getUserName()) && accountDetailVO.getAccountStatus().equals(AccountStatus.NORMAL.getKey())) {
+                String userName = accountDetailVO.getUserName();
+
+                DiscordAccountCacheObj discordAccountCacheObj = DiscordSocketAccountPool.get(userName);
+                if (Objects.isNull(discordAccountCacheObj) && accountDetailVO.getAccountStatus().equals(AccountStatus.NORMAL.getKey())) {
 
                     DiscordAccount discordAccount = DiscordSocketClient.buildAccount(accountDetailVO);
                     DiscordSocketClient.connection(discordAccount);

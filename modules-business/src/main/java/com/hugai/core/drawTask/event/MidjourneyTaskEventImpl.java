@@ -86,7 +86,7 @@ public class MidjourneyTaskEventImpl implements MidjourneyTaskEventListener {
      */
     @Override
     public void updateTask(String taskId, String id, String applicationId, String guildId, String channelId) {
-        if (StrUtil.isEmpty(taskId) || StrUtil.isEmpty(id) || StrUtil.isEmpty(applicationId) || StrUtil.isEmpty(channelId)) {
+        if (StrUtil.isEmpty(taskId) || StrUtil.isEmpty(id) || StrUtil.isEmpty(channelId)) {
             return;
         }
 
@@ -96,9 +96,33 @@ public class MidjourneyTaskEventImpl implements MidjourneyTaskEventListener {
             OR.run(applicationId, StrUtil::isNotEmpty, taskObj::setApplicationId);
             OR.run(guildId, StrUtil::isNotEmpty, taskObj::setGuildId);
             OR.run(channelId, StrUtil::isNotEmpty, taskObj::setChannelId);
+            taskDrawService.lambdaUpdate()
+                    .set(TaskDrawModel::getMjApplicationId, taskObj.getApplicationId())
+                    .set(TaskDrawModel::getMjGuildId, taskObj.getGuildId())
+                    .set(TaskDrawModel::getMjChannelId, taskObj.getChannelId())
+                    .eq(TaskDrawModel::getId, taskId).update();
             log.info("[Discord Task update] 任务更新 - TaskId: {} , id: {}", taskId, id);
         });
 
+    }
+
+    /**
+     * 更新任务进度
+     *  @param id
+     * @param progress
+     * @param prompt
+     */
+    @Override
+    public void updateTaskProgress(String id, String progress, String prompt) {
+        if (StrUtil.isEmpty(id) || StrUtil.isEmpty(progress)) {
+            return;
+        }
+        TaskObj taskObj = TaskQueueManager.getById(id);
+        if (Objects.isNull(taskObj))
+            return;
+        OR.run(prompt,StrUtil::isNotEmpty,() -> {
+            taskObj.setPrompt(prompt);
+        });
     }
 
     @Override

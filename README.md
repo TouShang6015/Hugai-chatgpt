@@ -1,18 +1,18 @@
 <div align="center">
-    <a href="http://chat.equinox19.xyz/"><img src="http://chat.static.equinox19.xyz/hugai-doc/HugAiLogo1-icon.png"/></a>
+    <a href="http://chat.hootin19.fun/"><img src="http://chat.static.hootin19.fun/hugai-doc/HugAiLogo1-icon.png"/></a>
 </div>
 
 <div align="center">
     <a href="https://github.com/TouShang6015/Hugai-chatgpt/stargazers">
         <img src="https://img.shields.io/github/stars/TouShang6015/Hugai-chatgpt.svg" />
     </a>
-    <a href="http://chat.equinox19.xyz/" target="_blank">
+    <a href="http://chat.hootin19.fun" target="_blank">
         <img alt="GitHub forks" src="https://img.shields.io/github/forks/TouShang6015/Hugai-chatgpt?color=eb6ea5">
     </a>
-    <a href="http://chat.equinox19.xyz/" target="_blank">
+    <a href="http://chat.hootin19.fun" target="_blank">
         <img src="https://img.shields.io/badge/HugAi-ChatGpt-blue.svg">
     </a>
-    <a href="http://chat.equinox19.xyz/" target="_blank">
+    <a href="http://chat.hootin19.fun" target="_blank">
         <img src="https://img.shields.io/github/license/TouShang6015/Hugai-chatgpt" />
     </a>
 </div>
@@ -32,9 +32,9 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GP
   - [https://gitee.com/toushang6015/hugai-chatgpt-ui](https://gitee.com/toushang6015/hugai-chatgpt-ui)
   - [https://github.com/TouShang6015/hugai-chatgpt-ui](https://github.com/TouShang6015/hugai-chatgpt-ui)
 
-- **在线体验地址**：[http://chat.equinox19.xyz/home](http://chat.equinox19.xyz/home)
-- **帮助文档**：[http://chat.doc.equinox19.xyz/](http://chat.doc.equinox19.xyz/)
-- 我的博客：[https://codesand.fun/](https://codesand.fun/)
+- **在线体验地址**：[http://chat.hootin19.fun](http://chat.hootin19.fun)
+- **帮助文档**：[http://chat.doc.hootin19.fun](http://chat.doc.hootin19.fun)
+- 我的博客：[https://www.hootin19.fun](https://www.hootin19.fun)
 
 > 特别提醒：部署项目请查看帮助文档
 
@@ -127,22 +127,22 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GP
 
 > 用户端
 
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205100114.png)
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205100213.png)
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205100250.png)
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205100752.png)
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205100810.png)
+![](http://chat.static.hootin19.fun/hugai-doc/eg/20231205100114.png)
+![](http://chat.static.hootin19.fun/hugai-doc/eg/20231205100213.png)
+![](http://chat.static.hootin19.fun/hugai-doc/eg/20231205100250.png)
+![](http://chat.static.hootin19.fun/hugai-doc/eg/20231205100752.png)
+![](http://chat.static.hootin19.fun/hugai-doc/eg/20231205100810.png)
 
 > 后台管理端
 
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095735.png)
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095758.png)
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095828.png)
-![](http://chat.static.equinox19.xyz/hugai-doc/eg/20231205095843.png)
+![](http://chat.static.hootin19.fun/hugai-doc/eg/20231205095735.png)
+![](http://chat.static.hootin19.fun/hugai-doc/eg/20231205095758.png)
+![](http://chat.static.hootin19.fun/hugai-doc/eg/20231205095828.png)
+![](http://chat.static.hootin19.fun/hugai-doc/eg/20231205095843.png)
 
 ### 讨论群/联系方式
 
-部署前优先查看 [帮助文档](http://chat.doc.equinox19.xyz/) ，如有疑问或宝贵的意见，欢迎加入讨论群一起交流🤤
+部署前优先查看 [帮助文档](http://chat.doc.hootin19.fun/) ，如有疑问或宝贵的意见，欢迎加入讨论群一起交流🤤
 
 - [HugAi交流群](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=aMuWiFSF07SRRGAjWoncq37lPo_LhWKL&authKey=A0PnuyDPFwVlgADcH5BDyKbWGhRJ7JnjjcSnSI7bg2RDjxXXkrowqeQEk2Z9x%2B3%2F&noverify=0&group_code=747193904)：747193904
 
