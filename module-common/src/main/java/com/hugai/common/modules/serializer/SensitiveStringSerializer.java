@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.hugai.common.constants.SecurityConstant;
+import com.org.bebas.core.security.SecurityBaseUtil;
 
 import java.io.IOException;
 
@@ -17,6 +19,13 @@ public class SensitiveStringSerializer extends JsonSerializer<String> {
 
     @Override
     public void serialize(String value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        try {
+            if (SecurityConstant.SYSTEM_ID.equals(SecurityBaseUtil.getUserId())) {
+                gen.writeString(value);
+                return;
+            }
+        } catch (Exception ignored) {
+        }
         if (StrUtil.isNotEmpty(value)) {
             int length = value.length();
             int maskLength = length / 2;
