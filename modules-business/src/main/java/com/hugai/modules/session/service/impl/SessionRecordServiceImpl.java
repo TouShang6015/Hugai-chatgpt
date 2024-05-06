@@ -56,7 +56,7 @@ public class SessionRecordServiceImpl extends ServiceImpl<SessionRecordMapper, S
      */
     @Transactional
     @Override
-    public void responseInsertHandle(List<RecordData> requestRecordList, ChatRequestParam contextParam, ChatSdkStorageResponse response) {
+    public List<SessionRecordModel> responseInsertHandle(List<RecordData> requestRecordList, ChatRequestParam contextParam, ChatSdkStorageResponse response) {
 
         Long sessionId = contextParam.getSessionId();
         Long userId = contextParam.getUserId();
@@ -118,6 +118,8 @@ public class SessionRecordServiceImpl extends ServiceImpl<SessionRecordMapper, S
 
         // 持久化响应信息
         this.cachePushRecord(finalInsertSessionRecordParam, userId);
+
+        return finalInsertSessionRecordParam;
     }
 
     /**

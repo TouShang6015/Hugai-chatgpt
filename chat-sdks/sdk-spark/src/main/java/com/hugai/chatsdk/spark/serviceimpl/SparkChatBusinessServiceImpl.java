@@ -95,6 +95,8 @@ public class SparkChatBusinessServiceImpl implements ChatBusinessService<ChatReq
                 return "generalv2";
             } else if (StrUtil.contains(url, "v3.1")) {
                 return "generalv3";
+            } else if (StrUtil.contains(url, "v3.5")) {
+                return "generalv3.5";
             }
             return null;
         };
