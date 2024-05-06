@@ -55,6 +55,7 @@ public class ChatRequestParam {
      * 是否连续对话
      */
     private Boolean ifConc;
+    private String ifConc2;
 
     /**
      * 扩展参数

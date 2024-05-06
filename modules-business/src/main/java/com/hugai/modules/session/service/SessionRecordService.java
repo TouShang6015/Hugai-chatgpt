@@ -27,7 +27,7 @@ public interface SessionRecordService extends IService<SessionRecordModel> {
      * @param contextParam
      * @param response
      */
-    void responseInsertHandle(List<RecordData> requestRecordList, ChatRequestParam contextParam, ChatSdkStorageResponse response);
+    List<SessionRecordModel> responseInsertHandle(List<RecordData> requestRecordList, ChatRequestParam contextParam, ChatSdkStorageResponse response);
 
     /**
      * 获取列表根据sessionId

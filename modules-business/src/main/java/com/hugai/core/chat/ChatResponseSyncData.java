@@ -7,6 +7,7 @@ import com.hugai.chatsdk.common.entity.ChatSdkStorageResponse;
 import com.hugai.chatsdk.common.entity.account.ChatSdkAccount;
 import com.hugai.chatsdk.common.entity.session.RecordData;
 import com.hugai.chatsdk.common.service.ChatResponseSyncDataService;
+import com.hugai.common.modules.entity.session.model.SessionRecordModel;
 import com.hugai.core.chat.entity.ChatRequestParam;
 import com.hugai.modules.config.service.IChatKeysService;
 import com.hugai.modules.session.service.SessionRecordService;
@@ -30,17 +31,18 @@ public class ChatResponseSyncData implements ChatResponseSyncDataService {
 
     @Transactional
     @Override
-    public void syncChatResponse(ChatSdkAccount requestParam, ChatSdkStorageResponse response, List<RecordData> recordList) {
+    public List<SessionRecordModel> syncChatResponse(ChatSdkAccount requestParam, ChatSdkStorageResponse response, List<RecordData> recordList) {
         // 帐号异常停用key
         if (response.getAccountError()) {
             String apiToken = response.getAccount().getApiToken();
             chatKeysService.removeByApiToken(apiToken);
-            return;
+            return null;
         }
         ChatRequestParam chatRequestParam = JSON.parseObject(requestParam.getChatRequestParamJson(), ChatRequestParam.class);
-        if (CollUtil.isNotEmpty(response.getResponseRecordData()) && StrUtil.isNotEmpty(response.getResponseRecordData().get(0).getRole())) {
-            sessionRecordService.responseInsertHandle(recordList, chatRequestParam, response);
+        if (CollUtil.isNotEmpty(response.getResponseRecordData())) {
+            return sessionRecordService.responseInsertHandle(recordList, chatRequestParam, response);
         }
+        return null;
     }
 
 }

@@ -53,7 +53,7 @@ public class ChatRequestHandler {
             buildList.add(RecordConvert.INSTANCE.sessionConvertRecord(e));
         });
 
-        if (chatRequestParam.getIfConc()) {
+        if (Constants.BOOLEAN.TRUE.equals(chatRequestParam.getIfConc2())) {
             OR.run(this.getSessionContext(sessionRecordModels, topRecord, chatModel, content), CollUtil::isNotEmpty, e -> {
                 buildList.addAll(RecordConvert.INSTANCE.sessionConvertRecord(e));
             });
