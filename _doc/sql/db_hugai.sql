@@ -1058,7 +1058,7 @@ INSERT INTO `tb_chat_model` VALUES (1739909284128403457, '2023-12-27 15:21:13', 
 INSERT INTO `tb_chat_model` VALUES (1739909480631545858, '2023-12-27 15:22:00', '1000000000', '2023-12-28 09:34:52', '1000000000', 0, 0, 1739820877465280513, 'spark30', '讯飞星火v3.0', 2048, 8192, 'spark30', 3, '1', 'https://spark-api.xf-yun.com/v3.1/chat', '0');
 INSERT INTO `tb_chat_model` VALUES (1745636161061154818, '2024-01-12 10:37:47', '1000000000', '2024-01-12 10:40:35', '1000000000', 0, 0, 1745376785238908929, 'ErnieBot-turbo', '(百度) 文心一言3.5 Turbo', 1024, 4096, 'ErnieBot-turbo', 1, '1', 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant', '0');
 INSERT INTO `tb_chat_model` VALUES (1745698917705613314, '2024-01-12 14:47:10', '1000000000', '2024-01-12 14:47:10', '1000000000', 0, 0, 1745376785238908929, 'ERNIE-Bot-4.0', '(百度) 文心一言 4.0', 1024, 4096, 'ERNIE-Bot-4.0', 1, '1', 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions_pro', '0');
-
+INSERT INTO `tb_chat_model` VALUES (1794453609966125057, '2024-05-26 03:40:54', '1000000000', '2024-05-26 03:40:54', '1000000000', 0, 0, 1794453458962792450, 'qwen:7b', '(LLM) 通义千问-7B', 2048, 8192, 'qwen:7b', 1, '0', NULL, '0');
 
 -- ----------------------------
 -- Table structure for tb_chat_sdk
@@ -1086,6 +1086,8 @@ CREATE TABLE `tb_chat_sdk`  (
 INSERT INTO `tb_chat_sdk` VALUES (1, NULL, NULL, NULL, NULL, 0, 0, 'openai', 'OpenAi', '0', 'random', '0');
 INSERT INTO `tb_chat_sdk` VALUES (1739820877465280513, '2024-01-04 14:05:12', '1000000000', '2024-01-04 14:05:12', '1000000000', 0, 0, 'spark', '讯飞星火', '0', 'random', '1');
 INSERT INTO `tb_chat_sdk` VALUES (1745376785238908929, '2024-01-11 17:27:07', '1000000000', '2024-01-11 17:27:07', '1000000000', 0, 0, 'baidu', '百度千帆', '0', 'random', '1');
+INSERT INTO `tb_chat_sdk` VALUES (1794453458962792450, '2024-05-26 03:40:18', '1000000000', '2024-05-26 03:40:18', '1000000000', 0, 0, 'Ollama', 'Ollama', '0', 'random', '0');
+
 
 -- ----------------------------
 -- Table structure for tb_chat_sdk_host
@@ -1114,6 +1116,8 @@ CREATE TABLE `tb_chat_sdk_host`  (
 -- Records of tb_chat_sdk_host
 -- ----------------------------
 INSERT INTO `tb_chat_sdk_host` VALUES (1, NULL, NULL, '2023-12-01 16:49:31', '1000000000', 0, 0, 1, 'https://api.openai.com/', '0', '1', '1', 180, 50, 1);
+INSERT INTO `tb_chat_sdk_host` VALUES (1794453709266272258, '2024-05-26 03:41:18', '1000000000', '2024-05-26 03:41:18', '1000000000', 0, 0, 1794453458962792450, 'http://localhost:11434', '0', '1', '0', 120, 50, 5);
+
 
 -- ----------------------------
 -- Table structure for tb_cmj_account

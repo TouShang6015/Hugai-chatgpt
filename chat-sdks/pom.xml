@@ -16,6 +16,7 @@
         <module>chat-sdk-common</module>
         <module>sdk-spark</module>
         <module>sdk-baidu</module>
+        <module>sdk-ollama</module>
     </modules>
 
     <properties>

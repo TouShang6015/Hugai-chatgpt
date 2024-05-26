@@ -17,6 +17,8 @@ public enum ChatSdkType implements FlowBaseEnum {
     spark("spark", "讯飞星火平台"),
 
     baidu("baidu", "百度千帆大模型"),
+
+    ollama("Ollama", "LLM平台"),
     ;
 
     private final String key;
