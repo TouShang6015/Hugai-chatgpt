@@ -61,7 +61,7 @@ public class MessageSendHandler {
         // 存放缓存池
         SessionMessageSendPool.add(connectId, this);
         // 执行自旋
-        this.queueSpin();
+//        this.queueSpin();
     }
 
     private void queueSpin() {
@@ -109,6 +109,17 @@ public class MessageSendHandler {
             OR.run(this.sseEmitter, Objects::nonNull, sse -> {
                 try {
                     sse.send(SseEmitter.event().data(ContentUtil.convertNormal(poll)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }else if (this.streamResponseType.equals(StreamResponseTypeEnum.Websocket)){
+            String poll = this.messageQueue.poll();
+            OR.run(this.session, Objects::nonNull, session -> {
+                try {
+                    if (StrUtil.isNotEmpty(poll)) {
+                        session.getBasicRemote().sendText(poll);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

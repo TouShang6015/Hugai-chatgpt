@@ -58,7 +58,7 @@ HugAi是由Springboot集成openAi SDK开发的一套智能AI知识库，支持GP
 
 ✅	支持本地、服务器、minio云端文件存储，多种文件上传策略动态切换
 
-> 已接入大模型：OpenAi、讯飞星火、文心一言
+> 已接入大模型：OpenAi、讯飞星火、文心一言、Ollama
 
 ## 技术栈
 
